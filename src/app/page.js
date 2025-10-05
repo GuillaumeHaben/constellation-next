@@ -1,5 +1,6 @@
-'use client'
+"use client";
 
+import { useAuth } from "@/context/AuthContext";
 import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -12,17 +13,17 @@ const parisienne = Parisienne({
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
+  const { user } = useAuth();
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
       <header className="absolute inset-x-0 top-0 z-50">
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
-            <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
+            <a href="/" className="-m-1.5 p-1.5">
+              <span className="sr-only">Constellation</span>
               <img
-                alt=""
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                alt="Constellation"
+                src="/icon.png"
                 className="h-8 w-auto"
               />
             </a>
@@ -38,9 +39,15 @@ export default function Home() {
             </button>
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="/login" className="text-sm/6 font-semibold text-white">
-              Log in <span aria-hidden="true">&rarr;</span>
-            </a>
+            {user ? (
+              <a href="/dashboard" className="text-sm/6 font-semibold text-white">
+                My dashboard <span aria-hidden="true">&rarr;</span>
+              </a>
+            ) : (
+              <a href="/login" className="text-sm/6 font-semibold text-white">
+                Log in <span aria-hidden="true">&rarr;</span>
+              </a>
+            )}
           </div>
         </nav>
         <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -92,10 +99,6 @@ export default function Home() {
                   className="inline-block h-6 w-auto align-middle"
                 />
               </span>
-              {/* <a href="#" className="font-semibold text-indigo-400">
-                <span aria-hidden="true" className="absolute inset-0" />
-                Read more <span aria-hidden="true">&rarr;</span>
-              </a> */}
             </div>
           </div>
           <div className="text-center">

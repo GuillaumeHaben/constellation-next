@@ -1,5 +1,4 @@
-// src/components/ClubsList.jsx
-"use client"; // needed if you’re in Next.js App Router
+"use client";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
