@@ -1,7 +1,13 @@
+"use client";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import ClubList from '../../components/ClubList'; 
 
-const user = {
+const userSample = {
   name: 'Tom Cook',
   email: 'tom@example.com',
   imageUrl:
@@ -25,6 +31,19 @@ function classNames(...classes) {
 }
 
 export default function Dashboard() {
+
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user === null) {
+      const token = localStorage.getItem("token");
+      if (!token) router.push("/login");
+    }
+  }, [user]);
+
+  if (!user) return <p>Loading...</p>;
+
   return (
     <div className="min-h-full">
       <Disclosure as="nav" className="bg-gray-800/50">
@@ -76,7 +95,7 @@ export default function Dashboard() {
                     <span className="sr-only">Open user menu</span>
                     <img
                       alt=""
-                      src={user.imageUrl}
+                      src={userSample.imageUrl}
                       className="size-8 rounded-full outline -outline-offset-1 outline-white/10"
                     />
                   </MenuButton>
@@ -99,7 +118,7 @@ export default function Dashboard() {
                 </Menu>
 
               <div className="ml-4 flex items-center md:ml-6">
-                  <a href="/" className="text-sm/6 font-semibold text-white">
+                  <a href="" onClick={ logout } className="text-sm/6 font-semibold text-white">
                     Log out <span aria-hidden="true">&rarr;</span>
                   </a>
                 </div>
@@ -139,13 +158,13 @@ export default function Dashboard() {
               <div className="shrink-0">
                 <img
                   alt=""
-                  src={user.imageUrl}
+                  src={userSample.imageUrl}
                   className="size-10 rounded-full outline -outline-offset-1 outline-white/10"
                 />
               </div>
               <div className="ml-3">
-                <div className="text-base/5 font-medium text-white">{user.name}</div>
-                <div className="text-sm font-medium text-gray-400">{user.email}</div>
+                <div className="text-base/5 font-medium text-white">{userSample.name}</div>
+                <div className="text-sm font-medium text-gray-400">{userSample.email}</div>
               </div>
               <button
                 type="button"
@@ -178,7 +197,12 @@ export default function Dashboard() {
         </div>
       </header>
       <main>
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{/* Your content */}</div>
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          
+          <ClubList />
+          <h1>Welcome, { user.username }!</h1>
+
+        </div>
       </main>
     </div>
   )

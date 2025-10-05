@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/context/AuthContext";
 import { Geist, Geist_Mono, Parisienne } from "next/font/google";
 import "./globals.css";
 
@@ -20,7 +21,9 @@ export default function RootLayout({ children }) {
   return (
     <html className={"h-full bg-gray-900"}>
       <body className={"h-full"}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
 
