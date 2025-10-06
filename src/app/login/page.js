@@ -7,7 +7,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function Login() {
-
   const [form, setForm] = useState({ identifier: "", password: "" });
   const [error, setError] = useState("");
   const router = useRouter();
@@ -48,7 +47,7 @@ export default function Login() {
             <Image
               alt="Constellation"
               src="/icon.png"
-              className="mx-auto h-10 w-auto"
+              className="mx-auto size-16 w-auto"
               width={64}
               height={64}
             />
@@ -105,7 +104,7 @@ export default function Login() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer"
               >
                 Sign in
               </button>

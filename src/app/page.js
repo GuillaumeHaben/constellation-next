@@ -16,20 +16,22 @@ const parisienne = Parisienne({
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { user } = useAuth();
+  if (!user) return null; 
+  
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
       <header className="absolute inset-x-0 top-0 z-50">
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
             <Link href="/" className="-m-1.5 p-1.5">
-                <span className="sr-only">Constellation</span>
-                <Image
-                  alt="Constellation"
-                  src="/icon.png"
-                  width={32}
-                  height={32}
-                  className="h-8 w-auto"
-                />
+              <span className="sr-only">Constellation</span>
+              <Image
+                alt="Constellation"
+                src="/icon.png"
+                width={32}
+                height={32}
+                className="h-10 w-auto"
+              />
             </Link>
           </div>
           <div className="flex lg:hidden">
@@ -44,11 +46,11 @@ export default function Home() {
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             {user ? (
-              <a href="/dashboard" className="text-sm/6 font-semibold text-white">
+              <a href="/dashboard" className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">
                 My dashboard <span aria-hidden="true">&rarr;</span>
               </a>
             ) : (
-              <a href="/login" className="text-sm/6 font-semibold text-white">
+              <a href="/login" className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">
                 Log in <span aria-hidden="true">&rarr;</span>
               </a>
             )}
