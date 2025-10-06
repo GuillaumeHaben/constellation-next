@@ -1,0 +1,43 @@
+image: node:20
+
+stages:
+  - build
+  - deploy
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+variables:
+  TARGET_BRANCH: "pages"  # The branch to store static files
+
+build_site:
+  stage: build
+  script:
+    - npm ci
+    - npm run build
+    - npm run export
+  artifacts:
+    paths:
+      - out/
+  only:
+    - tags
+
+deploy_pages:
+  stage: deploy
+  needs: ["build_site"]
+  script:
+    - mv out public
+    - |
+      git config --global user.email "ci-runner@gitlab.com"
+      git config --global user.name "GitLab CI"
+      git fetch origin $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
+      git checkout $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
+      rm -rf *
+      cp -r ../public/* .
+      git add .
+      git commit -m "Deploy from $CI_COMMIT_TAG"
+      git push --force "https://${CI_REPOSITORY_URL#https://}" HEAD:$TARGET_BRANCH
+  only:
+    - tags
