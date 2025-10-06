@@ -16,7 +16,6 @@ const parisienne = Parisienne({
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { user } = useAuth();
-  if (!user) return null; 
   
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-900">

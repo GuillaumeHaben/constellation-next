@@ -14,8 +14,8 @@ export default function RootLayout({ children }) {
     pathname.startsWith("/signup");
 
   return (
-    <html className={"h-full bg-gray-900"}>
-      <body className={"h-full"}>
+    <html className={"h-full bg-gray-900 dark"}>
+      <body className={"h-full dark"}>
         <AuthProvider>
           {isPublic ? children : <ProtectedRoute>{children}</ProtectedRoute>}
         </AuthProvider>

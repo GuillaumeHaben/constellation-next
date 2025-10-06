@@ -1,5 +1,8 @@
 image: node:22
 
+variables:
+  NEXT_PUBLIC_GITLAB_PAGES: "1"
+
 stages:
   - build
 
