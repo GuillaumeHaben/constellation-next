@@ -26,7 +26,9 @@ build_site:
 
 deploy_pages:
   stage: deploy
-  needs: ["build_site"]
+  needs: 
+    - job: build_site
+      artifacts: true
   script:
     - mv out public
     - |
