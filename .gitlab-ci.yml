@@ -32,13 +32,17 @@ deploy_pages:
     - |
       git config --global user.email "ci-runner@gitlab.com"
       git config --global user.name "GitLab CI"
-      git fetch origin $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
-      git checkout $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
+      if git ls-remote --exit-code --heads origin $TARGET_BRANCH; then
+        git checkout $TARGET_BRANCH
+      else
+        git checkout --orphan $TARGET_BRANCH
+      fi
       rm -rf *
       cp -r ../public/* .
       git add .
-      git commit -m "Deploy from $CI_COMMIT_TAG"
+      git commit -m "Deploy static site for $CI_COMMIT_TAG" || echo "Nothing to commit"
       git push --force "https://${CI_REPOSITORY_URL#https://}" HEAD:$TARGET_BRANCH
+
   only:
     - tags
     - triggers
