@@ -17,10 +17,10 @@ function classNames(...classes) {
 }
 
 export default function NavBar() {
+    const pathname = usePathname();
     const { user, logout } = useAuth();
     if (!user) return null;
 
-    const pathname = usePathname();
     const navWithCurrent = navigation.map(item => ({
         ...item,
         current: pathname === item.href
