@@ -23,6 +23,7 @@ build_site:
       - out/
   only:
     - tags
+    - triggers
 
 deploy_pages:
   stage: deploy
@@ -41,3 +42,4 @@ deploy_pages:
       git push --force "https://${CI_REPOSITORY_URL#https://}" HEAD:$TARGET_BRANCH
   only:
     - tags
+    - triggers
