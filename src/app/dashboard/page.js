@@ -15,9 +15,9 @@ export default function Dashboard() {
       const token = localStorage.getItem("token");
       if (!token) router.push("/login");
     }
-  }, [user]);
+  }, [user, router]);
 
-  if (!user) return <p>Loading...</p>;
+  if (typeof user === 'undefined' || user === null) return null;
 
   return (
     <div className="min-h-full">

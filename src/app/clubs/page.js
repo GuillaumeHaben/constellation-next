@@ -17,7 +17,7 @@ export default function Clubs() {
       const token = localStorage.getItem("token");
       if (!token) router.push("/login");
     }
-  }, [user]);
+  }, [user, router]);
 
   if (!user) return <p>Loading...</p>;
 

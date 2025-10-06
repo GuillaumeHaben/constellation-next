@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Signup() {
 
@@ -44,13 +46,15 @@ export default function Signup() {
     <>
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <a href="/">
-            <img
+          <Link href="/">
+            <Image
               alt="Constellation"
               src="/icon.png"
               className="mx-auto h-10 w-auto"
+              width={64}
+              height={64}
             />
-          </a>
+          </Link>
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Create your account</h2>
         </div>
 

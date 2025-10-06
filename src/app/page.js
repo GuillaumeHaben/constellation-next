@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Parisienne } from "next/font/google";
+import Link from "next/link";
+import Image from "next/image";
 
 const parisienne = Parisienne({
   weight: '400',
@@ -19,14 +21,16 @@ export default function Home() {
       <header className="absolute inset-x-0 top-0 z-50">
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
-            <a href="/" className="-m-1.5 p-1.5">
-              <span className="sr-only">Constellation</span>
-              <img
-                alt="Constellation"
-                src="/icon.png"
-                className="h-8 w-auto"
-              />
-            </a>
+            <Link href="/" className="-m-1.5 p-1.5">
+                <span className="sr-only">Constellation</span>
+                <Image
+                  alt="Constellation"
+                  src="/icon.png"
+                  width={32}
+                  height={32}
+                  className="h-8 w-auto"
+                />
+            </Link>
           </div>
           <div className="flex lg:hidden">
             <button
@@ -55,10 +59,12 @@ export default function Home() {
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5">
-                <span className="sr-only">Your Company</span>
-                <img
+                <span className="sr-only">Constellation</span>
+                <Image
                   alt=""
-                  src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                  src="/icon.png"
+                  width={32}
+                  height={32}
                   className="h-8 w-auto"
                 />
               </a>
@@ -93,9 +99,11 @@ export default function Home() {
             <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20">
               Something exciting is about to happen at {" "}
               <span className="inline-flex items-center align-middle">
-                <img
+                <Image
                   alt="ESA logo"
                   src="/esa-logo-white.png"
+                  width={256}
+                  height={256}
                   className="inline-block h-6 w-auto align-middle"
                 />
               </span>

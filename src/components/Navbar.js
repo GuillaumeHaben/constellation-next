@@ -3,7 +3,9 @@
 import { useAuth } from "@/context/AuthContext";
 import { usePathname } from "next/navigation";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import Link from "next/link";
+import Image from "next/image";
 
 const userSample = {
     name: 'Tom Cook',
@@ -12,8 +14,8 @@ const userSample = {
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-    { name: 'Dashboard', href: '/dashboard'},
-    { name: 'Clubs', href: '/clubs'},
+    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Clubs', href: '/clubs' },
 ]
 const userNavigation = [
     { name: 'Your profile', href: '#' },
@@ -39,13 +41,15 @@ export default function NavBar() {
                 <div className="flex h-16 items-center justify-between">
                     <div className="flex items-center">
                         <div className="shrink-0">
-                            <a href="/">
-                                <img
+                            <Link href="/">
+                                <Image
                                     alt="Constellation"
                                     src="/icon.png"
                                     className="size-8"
+                                    width={32}
+                                    height={32}
                                 />
-                            </a>
+                            </Link>
                         </div>
                         <div className="hidden md:block">
                             <div className="ml-10 flex items-baseline space-x-4">
@@ -83,9 +87,11 @@ export default function NavBar() {
                                 <MenuButton className="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                                     <span className="absolute -inset-1.5" />
                                     <span className="sr-only">Open user menu</span>
-                                    <img
+                                    <Image
                                         alt=""
-                                        src={userSample.imageUrl}
+                                        width={32}
+                                        height={32}
+                                        src={"/globe.svg"}
                                         className="size-8 rounded-full outline -outline-offset-1 outline-white/10"
                                     />
                                 </MenuButton>
@@ -146,9 +152,11 @@ export default function NavBar() {
                 <div className="border-t border-white/10 pt-4 pb-3">
                     <div className="flex items-center px-5">
                         <div className="shrink-0">
-                            <img
+                            <Image
                                 alt=""
-                                src={userSample.imageUrl}
+                                width={32}
+                                height={32}
+                                src={"/globe.svg"}
                                 className="size-10 rounded-full outline -outline-offset-1 outline-white/10"
                             />
                         </div>
