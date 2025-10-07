@@ -11,6 +11,7 @@ pages:
   script:
     - npm ci
     - npm run build
+    - npm run export
   artifacts:
     paths:
       - out
