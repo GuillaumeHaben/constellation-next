@@ -1,11 +1,17 @@
+import process from 'node:process';
+
 /** @type {import('next').NextConfig} */
 const isProdPages = process.env.NEXT_PUBLIC_GITLAB_PAGES === '1';
+const PROJECT_NAME = 'constellation';
+
 const nextConfig = {
-    output: 'export',
-    images: { unoptimized: true },
-    basePath: isProdPages ? '/constellation' : '',       // only use basePath on GitLab Pages
-    assetPrefix: isProdPages ? '/constellation/' : '',
-    trailingSlash: true,
+  output: 'export',
+  images: { unoptimized: true },
+  basePath: isProdPages ? `/${PROJECT_NAME}` : '',
+  assetPrefix: isProdPages ? `/${PROJECT_NAME}/` : '',
+  trailingSlash: true,
 };
+
+console.log('NEXT_PUBLIC_GITLAB_PAGES =', process.env.NEXT_PUBLIC_GITLAB_PAGES);
 
 export default nextConfig;
