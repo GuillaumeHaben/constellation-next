@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -10,6 +11,7 @@ export default function Signup() {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,7 +25,7 @@ export default function Signup() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: form.ß, // 👈 auto-use email as username
+          username: form.email, // 👈 auto-use email as username
           email: form.email,
           password: form.password,
         }),
@@ -32,7 +34,7 @@ export default function Signup() {
       const data = await res.json();
 
       if (res.ok) {
-        localStorage.setItem("token", data.jwt);
+        login(data.jwt, data.user);
         router.push("/dashboard");
       } else {
         setError(data.error?.message || "Registration failed");

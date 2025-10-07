@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { usePathname } from "next/navigation";
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton } from '@headlessui/react'
 import { Bars3Icon, UserCircleIcon, XMarkIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import icon from '../../public/icon.png';
 const navigation = [
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Clubs', href: '/clubs' },
+    { name: 'MarketPins', href: '/marketPins' },
 ]
 
 function classNames(...classes) {
@@ -22,9 +23,10 @@ export default function NavBar() {
     const { user, logout } = useAuth();
     if (!user) return null;
 
+    const normalize = (path) => path.replace(/\/$/, '');
     const navWithCurrent = navigation.map(item => ({
         ...item,
-        current: pathname === item.href
+        current: normalize(pathname) === normalize(item.href)
     }));
 
     return (
@@ -103,21 +105,21 @@ export default function NavBar() {
 
             <DisclosurePanel className="md:hidden">
                 <div className="border-t border-white/10 pt-4 pb-3 space-y-4">
-                    <button type="button" className="flex items-center pb-3 pt-3 px-5 w-full text-left hover:bg-white/5 rounded-md cursor-pointer">
+                    <button type="button" className="flex items-center pb-3 pt-3 px-5 w-full text-left rounded-md cursor-pointer group bg-transparent hover:bg-white/5">
                         <div className="shrink-0">
-                            <UserCircleIcon aria-hidden="true" className="size-12 rounded-full" />
+                            <UserCircleIcon aria-hidden="true" className="size-12 rounded-full text-gray-400 group-hover:text-white transition-colors duration-200" />
                         </div>
                         <div className="ml-3">
-                            <div className="text-base/5 font-medium text-white">{"John Doe"}</div>
-                            <div className="text-sm font-medium text-gray-400">{user.email}</div>
+                            <div className="text-base/5 font-medium text-gray-400 group-hover:text-white transition-colors duration-200">{"John Doe"}</div>
+                            <div className="text-sm font-medium text-gray-400 group-hover:text-white transition-colors duration-200">{user.email}</div>
                         </div>
                     </button>
-                    <button type="button" className="flex items-center pb-3 pt-3 px-5 w-full text-left hover:bg-white/5 rounded-md cursor-pointer">
+                    <button type="button" className="flex items-center pb-3 pt-3 px-5 w-full text-left rounded-md cursor-pointer group bg-transparent hover:bg-white/5">
                         <div className="shrink-0">
-                            <Cog6ToothIcon aria-hidden="true" className="size-12 rounded-full" />
+                            <Cog6ToothIcon aria-hidden="true" className="size-12 rounded-full text-gray-400 group-hover:text-white transition-colors duration-200" />
                         </div>
                         <div className="ml-3">
-                            <div className="text-base/5 font-medium text-white">Settings</div>
+                            <div className="text-base/5 font-medium text-gray-400 group-hover:text-white transition-colors duration-200">Settings</div>
                         </div>
                     </button>
                     <button type="button" className="flex items-center pb-6 pt-6 px-7 w-full text-left hover:bg-white/5 rounded-md cursor-pointer">
