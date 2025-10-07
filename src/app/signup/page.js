@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import icon from '../../../public/icon.png';
 
 export default function Signup() {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
@@ -48,7 +49,7 @@ export default function Signup() {
           <Link href="/">
             <Image
               alt="Constellation"
-              src="/icon.png"
+              src={icon}
               className="mx-auto size-16 w-auto"
               width={64}
               height={64}
@@ -128,9 +129,9 @@ export default function Signup() {
 
           <p className="mt-10 text-center text-sm/6 text-gray-400">
             Already a ⭐?{' '}
-            <a href="/login" className="font-semibold text-indigo-400 hover:text-indigo-300">
+            <Link href="/login" className="font-semibold text-indigo-400 hover:text-indigo-300">
               Sign in to your account
-            </a>
+            </Link>
           </p>
         </div>
       </div>

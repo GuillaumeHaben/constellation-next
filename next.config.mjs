@@ -12,6 +12,4 @@ const nextConfig = {
   trailingSlash: true,
 };
 
-console.log('NEXT_PUBLIC_GITLAB_PAGES =', process.env.NEXT_PUBLIC_GITLAB_PAGES);
-
 export default nextConfig;

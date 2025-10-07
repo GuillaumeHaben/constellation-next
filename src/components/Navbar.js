@@ -6,6 +6,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, UserCircleIcon, XMarkIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
+import icon from '../../public/icon.png';
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard' },
@@ -35,7 +36,7 @@ export default function NavBar() {
                             <Link href="/">
                                 <Image
                                     alt="Constellation"
-                                    src="/icon.png"
+                                    src={icon}
                                     className="size-10"
                                     width={32}
                                     height={32}
@@ -120,9 +121,9 @@ export default function NavBar() {
                         </div>
                     </button>
                     <button type="button" className="flex items-center pb-6 pt-6 px-7 w-full text-left hover:bg-white/5 rounded-md cursor-pointer">
-                        <a href="" onClick={logout} className="text-base/5 font-medium text-white">
+                        <Link href="" onClick={logout} className="text-base/5 font-medium text-white">
                             Sign out <span aria-hidden="true">&rarr;</span>
-                        </a>
+                        </Link>
                     </button>
                 </div>
             </DisclosurePanel>

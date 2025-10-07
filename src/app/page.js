@@ -7,6 +7,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Parisienne } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
+import esaLogo from '../../public/esa-logo-white.png';
+import icon from '../../public/icon.png';
 
 const parisienne = Parisienne({
   weight: '400',
@@ -26,7 +28,7 @@ export default function Home() {
               <span className="sr-only">Constellation</span>
               <Image
                 alt="Constellation"
-                src="/icon.png"
+                src={icon}
                 width={32}
                 height={32}
                 className="h-10 w-auto"
@@ -45,13 +47,13 @@ export default function Home() {
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             {user ? (
-              <a href="/dashboard" className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">
+              <Link href="/dashboard" className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">
                 My dashboard <span aria-hidden="true">&rarr;</span>
-              </a>
+              </Link>
             ) : (
-              <a href="/login" className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">
+              <Link href="/login" className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">
                 Log in <span aria-hidden="true">&rarr;</span>
-              </a>
+              </Link>
             )}
           </div>
         </nav>
@@ -59,16 +61,16 @@ export default function Home() {
           <div className="fixed inset-0 z-50" />
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
             <div className="flex items-center justify-between">
-              <a href="#" className="-m-1.5 p-1.5">
+              <Link href="/" className="-m-1.5 p-1.5">
                 <span className="sr-only">Constellation</span>
                 <Image
                   alt=""
-                  src="/icon.png"
+                  src={icon}
                   width={32}
                   height={32}
                   className="h-8 w-auto"
                 />
-              </a>
+              </Link>
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
@@ -102,7 +104,7 @@ export default function Home() {
               <span className="inline-flex items-center align-middle">
                 <Image
                   alt="ESA logo"
-                  src="/esa-logo-white.png"
+                  src={esaLogo}
                   width={256}
                   height={256}
                   className="inline-block h-6 w-auto align-middle"
@@ -118,12 +120,12 @@ export default function Home() {
               Connecting all the ⭐ together
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <a
+              <Link
                 href="#"
                 className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
                 Get notified
-              </a>
+              </Link>
               <a target="_blank" href="https://docs.google.com/document/d/1cWwAar7skvMQOlLjMmb8TLNhKaZcticAWuBFdh-cb9g/edit?usp=drive_link" className="text-sm/6 font-semibold text-white">
                 Learn more <span aria-hidden="true">→</span>
               </a>

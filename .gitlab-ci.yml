@@ -9,7 +9,6 @@ stages:
 pages:
   stage: build
   script:
-    - echo $NEXT_PUBLIC_GITLAB_PAGES
     - npm ci
     - npm run build
   artifacts:
