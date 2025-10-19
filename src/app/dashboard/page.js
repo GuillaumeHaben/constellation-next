@@ -2,8 +2,6 @@
 
 import { useAuth } from "@/context/AuthContext";
 import NavBar from "@/components/Navbar";
-import { Button } from "@material-tailwind/react";
-import { TableWithoutBorder } from "./table";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -13,7 +11,7 @@ export default function Dashboard() {
     <div className="min-h-full">
       <NavBar />
 
-      <header className="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+      <header className="relative bg-[#003247] after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard</h1>
         </div>
@@ -22,10 +20,6 @@ export default function Dashboard() {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
           <h1>Welcome, {user.username}!</h1>
-          <br />
-          <Button className="cursor-pointer" color="amber">Click me</Button>
-          <br /><br />
-          <TableWithoutBorder />
         </div>
       </main>
     </div>

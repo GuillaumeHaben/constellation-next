@@ -3,7 +3,7 @@
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/context/ProtectedRoute";
 import { usePathname } from "next/navigation";
-import { ThemeProvider } from "@material-tailwind/react";
+import { HeroUIProvider } from "@heroui/react";
 import "./globals.css";
 
 export default function RootLayout({ children }) {
@@ -17,14 +17,14 @@ export default function RootLayout({ children }) {
   return (
     <html className={"h-full bg-gray-900 dark"} suppressHydrationWarning>
       <head>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" async></script>
       </head>
       <body className={"h-full dark"}>
-        <ThemeProvider>
+        <HeroUIProvider>
           <AuthProvider>
             {isPublic ? children : <ProtectedRoute>{children}</ProtectedRoute>}
           </AuthProvider>
-        </ThemeProvider>
+        </HeroUIProvider>
       </body>
     </html>
   );
