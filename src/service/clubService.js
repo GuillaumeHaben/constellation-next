@@ -25,20 +25,20 @@ export const clubService = {
 
   create: async (clubData, token) => {
     const client = getClient(token);
-    const newClub = await client.collection(RESOURCE).create( clubData );
+    const newClub = await client.collection(RESOURCE).create(clubData);
     return newClub;
   },
 
-  updateByDocumentId: async (documentId, clubData, token) => {
+  updateByDocumentId: async (documentId, name, description, token) => {
     const client = getClient(token);
-    const updated = await client.collection(RESOURCE).update({ id: documentId, data: clubData });
+    const updated = await client.collection(RESOURCE).update(documentId, {name, description});
     return updated;
   },
 
   removeByDocumentId: async (documentId, token) => {
     const client = getClient(token);
     console.log("Removing club with documentId:", documentId);
-    await client.collection(RESOURCE).delete( documentId );
+    await client.collection(RESOURCE).delete(documentId);
     return true;
   },
 };

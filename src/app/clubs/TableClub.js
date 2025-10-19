@@ -40,38 +40,66 @@ const columns = [
 export function TableClub() {
   const [clubs, setClubs] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedClub, setSelectedClub] = useState(null); // for editing
 
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     clubService.getAll(token).then(setClubs).catch(console.error);
   }, []);
 
-  // Create a new club
   const handleCreate = async (name, description) => {
     try {
-      const created = await clubService.create({ name: name, description: description }, token);
-      setClubs((prev) => [...prev, created.data]); // add new club to state
+      const created = await clubService.create({ name, description }, token);
+      setClubs((prev) => [...prev, created.data]);
     } catch (err) {
       console.error("Failed to create club:", err);
     }
   };
 
-  // Remove a club
+  const handleUpdate = async (documentId, name, description) => {
+    try {
+      const updated = await clubService.updateByDocumentId(documentId, name, description, token);
+      setClubs((prev) =>
+        prev.map((club) =>
+          club.documentId === documentId ? updated.data : club
+        )
+      );
+    } catch (err) {
+      console.error("Failed to update club:", err);
+    }
+  };
+
   const handleRemove = async (documentId) => {
     try {
       await clubService.removeByDocumentId(documentId, token);
-      setClubs((prev) => prev.filter((c) => c.documentId !== documentId)); // use documentId
+      setClubs((prev) => prev.filter((c) => c.documentId !== documentId));
     } catch (err) {
       console.error("Failed to remove club:", err);
     }
   };
+
   return (
     <>
-      <Button color="success" onPress={() => setModalOpen(true)}>Create a club</Button>
-      <ModalClub isOpen={isModalOpen} onOpenChange={setModalOpen} onCreate={handleCreate}></ModalClub>
+      <Button
+        color="success"
+        onPress={() => {
+          setSelectedClub(null); // reset for create
+          setModalOpen(true);
+        }}
+      >
+        Create a club
+      </Button>
+
+      <ModalClub
+        isOpen={isModalOpen}
+        onOpenChange={setModalOpen}
+        onCreate={handleCreate}
+        onUpdate={handleUpdate}
+        initialData={selectedClub}
+      />
+
       <br /><br />
       <Table aria-label="Example table with dynamic content">
         <TableHeader columns={columns}>
@@ -79,28 +107,27 @@ export function TableClub() {
         </TableHeader>
         <TableBody items={clubs}>
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.documentId}>
               <TableCell>{item.id}</TableCell>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.description}</TableCell>
               <TableCell>{item.creation}</TableCell>
               <TableCell>
                 <div className="relative flex items-center gap-2">
-                  <Tooltip content="Edit user" placement="bottom">
-                    <Button isIconOnly onPress={() => setModalOpen(true)}>
-                      <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-
-                        <PencilSquareIcon
-                          className="h-5 w-5 text-yellow-500" />
-                      </span>
+                  <Tooltip content="Edit club" placement="bottom">
+                    <Button
+                      isIconOnly
+                      onPress={() => {
+                        setSelectedClub(item);
+                        setModalOpen(true);
+                      }}
+                    >
+                      <PencilSquareIcon className="h-5 w-5 text-yellow-500" />
                     </Button>
                   </Tooltip>
-                  <Tooltip content="Delete user" placement="bottom">
+                  <Tooltip content="Delete club" placement="bottom">
                     <Button isIconOnly onClick={() => handleRemove(item.documentId)}>
-                      <span className="text-lg text-danger cursor-pointer active:opacity-50" >
-                        <TrashIcon
-                          className="h-5 w-5 text-red-500" />
-                      </span>
+                      <TrashIcon className="h-5 w-5 text-red-500" />
                     </Button>
                   </Tooltip>
                 </div>
