@@ -9,6 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import esaLogo from '../../public/esa-logo-white.png';
 import icon from '../../public/icon.png';
+import Galaxy from "../components/Galaxy";
 
 const parisienne = Parisienne({
   weight: '400',
@@ -18,9 +19,10 @@ const parisienne = Parisienne({
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { user } = useAuth();
-  
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
+    <div style={{zIndex: 10, width: "100%", position: 'absolute', top: "50%", left: "50%", transform: "translate(-50%, -50%)"}} 
+    className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
       <header className="absolute inset-x-0 top-0 z-50">
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
@@ -145,6 +147,7 @@ export default function Home() {
           />
         </div>
       </div>
+      <Galaxy />
     </div>
   )
 }

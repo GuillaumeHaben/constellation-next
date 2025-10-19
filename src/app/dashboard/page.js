@@ -2,11 +2,13 @@
 
 import { useAuth } from "@/context/AuthContext";
 import NavBar from "@/components/Navbar";
+import { Button } from "@material-tailwind/react";
+import { TableWithoutBorder } from "./table";
 
 export default function Dashboard() {
   const { user } = useAuth();
   if (!user) return null;
-  
+
   return (
     <div className="min-h-full">
       <NavBar />
@@ -20,7 +22,10 @@ export default function Dashboard() {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
           <h1>Welcome, {user.username}!</h1>
-
+          <br />
+          <Button className="cursor-pointer" color="amber">Click me</Button>
+          <br /><br />
+          <TableWithoutBorder />
         </div>
       </main>
     </div>
