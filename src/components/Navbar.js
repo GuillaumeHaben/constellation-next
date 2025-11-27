@@ -11,6 +11,7 @@ import icon from '../../public/icon.png';
 const navigation = [
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Clubs', href: '/clubs' },
+    { name: 'Users', href: '/users' },
     { name: 'MarketPins', href: '/marketPins' },
 ]
 
@@ -69,20 +70,22 @@ export default function NavBar() {
                         <div className="ml-4 flex items-center md:ml-6">
 
                             <Menu as="div" className="relative ml-3">
-                                <MenuButton className="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer">
-                                    <span className="absolute -inset-1.5" />
-                                    <span className="sr-only">Open user menu</span>
-                                    <UserCircleIcon aria-hidden="true" className="size-10 rounded-full" />
-                                </MenuButton>
+                                <Link href={`/profile`}>
+                                    <MenuButton className="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer">
+                                        <span className="absolute -inset-1.5" />
+                                        <span className="sr-only">Open user menu</span>
+                                        <UserCircleIcon aria-hidden="true" className="size-10 rounded-full" />
+                                    </MenuButton>
+                                </Link>
                             </Menu>
 
-                            <Menu as="div" className="relative ml-3">
+                            {/* <Menu as="div" className="relative ml-3">
                                 <MenuButton className="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer">
                                     <span className="absolute -inset-1.5" />
                                     <span className="sr-only">Open user menu</span>
                                     <Cog6ToothIcon aria-hidden="true" className="size-10 rounded-full" />
                                 </MenuButton>
-                            </Menu>
+                            </Menu> */}
 
                             <div className="ml-4 flex items-center md:ml-6">
                                 <a href="" onClick={logout} className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">

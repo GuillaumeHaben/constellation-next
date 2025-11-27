@@ -37,7 +37,7 @@ const columns = [
   },
 ];
 
-export function TableClub() {
+export function TableClubs() {
   const [clubs, setClubs] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedClub, setSelectedClub] = useState(null); // for editing

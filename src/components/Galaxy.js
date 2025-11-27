@@ -21,7 +21,7 @@ const Galaxy = () => {
         mountRef.current.appendChild(renderer.domElement);
 
         // Parameters
-        const starCount = 1000;
+        const starCount = 500;
         const innerRadius = 2;
         const outerRadius = 10;
         const positions = [];

@@ -1,10 +1,10 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { TableClubs } from "./TableClubs";
+import { TableUsers } from "./TableUsers";
 import NavBar from "@/components/Navbar";
 
-export default function Clubs() {
+export default function Users() {
   const { user } = useAuth();
   if (!user) return null;
 
@@ -13,12 +13,12 @@ export default function Clubs() {
       <NavBar />
       <header className="relative bg-[#003247] after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-white">Clubs</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Users</h1>
         </div>
       </header>
       <main>
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <TableClubs />
+          <TableUsers />
         </div>
       </main>
     </div>
