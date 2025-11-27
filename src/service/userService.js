@@ -29,32 +29,22 @@ export const userService = {
     return res.data.length > 0 ? res.data[0] : null;
   },
 
+  getBySlug: async (slug, token) => {
+    const client = getClient(token);
+    const res = await client.collection(RESOURCE).find({ filters: { slug } });
+    return res.data.length > 0 ? res.data[0] : null;
+  },
+
   create: async (userData, token) => {
     const client = getClient(token);
     const res = await client.collection(RESOURCE).create({ data: userData });
     return res.data;
   },
 
-  updateByEmail: async (email, { slug, firstName, lastName }, token) => {
-    // const client = getClient(token);
-    // // 1️⃣ Find user by email
-    // const usersRes = await client.collection("users").find({
-    //   filters: { email },
-    // });
-
-    // if (!usersRes.data || usersRes.data.length === 0) {
-    //   throw new Error(`User with email ${email} not found`);
-    // }
-    // const userId = usersRes.data[0].id; // numeric ID of the user
-    // console.log(userId);
-
-    // // 2️⃣ Update user by ID
-    // const updated = await client.collection("users").update({
-    //   id: userId,
-    //   data: { firstName, lastName, slug }
-    // });
-
-    // return updated;
+  update: async (id, userData, token) => {
+    const client = getClient(token);
+    const res = await client.collection(RESOURCE).update(id, { data: userData });
+    return res.data;
   },
 
   remove: async (id, token) => {

@@ -22,7 +22,6 @@ export default function Signup() {
     setError("");
 
     try {
-      // 1️⃣ Register user with default endpoint
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/local/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -30,6 +29,9 @@ export default function Signup() {
           username: form.email, // using email as username
           email: form.email,
           password: form.password,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          slug: `${form.firstName.toLowerCase()}-${form.lastName.toLowerCase()}`,
         }),
       });
 
@@ -40,21 +42,18 @@ export default function Signup() {
         return;
       }
 
-      // 3️⃣ Update the user with extra fields
-      const slug = `${form.firstName.toLowerCase()}-${form.lastName.toLowerCase()}`;
-      const firstName = form.firstName;
-      const lastName = form.lastName;
-      const email = form.email;
+      console.log("Registration successful:", data);
 
-      // 4️⃣ Log in user in context
       login(data.jwt, data.user);
       const token = data.jwt;
 
       try {
-        // This doens't work, can't find user by email
-        await userService.updateByEmail(email, {slug, firstName, lastName}, token);
+        console.log("Updating user with ID:", data.user.id);
+        console.log("Update data:", { slug, firstName, lastName });
+        const updatedUser = await userService.update(data.user.id, { slug, firstName, lastName }, token);
+        console.log("User updated successfully:", updatedUser);
       } catch (err) {
-        console.error("Failed to udpate user:", err);
+        console.error("Failed to update user:", err);
       }
 
       router.push("/dashboard");

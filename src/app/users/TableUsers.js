@@ -1,4 +1,4 @@
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, EyeIcon } from "@heroicons/react/24/solid";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import {
   Button,
@@ -77,6 +77,11 @@ export function TableUsers() {
                   <Tooltip content="Delete user" placement="bottom">
                     <Button isIconOnly onPress={() => handleRemove(item.id)}>
                       <TrashIcon className="h-5 w-5 text-red-500" />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip content="View profile" placement="bottom">
+                    <Button isIconOnly as="a" href={`/user/${item.slug}`}>
+                      <EyeIcon className="h-5 w-5 text-blue-500" />
                     </Button>
                   </Tooltip>
                 </div>

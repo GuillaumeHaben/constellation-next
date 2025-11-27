@@ -3,19 +3,21 @@
 import { useAuth } from "@/context/AuthContext";
 import { userService } from "@/service/userService";
 import NavBar from "@/components/Navbar";
-import { use } from 'react'; 
+import { use, useEffect, useState } from 'react';
 
-export default async function User({ params}) {
-  const { id } = use(params);
+export default function User({ params }) {
+  const { slug } = use(params);
   const { user } = useAuth();
+  const [targetUser, setTargetUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (slug && token) {
+      userService.getBySlug(slug, token).then(setTargetUser).catch(console.error);
+    }
+  }, [slug]);
 
   if (!user) return null;
-  console.log(user);
-
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  const targetUser =  await userService.getUserById(id, token);
-
-  !!targetUser && console.log(targetUser);
 
   return (
     <div className="min-h-full">
@@ -27,10 +29,14 @@ export default async function User({ params}) {
       </header>
       <main>
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-
-          <h1>Welcome {user.email}, this is the profile of: {targetUser.id}!</h1>
-          <h2>Page slug: {id}.</h2>
-          
+          {targetUser ? (
+            <>
+              <h1>Welcome {user.email}, this is the profile of: {targetUser.firstName} {targetUser.lastName}!</h1>
+              <h2>Page slug: {slug}.</h2>
+            </>
+          ) : (
+            <p>Loading user profile...</p>
+          )}
         </div>
       </main>
     </div>

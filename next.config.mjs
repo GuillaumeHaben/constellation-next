@@ -5,10 +5,10 @@ const isProdPages = process.env.NEXT_PUBLIC_GITLAB_PAGES === '1';
 const PROJECT_NAME = 'constellation';
 
 const nextConfig = {
-  output: 'export',
+  // output: 'export',
   images: { unoptimized: true },
-  basePath: isProdPages ? `/${PROJECT_NAME}` : '',
-  assetPrefix: isProdPages ? `/${PROJECT_NAME}/` : '',
+  // basePath: isProdPages ? `/${PROJECT_NAME}` : '',
+  // assetPrefix: isProdPages ? `/${PROJECT_NAME}/` : '',
   trailingSlash: true,
 };
 
