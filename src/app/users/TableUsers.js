@@ -1,4 +1,6 @@
-import { PencilSquareIcon, EyeIcon } from "@heroicons/react/24/solid";
+"use client";
+
+import { EyeIcon } from "@heroicons/react/24/solid";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import {
   Button,

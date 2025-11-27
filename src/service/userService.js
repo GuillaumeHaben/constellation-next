@@ -32,9 +32,7 @@ export const userService = {
 
   getBySlug: async (slug, token) => {
     const client = getClient(token);
-    console.log("Getting user by slug:", slug);
     const res = await client.collection(RESOURCE).find({ filters: { slug } });
-    console.log("User found:", res);
     if (!res) { return null };
     return res.length > 0 ? res[0] : null;
   },
@@ -53,7 +51,6 @@ export const userService = {
 
   remove: async (id, token) => {
     const client = getClient(token);
-    console.log("Removing user with id:", id);
     await client.collection(RESOURCE).delete(id);
     return true;
   },

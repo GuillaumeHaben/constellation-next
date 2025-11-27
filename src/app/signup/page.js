@@ -56,7 +56,7 @@ export default function Signup() {
         console.error("Failed to update user:", err);
       }
 
-      router.push("/dashboard");
+      router.push("/home");
 
     } catch (err) {
       console.error(err);

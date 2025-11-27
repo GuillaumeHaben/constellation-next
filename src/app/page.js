@@ -21,8 +21,8 @@ export default function Home() {
   const { user } = useAuth();
 
   return (
-    <div style={{zIndex: 10, width: "100%", position: 'absolute', top: "50%", left: "50%", transform: "translate(-50%, -50%)"}} 
-    className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
+    <div style={{ zIndex: 10, width: "100%", position: 'absolute', top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+      className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
       <header className="absolute inset-x-0 top-0 z-50">
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
@@ -49,8 +49,8 @@ export default function Home() {
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             {user ? (
-              <Link href="/dashboard" className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">
-                My dashboard <span aria-hidden="true">&rarr;</span>
+              <Link href="/home" className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">
+                Home <span aria-hidden="true">&rarr;</span>
               </Link>
             ) : (
               <Link href="/login" className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">

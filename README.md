@@ -1,6 +1,6 @@
 # Constellation
 
-Constellation is a modern web application built with Next.js and Strapi, featuring 3D visualizations and smooth animations.
+Constellation is ESA's social platform, built with Next.js and Strapi.
 
 ## Tech Stack
 
@@ -8,7 +8,6 @@ Constellation is a modern web application built with Next.js and Strapi, featuri
 -   **UI Library**: [React 19](https://react.dev/)
 -   **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
 -   **CMS**: [Strapi](https://strapi.io/)
--   **Animations & 3D**: [Framer Motion](https://www.framer.com/motion/), [Three.js](https://threejs.org/)
 
 ## Prerequisites
 

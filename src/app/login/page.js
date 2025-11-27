@@ -31,7 +31,7 @@ export default function Login() {
 
       if (res.ok) {
         login(data.jwt, data.user);
-        router.push("/dashboard");
+        router.push("/home");
       } else {
         setError(data.error?.message || "Invalid credentials");
       }

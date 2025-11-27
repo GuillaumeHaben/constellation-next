@@ -9,7 +9,7 @@ import Image from "next/image";
 import icon from '../../public/icon.png';
 
 const navigation = [
-    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Home', href: '/home' },
     { name: 'Clubs', href: '/clubs' },
     { name: 'Users', href: '/users' },
     { name: 'MarketPins', href: '/marketPins' },
