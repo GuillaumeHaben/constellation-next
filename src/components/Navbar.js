@@ -70,7 +70,7 @@ export default function NavBar() {
                         <div className="ml-4 flex items-center md:ml-6">
 
                             <Menu as="div" className="relative ml-3">
-                                <Link href={`/profile`}>
+                                <Link href={`/user/${user.slug}`}>
                                     <MenuButton className="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
@@ -112,10 +112,16 @@ export default function NavBar() {
                         <div className="shrink-0">
                             <UserCircleIcon aria-hidden="true" className="size-12 rounded-full text-gray-400 group-hover:text-white transition-colors duration-200" />
                         </div>
-                        <div className="ml-3">
-                            <div className="text-base/5 font-medium text-gray-400 group-hover:text-white transition-colors duration-200">{"John Doe"}</div>
-                            <div className="text-sm font-medium text-gray-400 group-hover:text-white transition-colors duration-200">{user.email}</div>
-                        </div>
+                        <Link href={`/user/${user.slug}`}>
+                            <div className="ml-3">
+                                <div className="text-base/5 font-medium text-gray-400 group-hover:text-white transition-colors duration-200">
+                                    {user.firstName} {user.lastName}
+                                </div>
+                                <div className="text-sm font-medium text-gray-400 group-hover:text-white transition-colors duration-200">
+                                    {user.email}
+                                </div>
+                            </div>
+                        </Link>
                     </button>
                     <button type="button" className="flex items-center pb-3 pt-3 px-5 w-full text-left rounded-md cursor-pointer group bg-transparent hover:bg-white/5">
                         <div className="shrink-0">
@@ -126,9 +132,9 @@ export default function NavBar() {
                         </div>
                     </button>
                     <button type="button" className="flex items-center pb-6 pt-6 px-7 w-full text-left hover:bg-white/5 rounded-md cursor-pointer">
-                        <Link href="" onClick={logout} className="text-base/5 font-medium text-white">
+                        <button onClick={logout} className="text-base/5 font-medium text-white">
                             Sign out <span aria-hidden="true">&rarr;</span>
-                        </Link>
+                        </button>
                     </button>
                 </div>
             </DisclosurePanel>

@@ -31,11 +31,11 @@ export default function User({ params }) {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           {targetUser ? (
             <>
-              <h1>Welcome {user.email}, this is the profile of: {targetUser.firstName} {targetUser.lastName}!</h1>
-              <h2>Page slug: {slug}.</h2>
+              <h1>Welcome {user.firstName} {user.lastName}, this is the profile of: {targetUser.firstName} {targetUser.lastName}!</h1>
+              <h2>Page slug: /user/{slug}.</h2>
             </>
           ) : (
-            <p>Loading user profile...</p>
+            <p>User profile not found.</p>
           )}
         </div>
       </main>

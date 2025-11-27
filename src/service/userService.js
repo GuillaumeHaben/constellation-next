@@ -26,13 +26,17 @@ export const userService = {
   getByEmailAddress: async (email, token) => {
     const client = getClient(token);
     const res = await client.collection(RESOURCE).find({ filters: { email } });
+    if (!res || !res.data) return null;
     return res.data.length > 0 ? res.data[0] : null;
   },
 
   getBySlug: async (slug, token) => {
     const client = getClient(token);
+    console.log("Getting user by slug:", slug);
     const res = await client.collection(RESOURCE).find({ filters: { slug } });
-    return res.data.length > 0 ? res.data[0] : null;
+    console.log("User found:", res);
+    if (!res) { return null };
+    return res.length > 0 ? res[0] : null;
   },
 
   create: async (userData, token) => {
