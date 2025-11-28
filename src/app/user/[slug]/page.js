@@ -30,6 +30,32 @@ const COUNTRIES = [
   "Norway", "Poland", "Portugal", "Romania", "Slovenia", "Spain", "Sweden",
   "Switzerland", "United Kingdom"
 ];
+const COUNTRY_EMOJIS = {
+  "Austria": "🇦🇹",
+  "Belgium": "🇧🇪",
+  "Czech Republic": "🇨🇿",
+  "Denmark": "🇩🇰",
+  "Estonia": "🇪🇪",
+  "Finland": "🇫🇮",
+  "France": "🇫🇷",
+  "Germany": "🇩🇪",
+  "Greece": "🇬🇷",
+  "Hungary": "🇭🇺",
+  "Ireland": "🇮🇪",
+  "Italy": "🇮🇹",
+  "Luxembourg": "🇱🇺",
+  "Netherlands": "🇳🇱",
+  "Norway": "🇳🇴",
+  "Poland": "🇵🇱",
+  "Portugal": "🇵🇹",
+  "Romania": "🇷🇴",
+  "Slovenia": "🇸🇮",
+  "Spain": "🇪🇸",
+  "Sweden": "🇸🇪",
+  "Switzerland": "🇨🇭",
+  "United Kingdom": "🇬🇧"
+};
+
 const POSITIONS = ["Intern", "YGT", "IRF", "JP", "Staff", "Contractor", "Visiting researcher"];
 
 export default function User({ params }) {
@@ -87,7 +113,7 @@ export default function User({ params }) {
       <NavBar />
       <header className="relative bg-[#003247] after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-white">User profile</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Profile</h1>
           <BreadCrumbs currentPage={"user/" + slug} targetUser={targetUser}></BreadCrumbs>
         </div>
       </header>
@@ -133,7 +159,7 @@ export default function User({ params }) {
                     <h3 className="text-xl font-bold text-white mb-6">Profile Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <ProfileField label="Birthday" value={targetUser.birthday} />
-                      <ProfileField label="Country" value={targetUser.country} />
+                      <ProfileField label="Country" value={COUNTRY_EMOJIS[targetUser.country] + " " + targetUser.country} />
                       <ProfileField label="ESA Site" value={targetUser.esaSite} />
                       <ProfileField label="Directorate" value={targetUser.directorate} />
                       <ProfileField label="Position" value={targetUser.position} />
