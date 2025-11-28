@@ -44,9 +44,25 @@ export const userService = {
   },
 
   update: async (id, userData, token) => {
-    const client = getClient(token);
-    const res = await client.collection(RESOURCE).update(id, { data: userData });
-    return res.data;
+    // For users, we need to use the direct API endpoint, not the collection method
+    const response = await fetch(`http://localhost:1337/api/users/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('Update failed:', error);
+      throw new Error(error.error?.message || 'Failed to update user');
+    }
+
+    const data = await response.json();
+    console.log('Update successful:', data);
+    return data;
   },
 
   remove: async (id, token) => {
