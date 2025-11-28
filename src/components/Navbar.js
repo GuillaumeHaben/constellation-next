@@ -7,11 +7,14 @@ import { Bars3Icon, UserCircleIcon, XMarkIcon, Cog6ToothIcon } from '@heroicons/
 import Link from "next/link";
 import Image from "next/image";
 import icon from '../../public/icon.png';
+import { Avatar } from "@heroui/react";
+import { getProfilePictureUrl } from "@/utils/media";
 
 const navigation = [
     { name: 'Home', href: '/home' },
-    { name: 'Clubs', href: '/clubs' },
     { name: 'Users', href: '/users' },
+    { name: 'Clubs', href: '/clubs' },
+    { name: 'Map', href: '/map' },
     { name: 'MarketPins', href: '/marketPins' },
 ]
 
@@ -70,24 +73,25 @@ export default function NavBar() {
                         <div className="ml-4 flex items-center md:ml-6">
 
                             <Menu as="div" className="relative ml-3">
-                                <Link href={`/user/${user.slug}`}>
-                                    <MenuButton className="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer">
+                                <Link href={`/user/${user.slug}`} className="flex items-center gap-3">
+                                    <MenuButton className="relative flex items-center gap-3 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
-                                        <UserCircleIcon aria-hidden="true" className="size-10 rounded-full" />
+                                        <Avatar
+                                            src={getProfilePictureUrl(user)}
+                                            className="w-8 h-8 mr-1"
+                                            isBordered
+                                            radius="full"
+                                            color="default"
+                                        />
+                                        <span className="text-sm font-medium text-white">
+                                            {user.firstName} {user.lastName}
+                                        </span>
                                     </MenuButton>
                                 </Link>
                             </Menu>
 
-                            {/* <Menu as="div" className="relative ml-3">
-                                <MenuButton className="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer">
-                                    <span className="absolute -inset-1.5" />
-                                    <span className="sr-only">Open user menu</span>
-                                    <Cog6ToothIcon aria-hidden="true" className="size-10 rounded-full" />
-                                </MenuButton>
-                            </Menu> */}
-
-                            <div className="ml-4 flex items-center md:ml-6">
+                            <div className="ml-4 flex items-center md:ml-8">
                                 <a href="" onClick={logout} className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">
                                     Sign out <span aria-hidden="true">&rarr;</span>
                                 </a>
@@ -110,7 +114,13 @@ export default function NavBar() {
                 <div className="border-t border-white/10 pt-4 pb-3 space-y-4">
                     <button type="button" className="flex items-center pb-3 pt-3 px-5 w-full text-left rounded-md cursor-pointer group bg-transparent hover:bg-white/5">
                         <div className="shrink-0">
-                            <UserCircleIcon aria-hidden="true" className="size-12 rounded-full text-gray-400 group-hover:text-white transition-colors duration-200" />
+                            <Avatar
+                                src={getProfilePictureUrl(user)}
+                                className="w-10 h-10"
+                                isBordered
+                                radius="full"
+                                color="default"
+                            />
                         </div>
                         <Link href={`/user/${user.slug}`}>
                             <div className="ml-3">

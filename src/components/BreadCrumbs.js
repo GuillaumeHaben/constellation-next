@@ -21,11 +21,6 @@ export default function BreadCrumbs({ currentPage, targetUser }) {
                     Users
                 </BreadcrumbItem>
             )}
-            {currentPage === "marketPins" && (
-                <BreadcrumbItem key="marketPins" isCurrent={true}>
-                    MarketPins
-                </BreadcrumbItem>
-            )}
             {currentPage?.startsWith("user/") && (
                 <BreadcrumbItem key="users" isCurrent={false}>
                     Users
@@ -34,6 +29,16 @@ export default function BreadCrumbs({ currentPage, targetUser }) {
             {currentPage?.startsWith("user/") && (
                 <BreadcrumbItem key={currentPage} isCurrent={true}>
                     {targetUser?.firstName} {targetUser?.lastName}
+                </BreadcrumbItem>
+            )}
+            {currentPage === "marketPins" && (
+                <BreadcrumbItem key="marketPins" isCurrent={true}>
+                    MarketPins
+                </BreadcrumbItem>
+            )}
+            {currentPage === "Map" && (
+                <BreadcrumbItem key="map" isCurrent={true}>
+                    Map
                 </BreadcrumbItem>
             )}
         </Breadcrumbs>

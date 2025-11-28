@@ -69,3 +69,16 @@ The project follows a standard Next.js App Router structure:
 -   `npm run build`: Builds the application for production.
 -   `npm start`: Starts the production server.
 -   `npm run lint`: Runs ESLint to check for code quality issues.
+
+## Roadmap
+
+- [x] (Feature) Add user profiles
+- [ ] (Feature) Add profile picture
+- [ ] (Feature) Add map
+- [ ] (Feature) Think about mobile support
+- [ ] (Feature) Add admin panel
+- [ ] (Security) Update collection by separating User and User Profile collections https://www.youtube.com/watch?v=jGvyGEw59jE
+- [ ] (Style) Add dark mode
+- [ ] (Style) Update logo
+- [ ] (Style) Update colors
+- [ ] (Compliance) Add GDPR notice

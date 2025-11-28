@@ -13,26 +13,31 @@ const getClient = (token) =>
 export const userService = {
   getAll: async (token) => {
     const client = getClient(token);
-    const res = await client.collection(RESOURCE).find();
+    const res = await client.collection(RESOURCE).find({
+      populate: ['profilePicture'],
+      pagination: {
+        limit: 100 // Fetch up to 100 users to ensure client-side sorting works for a reasonable set
+      }
+    });
     return res; // array of users with documentId, id, attributes
   },
 
   getUserById: async (userId, token) => {
     const client = getClient(token);
-    const res = await client.collection(RESOURCE).findOne({ id: userId });
+    const res = await client.collection(RESOURCE).findOne({ id: userId, populate: ['profilePicture'] });
     return res; // single user object
   },
 
   getByEmailAddress: async (email, token) => {
     const client = getClient(token);
-    const res = await client.collection(RESOURCE).find({ filters: { email } });
+    const res = await client.collection(RESOURCE).find({ filters: { email }, populate: ['profilePicture'] });
     if (!res || !res.data) return null;
     return res.data.length > 0 ? res.data[0] : null;
   },
 
   getBySlug: async (slug, token) => {
     const client = getClient(token);
-    const res = await client.collection(RESOURCE).find({ filters: { slug } });
+    const res = await client.collection(RESOURCE).find({ filters: { slug }, populate: ['profilePicture'] });
     if (!res) { return null };
     return res.length > 0 ? res[0] : null;
   },
@@ -63,6 +68,31 @@ export const userService = {
     const data = await response.json();
     console.log('Update successful:', data);
     return data;
+  },
+
+  upload: async (file, token, userId) => {
+    const formData = new FormData();
+    formData.append("files", file);
+    formData.append('ref', 'plugin::users-permissions.user'); // user model
+    formData.append('refId', userId);
+    formData.append('field', 'profilePicture');
+
+    const response = await fetch(`http://localhost:1337/api/upload`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error("Upload failed:", error);
+      throw new Error(error.error?.message || "Failed to upload file");
+    }
+
+    const data = await response.json();
+    return data[0]; // Strapi returns an array of uploaded files
   },
 
   remove: async (id, token) => {

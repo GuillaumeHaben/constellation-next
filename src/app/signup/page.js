@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import icon from '../../../public/icon.png';
 import { userService } from "@/service/userService";
+import { createUserSlug } from "@/utils/slug";
 
 export default function Signup() {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
@@ -22,6 +23,7 @@ export default function Signup() {
     setError("");
 
     try {
+      const slug = createUserSlug(form.firstName, form.lastName);
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/local/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -31,7 +33,7 @@ export default function Signup() {
           password: form.password,
           firstName: form.firstName,
           lastName: form.lastName,
-          slug: `${form.firstName.toLowerCase()}-${form.lastName.toLowerCase()}`,
+          slug,
         }),
       });
 
