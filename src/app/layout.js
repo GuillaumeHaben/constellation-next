@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
     pathname.startsWith("/signup");
 
   return (
-    <html className={"h-full bg-slate-900 dark"} suppressHydrationWarning>
+    <html className={"h-full bg-gray-900 dark"} suppressHydrationWarning>
       <head>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" async></script>
       </head>

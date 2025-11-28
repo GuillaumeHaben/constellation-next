@@ -9,6 +9,7 @@ import {
   TableRow,
   TableCell,
   Input,
+  Link,
   Button,
   DropdownTrigger,
   Dropdown,
@@ -166,19 +167,21 @@ export function TableUsers() {
     switch (columnKey) {
       case "name":
         return (
-          <User
-            avatarProps={{ radius: "lg", src: getProfilePictureUrl(user) }}
-            description={user.email}
-            name={`${user.firstName || ""} ${user.lastName || ""}`}
-          >
-            {user.email}
-          </User>
+          <Link href={`/user/${user.slug}`} className="no-underline text-default-700">
+            <User
+              avatarProps={{ radius: "lg", src: getProfilePictureUrl(user) }}
+              description={user.email}
+              name={`${user.firstName || ""} ${user.lastName || ""}`}
+            >
+              {user.email}
+            </User>
+          </Link>
         );
       case "role":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">User</p>
-            {/* <p className="text-bold text-tiny capitalize text-default-400">{user.team}</p> */}
+            {/* <p className="text-bold text-tiny capitalize text-default-700">{user.team}</p> */}
           </div>
         );
       case "status":
@@ -193,7 +196,7 @@ export function TableUsers() {
           <div className="flex items-center justify-center gap-2">
             <Tooltip content="View profile" placement="bottom">
               <Button isIconOnly as="a" href={`/user/${user.slug}`} size="sm" variant="light">
-                <EyeIcon className="h-5 w-5 text-slate-500" />
+                <EyeIcon className="h-5 w-5 text-slate-400" />
               </Button>
             </Tooltip>
             <Tooltip content="Connect on Teams" placement="bottom">
@@ -303,11 +306,11 @@ export function TableUsers() {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {users.length} users</span>
-          <label className="flex items-center text-default-400 text-small">
-            Rows per page:
+          <span className="text-default-700 text-small">Total {users.length} users</span>
+          <label className="flex items-center text-default-700 text-small">
+            Rows per page:&nbsp;
             <select
-              className="bg-transparent outline-solid outline-transparent text-default-400 text-small"
+              className="bg-transparent outline-solid outline-transparent text-default-700 text-small"
               onChange={onRowsPerPageChange}
             >
               <option value="5">5</option>
@@ -331,7 +334,7 @@ export function TableUsers() {
   const bottomContent = useMemo(() => {
     return (
       <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400">
+        <span className="w-[30%] text-small text-default-700">
           {selectedKeys === "all"
             ? "All items selected"
             : `${selectedKeys.size} of ${filteredItems.length} selected`}

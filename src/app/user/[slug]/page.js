@@ -115,6 +115,18 @@ export default function User({ params }) {
 
   if (!user) return null;
 
+  const getAgeDisplay = (birthdayStr) => {
+    if (!birthdayStr) return null;
+    const date = new Date(birthdayStr);
+    if (isNaN(date)) return null;
+    const today = new Date();
+    let age = today.getFullYear() - date.getFullYear();
+    const hasHadBirthdayThisYear = (today.getMonth() > date.getMonth()) || (today.getMonth() === date.getMonth() && today.getDate() >= date.getDate());
+    if (!hasHadBirthdayThisYear) age--;
+    const isBirthdayToday = today.getMonth() === date.getMonth() && today.getDate() === date.getDate();
+    return `${isBirthdayToday ? ' 🎂' : ''} ${age} years old`;
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
@@ -125,7 +137,7 @@ export default function User({ params }) {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Left Column - Profile Card */}
               <div className="lg:col-span-1">
-                <Card className="bg-white/5 border border-white/10 ">
+                <Card className="bg-slate-800 shadow-xl/50 border border-slate-700">
                   <CardBody className="flex flex-col items-center gap-4 p-6">
                     <div className="relative">
                       <Avatar
@@ -189,11 +201,11 @@ export default function User({ params }) {
 
               {/* Right Column - Detailed Information */}
               <div className="lg:col-span-3">
-                <Card className="bg-white/5 border border-white/10">
+                <Card className="bg-slate-800 shadow-xl/50 border border-slate-700">
                   <CardBody className="p-6">
                     <h3 className="text-xl font-bold text-white mb-6">Profile Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <ProfileField label="Birthday" value={targetUser.birthday} />
+                      <ProfileField label="Age" value={getAgeDisplay(targetUser.birthday)} />
                       <ProfileField label="Country" value={targetUser.country ? COUNTRY_EMOJIS[targetUser.country] + " " + targetUser.country : null} />
                       <ProfileField label="ESA Site" value={targetUser.esaSite} />
                       <ProfileField label="Directorate" value={targetUser.directorate} />

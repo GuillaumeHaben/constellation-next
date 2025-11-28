@@ -12,7 +12,7 @@ const parisienne = Parisienne({
 export default function Footer() {
 
     return (
-        <footer className="w-full bg-slate-900 py-6 border-t border-slate-700 mt-8">
+        <footer className="w-full bg-gradient-to-r from-slate-950 to-slate-800 py-6 border-t border-gray-700 mt-8">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 items-center gap-5">
                 <div>
                     <a className={parisienne.className + " text-2xl font-semibold tracking-tight text-balance text-white sm:text-2xl"} href="/" aria-label="Brand">Constellation</a>
