@@ -72,13 +72,29 @@ The project follows a standard Next.js App Router structure:
 
 ## Roadmap
 
-- [x] (Feature) Add user profiles
-- [ ] (Feature) Add profile picture
-- [ ] (Feature) Add map
-- [ ] (Feature) Think about mobile support
-- [ ] (Feature) Add admin panel
-- [ ] (Security) Update collection by separating User and User Profile collections https://www.youtube.com/watch?v=jGvyGEw59jE
-- [ ] (Style) Add dark mode
-- [ ] (Style) Update logo
-- [ ] (Style) Update colors
-- [ ] (Compliance) Add GDPR notice
+### Features
+
+- [x] Add user profiles
+- [x] Add profile picture
+- [ ] Add map
+- [ ] Think about mobile support
+- [ ] Add admin panel
+
+### Security
+
+- [ ] Update collection by separating User and User Profile collections https://www.youtube.com/watch?v=jGvyGEw59jE
+- [ ] Check how to backup and easily restore the database
+
+### Style
+
+- [ ] Add dark mode
+- [ ] Update logo
+- [ ] Update colors
+
+### Compliance
+
+- [ ] Add GDPR notice
+
+### Bug
+
+- [ ] No menu on home, weird one with medium screen size on home.

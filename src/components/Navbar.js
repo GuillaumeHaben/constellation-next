@@ -34,7 +34,7 @@ export default function NavBar() {
     }));
 
     return (
-        <Disclosure as="nav" className="bg-gray-900">
+        <Disclosure as="nav" className="bg-gray-900 border-b">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     <div className="flex items-center">
@@ -74,7 +74,7 @@ export default function NavBar() {
 
                             <Menu as="div" className="relative ml-3">
                                 <Link href={`/user/${user.slug}`} className="flex items-center gap-3">
-                                    <MenuButton className="relative flex items-center gap-3 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer">
+                                    <MenuButton className="relative flex items-center gap-3 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 cursor-pointer">
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
                                         <Avatar
@@ -92,7 +92,7 @@ export default function NavBar() {
                             </Menu>
 
                             <div className="ml-4 flex items-center md:ml-8">
-                                <a href="" onClick={logout} className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-indigo-500 px-3 py-2 rounded-md">
+                                <a href="" onClick={logout} className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-blue-500 px-3 py-2 rounded-md">
                                     Sign out <span aria-hidden="true">&rarr;</span>
                                 </a>
                             </div>
@@ -100,7 +100,7 @@ export default function NavBar() {
                     </div>
                     <div className="-mr-2 flex md:hidden">
                         {/* Mobile menu button */}
-                        <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
+                        <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-blue-500">
                             <span className="absolute -inset-0.5" />
                             <span className="sr-only">Open main menu</span>
                             <Bars3Icon aria-hidden="true" className="block size-6 group-data-open:hidden" />

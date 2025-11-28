@@ -4,22 +4,19 @@ import { useAuth } from "@/context/AuthContext";
 import { Avatar } from "@heroui/react";
 import NavBar from "@/components/Navbar";
 import BreadCrumbs from "@/components/BreadCrumbs";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function MarketPins() {
   const { user } = useAuth();
   if (!user) return null;
 
   return (
-    <div className="min-h-full">
+    <div className="min-h-screen flex flex-col">
       <NavBar />
 
-      <header className="relative bg-[#003247] after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-white">MarketPins</h1>
-          <BreadCrumbs currentPage="marketPins" />
-        </div>
-      </header>
-      <main>
+      <Header title={"Market Pins"} breadcrumbs={<BreadCrumbs currentPage="marketPins" />} />
+      <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
           <h1>This is the place to exchange your pins!</h1>
@@ -36,6 +33,7 @@ export default function MarketPins() {
 
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

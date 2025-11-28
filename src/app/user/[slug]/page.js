@@ -5,6 +5,8 @@ import { useAuth } from "@/context/AuthContext";
 import { userService } from "@/service/userService";
 import NavBar from "@/components/Navbar";
 import BreadCrumbs from "@/components/BreadCrumbs";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { PencilIcon, CameraIcon } from "@heroicons/react/24/solid";
 import { ModalUser } from "./ModalUser";
 import {
@@ -114,21 +116,16 @@ export default function User({ params }) {
   if (!user) return null;
 
   return (
-    <div className="min-h-full">
+    <div className="min-h-screen flex flex-col">
       <NavBar />
-      <header className="relative bg-[#003247] after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-white">Profile</h1>
-          <BreadCrumbs currentPage={"user/" + slug} targetUser={targetUser}></BreadCrumbs>
-        </div>
-      </header>
-      <main>
+      <Header title={"Profile"} breadcrumbs={<BreadCrumbs currentPage={"user/" + slug} targetUser={targetUser}></BreadCrumbs>} />
+      <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           {targetUser ? (
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Left Column - Profile Card */}
               <div className="lg:col-span-1">
-                <Card className="bg-white/5 border border-white/10">
+                <Card className="bg-white/5 border border-white/10 ">
                   <CardBody className="flex flex-col items-center gap-4 p-6">
                     <div className="relative">
                       <Avatar
@@ -239,6 +236,9 @@ export default function User({ params }) {
           )}
         </div>
       </main>
+
+      <Footer />
+
       <ModalUser
         isOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
