@@ -10,7 +10,7 @@ import { userService } from "@/service/userService";
 import { createUserSlug } from "@/utils/slug";
 
 export default function Signup() {
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [form, setForm] = useState({ username: "", email: "", password: "", firstName: "", lastName: "" });
   const [error, setError] = useState("");
   const router = useRouter();
   const { login } = useAuth();
@@ -44,16 +44,11 @@ export default function Signup() {
         return;
       }
 
-      console.log("Registration successful:", data);
-
       login(data.jwt, data.user);
       const token = data.jwt;
 
       try {
-        console.log("Updating user with ID:", data.user.id);
-        console.log("Update data:", { slug, firstName, lastName });
-        const updatedUser = await userService.update(data.user.id, { slug, firstName, lastName }, token);
-        console.log("User updated successfully:", updatedUser);
+        const updatedUser = await userService.update(data.user.id, { slug, firstName: form.firstName, lastName: form.lastName }, token);
       } catch (err) {
         console.error("Failed to update user:", err);
       }
@@ -84,7 +79,7 @@ export default function Signup() {
         <div className="mt-10 w-full sm:max-w-sm">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">
+              <label htmlFor="firstName" className="block text-sm/6 font-medium text-gray-100">
                 First name
               </label>
               <div className="mt-2">
@@ -102,7 +97,7 @@ export default function Signup() {
               </div>
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">
+              <label htmlFor="lastName" className="block text-sm/6 font-medium text-gray-100">
                 Last name
               </label>
               <div className="mt-2">
@@ -159,14 +154,14 @@ export default function Signup() {
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm/6 font-medium text-gray-100">
+                <label htmlFor="repeatPassword" className="block text-sm/6 font-medium text-gray-100">
                   Repeat password
                 </label>
               </div>
               <div className="mt-2">
                 <input
-                  id="password"
-                  name="password"
+                  id="repeatPassword"
+                  name="repeatPassword"
                   type="password"
                   required
                   autoComplete="current-password"

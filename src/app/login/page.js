@@ -58,7 +58,7 @@ export default function Login() {
         <div className="mt-10 w-full sm:max-w-sm">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">
+              <label htmlFor="identifier" className="block text-sm/6 font-medium text-gray-100">
                 Email address
               </label>
               <div className="mt-2">

@@ -1,60 +1,53 @@
 "use client";
 
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
-import { TrashIcon } from "@heroicons/react/24/solid";
-import {
-  Button,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Tooltip,
-} from "@heroui/react";
+import React, { useCallback, useState } from "react";
+import { Button, Tooltip } from "@heroui/react";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { DataTable, useDataTable } from "@/components/DataTable";
 import { clubService } from "@/service/clubService";
-import { useEffect, useState } from "react";
 import { ModalClub } from "./ModalClub";
 
 const columns = [
-  {
-    key: "id",
-    label: "ID",
-  },
-  {
-    key: "name",
-    label: "NAME",
-  },
-  {
-    key: "description",
-    label: "DESCRIPTION",
-  },
-  {
-    key: "creation",
-    label: "CREATION",
-  },
-  {
-    key: "actions",
-    label: "ACTIONS",
-  },
+  { key: "id", label: "ID", sortable: true },
+  { key: "name", label: "NAME", sortable: true },
+  { key: "description", label: "DESCRIPTION", sortable: false },
+  { key: "creation", label: "CREATION", sortable: true },
+  { key: "actions", label: "ACTIONS", sortable: false },
 ];
 
 export function TableClubs() {
-  const [clubs, setClubs] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedClub, setSelectedClub] = useState(null); // for editing
+  const [selectedClub, setSelectedClub] = useState(null);
 
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const tableState = useDataTable({
+    fetchData: clubService.getAll,
+    columns,
+    initialVisibleColumns: null, // Show all columns
+    enableFiltering: false,
+    enableSorting: true,
+    enablePagination: false,
+    initialSortColumn: "name",
+  });
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    clubService.getAll(token).then(setClubs).catch(console.error);
-  }, []);
+  const {
+    data,
+    setData,
+    selectedKeys,
+    sortDescriptor,
+    items,
+    headerColumns,
+    setSelectedKeys,
+    setSortDescriptor,
+    handleRemove,
+  } = tableState;
+
+  const onRemove = handleRemove(clubService.removeByDocumentId);
 
   const handleCreate = async (name, description) => {
     try {
+      const token = localStorage.getItem("token");
       const created = await clubService.create({ name, description }, token);
-      setClubs((prev) => [...prev, created.data]);
+      setData((prev) => [...prev, created.data]);
     } catch (err) {
       console.error("Failed to create club:", err);
     }
@@ -62,8 +55,9 @@ export function TableClubs() {
 
   const handleUpdate = async (documentId, name, description) => {
     try {
+      const token = localStorage.getItem("token");
       const updated = await clubService.updateByDocumentId(documentId, name, description, token);
-      setClubs((prev) =>
+      setData((prev) =>
         prev.map((club) =>
           club.documentId === documentId ? updated.data : club
         )
@@ -73,21 +67,42 @@ export function TableClubs() {
     }
   };
 
-  const handleRemove = async (documentId) => {
-    try {
-      await clubService.removeByDocumentId(documentId, token);
-      setClubs((prev) => prev.filter((c) => c.documentId !== documentId));
-    } catch (err) {
-      console.error("Failed to remove club:", err);
+  const renderCell = useCallback((club, columnKey) => {
+    const cellValue = club[columnKey];
+
+    switch (columnKey) {
+      case "actions":
+        return (
+          <div className="flex items-center justify-center gap-2">
+            <Tooltip content="Edit club" placement="bottom">
+              <Button
+                isIconOnly
+                onPress={() => {
+                  setSelectedClub(club);
+                  setModalOpen(true);
+                }}
+              >
+                <PencilSquareIcon className="h-5 w-5 text-yellow-500" />
+              </Button>
+            </Tooltip>
+            <Tooltip content="Delete club" placement="bottom">
+              <Button isIconOnly onClick={() => onRemove(club.documentId)}>
+                <TrashIcon className="h-5 w-5 text-red-500" />
+              </Button>
+            </Tooltip>
+          </div>
+        );
+      default:
+        return cellValue;
     }
-  };
+  }, [onRemove]);
 
   return (
     <>
       <Button
         color="success"
         onPress={() => {
-          setSelectedClub(null); // reset for create
+          setSelectedClub(null);
           setModalOpen(true);
         }}
       >
@@ -103,41 +118,20 @@ export function TableClubs() {
       />
 
       <br /><br />
-      <Table aria-label="Example table with dynamic content">
-        <TableHeader columns={columns}>
-          {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-        </TableHeader>
-        <TableBody items={clubs}>
-          {(item) => (
-            <TableRow key={item.documentId}>
-              <TableCell>{item.id}</TableCell>
-              <TableCell>{item.name}</TableCell>
-              <TableCell>{item.description}</TableCell>
-              <TableCell>{item.creation}</TableCell>
-              <TableCell>
-                <div className="relative flex items-center gap-2">
-                  <Tooltip content="Edit club" placement="bottom">
-                    <Button
-                      isIconOnly
-                      onPress={() => {
-                        setSelectedClub(item);
-                        setModalOpen(true);
-                      }}
-                    >
-                      <PencilSquareIcon className="h-5 w-5 text-yellow-500" />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip content="Delete club" placement="bottom">
-                    <Button isIconOnly onClick={() => handleRemove(item.documentId)}>
-                      <TrashIcon className="h-5 w-5 text-red-500" />
-                    </Button>
-                  </Tooltip>
-                </div>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+
+      <DataTable
+        columns={columns}
+        items={items}
+        headerColumns={headerColumns}
+        renderCell={renderCell}
+        selectedKeys={selectedKeys}
+        sortDescriptor={sortDescriptor}
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+        ariaLabel="Clubs table"
+        enableSorting={true}
+        enableSelection={false}
+      />
     </>
   );
 }
