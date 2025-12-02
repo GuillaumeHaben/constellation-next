@@ -24,6 +24,25 @@ git clone https://github.com/GuillaumeHaben/constellation-strapi.git
 
 `npm install`
 
+### 2.1 Add environment variables
+
+Add environment variables in `constellation-next/.env.local`.
+`NEXT_PUBLIC_API_URL=http://localhost:1337`
+
+Add environment variables in `constellation-strapi/.env`.
+
+```bash
+APP_KEYS=
+API_TOKEN_SALT=
+ADMIN_JWT_SECRET=
+JWT_SECRET=
+GOOGLE_MAPS_API_KEY=
+```
+
+### 2.2 Install dependencies in Strapi
+
+`npm install`
+
 ### 3. Run the project
 
 (For Next.js / React app)

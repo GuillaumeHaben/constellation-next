@@ -6,6 +6,7 @@ import NavBar from "@/components/Navbar";
 import BreadCrumbs from "@/components/BreadCrumbs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { UserGroupIcon } from "@heroicons/react/24/outline";
 
 export default function Clubs() {
   const { user } = useAuth();
@@ -14,7 +15,7 @@ export default function Clubs() {
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
-      <Header title={"Clubs"} breadcrumbs={<BreadCrumbs currentPage="clubs" />} />
+      <Header title={"Clubs"} breadcrumbs={<BreadCrumbs currentPage="clubs" />} icon={UserGroupIcon} />
       <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <TableClubs />

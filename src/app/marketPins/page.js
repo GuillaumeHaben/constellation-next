@@ -6,6 +6,7 @@ import NavBar from "@/components/Navbar";
 import BreadCrumbs from "@/components/BreadCrumbs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 
 export default function MarketPins() {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ export default function MarketPins() {
     <div className="min-h-screen flex flex-col">
       <NavBar />
 
-      <Header title={"Market Pins"} breadcrumbs={<BreadCrumbs currentPage="marketPins" />} />
+      <Header title={"Market Pins"} breadcrumbs={<BreadCrumbs currentPage="marketPins" />} icon={ShoppingBagIcon} />
       <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 

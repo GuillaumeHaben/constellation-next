@@ -99,6 +99,15 @@ export function TableClubs() {
 
   return (
     <>
+
+      <ModalClub
+        isOpen={isModalOpen}
+        onOpenChange={setModalOpen}
+        onCreate={handleCreate}
+        onUpdate={handleUpdate}
+        initialData={selectedClub}
+      />
+
       <Button
         color="success"
         onPress={() => {
@@ -108,14 +117,6 @@ export function TableClubs() {
       >
         Create a club
       </Button>
-
-      <ModalClub
-        isOpen={isModalOpen}
-        onOpenChange={setModalOpen}
-        onCreate={handleCreate}
-        onUpdate={handleUpdate}
-        initialData={selectedClub}
-      />
 
       <br /><br />
 

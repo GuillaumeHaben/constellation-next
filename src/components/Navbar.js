@@ -3,7 +3,17 @@
 import { useAuth } from "@/context/AuthContext";
 import { usePathname } from "next/navigation";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton } from '@headlessui/react'
-import { Bars3Icon, UserCircleIcon, XMarkIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
+import {
+    Bars3Icon,
+    ArrowLeftEndOnRectangleIcon,
+    XMarkIcon,
+    Cog6ToothIcon,
+    HomeIcon,
+    UsersIcon,
+    UserGroupIcon,
+    MapIcon,
+    ShoppingBagIcon
+} from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
 import icon from '../../public/icon.png';
@@ -11,11 +21,11 @@ import { Avatar } from "@heroui/react";
 import { getProfilePictureUrl } from "@/utils/media";
 
 const navigation = [
-    { name: 'Home', href: '/home' },
-    { name: 'Users', href: '/users' },
-    { name: 'Clubs', href: '/clubs' },
-    { name: 'Map', href: '/map' },
-    { name: 'MarketPins', href: '/marketPins' },
+    { name: 'Home', href: '/home', icon: HomeIcon },
+    { name: 'Users', href: '/users', icon: UsersIcon },
+    { name: 'Clubs', href: '/clubs', icon: UserGroupIcon },
+    { name: 'Map', href: '/map', icon: MapIcon },
+    { name: 'MarketPins', href: '/marketPins', icon: ShoppingBagIcon },
 ]
 
 function classNames(...classes) {
@@ -51,21 +61,25 @@ export default function NavBar() {
                         </div>
                         <div className="hidden md:block">
                             <div className="ml-10 flex items-baseline space-x-4">
-                                {navWithCurrent.map((item) => (
-                                    <a
-                                        key={item.name}
-                                        href={item.href}
-                                        aria-current={item.current ? 'page' : undefined}
-                                        className={classNames(
-                                            item.current
-                                                ? 'bg-gray-950/50 text-white'
-                                                : 'text-gray-300 hover:bg-white/5 hover:text-white',
-                                            'rounded-md px-3 py-2 text-sm font-medium',
-                                        )}
-                                    >
-                                        {item.name}
-                                    </a>
-                                ))}
+                                {navWithCurrent.map((item) => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <a
+                                            key={item.name}
+                                            href={item.href}
+                                            aria-current={item.current ? 'page' : undefined}
+                                            className={classNames(
+                                                item.current
+                                                    ? 'bg-gray-950/50 text-white'
+                                                    : 'text-gray-300 hover:bg-white/5 hover:text-white',
+                                                'rounded-md px-3 py-2 text-sm font-medium flex items-center gap-2',
+                                            )}
+                                        >
+                                            {Icon && <Icon className="h-5 w-5" />}
+                                            {item.name}
+                                        </a>
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
@@ -92,8 +106,8 @@ export default function NavBar() {
                             </Menu>
 
                             <div className="ml-4 flex items-center md:ml-8">
-                                <a href="" onClick={logout} className="text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-blue-500 px-3 py-2 rounded-md">
-                                    Sign out <span aria-hidden="true">&rarr;</span>
+                                <a href="" onClick={logout} className="flex items-center gap-2 text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-blue-500 px-3 py-2 rounded-md">
+                                    {ArrowLeftEndOnRectangleIcon && <ArrowLeftEndOnRectangleIcon className="h-6 w-6 text-white" />} Sign out <span aria-hidden="true"></span>
                                 </a>
                             </div>
                         </div>

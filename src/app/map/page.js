@@ -6,6 +6,7 @@ import BreadCrumbs from "@/components/BreadCrumbs";
 import Header from "@/components/Header";
 import HeatMap from "./HeatMap";
 import Footer from "@/components/Footer";
+import { MapIcon } from "@heroicons/react/24/outline";
 
 export default function Map() {
     const { user } = useAuth();
@@ -15,7 +16,7 @@ export default function Map() {
         <div className="min-h-screen flex flex-col">
             <NavBar />
 
-            <Header title={"Map"} breadcrumbs={<BreadCrumbs currentPage="Map" />} />
+            <Header title={"Map"} breadcrumbs={<BreadCrumbs currentPage="Map" />} icon={MapIcon} />
             <main className="flex-1">
                 <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 mb-6">
 

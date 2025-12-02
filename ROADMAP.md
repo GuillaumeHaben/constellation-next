@@ -31,6 +31,7 @@ Build a clean, modular social platform where users can:
 - [ ] Social graph (know / unknown)
 - [ ] Map
 - [ ] Notification system (new features)  
+- [ ] About page, changelog, information, links to ESA, etc.
 - [ ] Full changelog system with digest  
 
 ---

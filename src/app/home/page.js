@@ -5,6 +5,7 @@ import NavBar from "@/components/Navbar";
 import BreadCrumbs from "@/components/BreadCrumbs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { HomeIcon } from "@heroicons/react/24/outline";
 
 export default function Home() {
   const { user } = useAuth();
@@ -14,7 +15,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <NavBar />
 
-      <Header title={"Home"} breadcrumbs={<BreadCrumbs currentPage="home" />} />
+      <Header title={"Home"} breadcrumbs={<BreadCrumbs currentPage="home" />} icon={HomeIcon} />
       <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <p>Oh! A new star is born!</p>
