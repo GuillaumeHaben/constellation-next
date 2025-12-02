@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
+import circle from '../../public/img/circle.png';
 
 const Galaxy = () => {
     const mountRef = useRef(null);
@@ -47,7 +48,7 @@ const Galaxy = () => {
 
         const textureLoader = new THREE.TextureLoader();
         const starTexture = textureLoader.load(
-            "https://threejs.org/examples/textures/sprites/circle.png"
+            circle.src
         );
 
         const starMaterial = new THREE.PointsMaterial({

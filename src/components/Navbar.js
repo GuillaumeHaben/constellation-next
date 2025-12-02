@@ -16,7 +16,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
-import icon from '../../public/icon.png';
+import icon from '../../public/img/icon.png';
 import { Avatar } from "@heroui/react";
 import { getProfilePictureUrl } from "@/utils/media";
 

@@ -2,7 +2,7 @@
 
 import { Parisienne } from "next/font/google";
 import Image from "next/image";
-import esaLogo from '../../public/esa-logo-white.png';
+import esaLogo from '../../public/img/esa-logo-white.png';
 import { Link } from "react-aria-components";
 
 const parisienne = Parisienne({

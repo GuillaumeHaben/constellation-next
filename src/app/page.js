@@ -7,8 +7,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Parisienne } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
-import esaLogo from '../../public/esa-logo-white.png';
-import icon from '../../public/icon.png';
+import esaLogo from '../../public/img/esa-logo-white.png';
+import icon from '../../public/img/icon.png';
 import Galaxy from "../components/Galaxy";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";

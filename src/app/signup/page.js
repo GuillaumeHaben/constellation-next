@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import icon from '../../../public/icon.png';
+import icon from '../../../public/img/icon.png';
 import { userService } from "@/service/userService";
 import { createUserSlug } from "@/utils/slug";
 
