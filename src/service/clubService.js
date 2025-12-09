@@ -6,7 +6,7 @@ const RESOURCE = "clubs";
 // token is passed per function call to handle dynamic auth
 const getClient = (token) =>
   strapi({
-    baseURL: "http://localhost:1337/api", //process.env.NEXT_PUBLIC_API_URL || 
+    baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
     auth: token, // JWT token for authentication
   });
 

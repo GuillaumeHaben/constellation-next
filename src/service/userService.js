@@ -6,7 +6,7 @@ const RESOURCE = "users";
 // token is passed per function call to handle dynamic auth
 const getClient = (token) =>
   strapi({
-    baseURL: "http://localhost:1337/api", //process.env.NEXT_PUBLIC_API_URL || 
+    baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
     auth: token, // JWT token for authentication
   });
 
@@ -50,7 +50,7 @@ export const userService = {
 
   update: async (id, userData, token) => {
     // For users, we need to use the direct API endpoint, not the collection method
-    const response = await fetch(`http://localhost:1337/api/users/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ export const userService = {
     formData.append('refId', userId);
     formData.append('field', 'profilePicture');
 
-    const response = await fetch(`http://localhost:1337/api/upload`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

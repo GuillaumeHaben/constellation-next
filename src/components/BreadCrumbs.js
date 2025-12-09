@@ -41,6 +41,11 @@ export default function BreadCrumbs({ currentPage, targetUser }) {
                     Map
                 </BreadcrumbItem>
             )}
+            {currentPage === "Changelog" && (
+                <BreadcrumbItem key="changelog" isCurrent={true}>
+                    Changelog
+                </BreadcrumbItem>
+            )}
         </Breadcrumbs>
     )
 }
