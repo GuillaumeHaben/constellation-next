@@ -138,7 +138,7 @@ export default function User({ params }) {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Left Column - Profile Card */}
               <div className="lg:col-span-1">
-                <Card className="bg-slate-800 shadow-xl/50 border border-slate-700">
+                <Card className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow hover:border-slate-600">
                   <CardBody className="flex flex-col items-center gap-4 p-6">
                     <div className="relative">
                       <Avatar
@@ -202,7 +202,7 @@ export default function User({ params }) {
 
               {/* Right Column - Detailed Information */}
               <div className="lg:col-span-3">
-                <Card className="bg-slate-800 shadow-xl/50 border border-slate-700">
+                <Card className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow hover:border-slate-600">
                   <CardBody className="p-6">
                     <h3 className="text-xl font-bold text-white mb-6">Profile Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

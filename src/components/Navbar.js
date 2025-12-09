@@ -125,6 +125,25 @@ export default function NavBar() {
             </div>
 
             <DisclosurePanel className="md:hidden">
+                <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+                    {navWithCurrent.map((item) => (
+                        <DisclosureButton
+                            key={item.name}
+                            as="a"
+                            href={item.href}
+                            aria-current={item.current ? 'page' : undefined}
+                            className={classNames(
+                                item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                'block rounded-md px-3 py-2 text-base font-medium',
+                            )}
+                        >
+                            <div className="flex items-center gap-2">
+                                {item.icon && <item.icon className="h-5 w-5" />}
+                                {item.name}
+                            </div>
+                        </DisclosureButton>
+                    ))}
+                </div>
                 <div className="border-t border-white/10 pt-4 pb-3 space-y-4">
                     <button type="button" className="flex items-center pb-3 pt-3 px-5 w-full text-left rounded-md cursor-pointer group bg-transparent hover:bg-white/5">
                         <div className="shrink-0">
@@ -146,14 +165,6 @@ export default function NavBar() {
                                 </div>
                             </div>
                         </Link>
-                    </button>
-                    <button type="button" className="flex items-center pb-3 pt-3 px-5 w-full text-left rounded-md cursor-pointer group bg-transparent hover:bg-white/5">
-                        <div className="shrink-0">
-                            <Cog6ToothIcon aria-hidden="true" className="size-12 rounded-full text-gray-400 group-hover:text-white transition-colors duration-200" />
-                        </div>
-                        <div className="ml-3">
-                            <div className="text-base/5 font-medium text-gray-400 group-hover:text-white transition-colors duration-200">Settings</div>
-                        </div>
                     </button>
                     <button type="button" className="flex items-center pb-6 pt-6 px-7 w-full text-left hover:bg-white/5 rounded-md cursor-pointer">
                         <button onClick={logout} className="text-base/5 font-medium text-white">
