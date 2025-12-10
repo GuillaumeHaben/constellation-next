@@ -3,7 +3,7 @@ import { User, Chip, Tooltip, Button, Link } from "@heroui/react";
 import { EyeIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { TeamsIcon } from "@/components/Icons";
 import { getProfilePictureUrl } from "@/utils/media";
-import { statusColorMap } from "../utils";
+import { roleColorMap } from "../utils";
 
 export function RenderCell({ user, columnKey, onRemove }) {
     const cellValue = user[columnKey];
@@ -24,15 +24,15 @@ export function RenderCell({ user, columnKey, onRemove }) {
         case "role":
             return (
                 <div className="flex flex-col">
-                    <p className="text-bold text-small capitalize">User</p>
+                    <Chip
+                        className="capitalize"
+                        color={roleColorMap[user.role?.name?.toLowerCase()] || "default"}
+                        size="sm"
+                        variant="flat"
+                    >
+                        {user.role?.name}
+                    </Chip>
                 </div>
-            );
-        case "status":
-            const status = user.blocked ? "blocked" : "active";
-            return (
-                <Chip className="capitalize" color={statusColorMap[status]} size="sm" variant="flat">
-                    {status}
-                </Chip>
             );
         case "actions":
             return (

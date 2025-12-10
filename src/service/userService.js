@@ -14,7 +14,7 @@ export const userService = {
   getAll: async (token) => {
     const client = getClient(token);
     const res = await client.collection(RESOURCE).find({
-      populate: ['profilePicture'],
+      populate: ['profilePicture', 'role'],
       pagination: {
         limit: 100 // Fetch up to 100 users to ensure client-side sorting works for a reasonable set
       }
@@ -24,7 +24,7 @@ export const userService = {
 
   getUserById: async (userId, token) => {
     const client = getClient(token);
-    const res = await client.collection(RESOURCE).findOne({ id: userId, populate: ['profilePicture'] });
+    const res = await client.collection(RESOURCE).findOne({ id: userId, populate: ['profilePicture', 'role'] });
     return res; // single user object
   },
 
@@ -99,5 +99,17 @@ export const userService = {
     const client = getClient(token);
     await client.collection(RESOURCE).delete(id);
     return true;
+  },
+
+  getMe: async (token) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me?populate[0]=profilePicture&populate[1]=role`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      return null; // or throw, but existing code returns null on error
+    }
+    return await response.json();
   },
 };

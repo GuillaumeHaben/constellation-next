@@ -15,7 +15,7 @@ export default function Home() {
   const [isModalOpen, setModalOpen] = useState(false);
   if (!user) return null;
 
-
+  console.log("user.role", user.role.type);
 
   return (
     <div className="min-h-screen flex flex-col">

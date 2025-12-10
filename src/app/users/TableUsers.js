@@ -4,7 +4,7 @@ import React, { useCallback } from "react";
 import { DataTable, useDataTable, TableTopContent, TableBottomContent } from "@/components/DataTable";
 import { userService } from "@/service/userService";
 import { RenderCell } from "./components/RenderCell";
-import { columns, statusOptions, INITIAL_VISIBLE_COLUMNS } from "./utils";
+import { columns, INITIAL_VISIBLE_COLUMNS } from "./utils";
 
 // Custom sort function for users
 const customUserSort = (items, sortDescriptor) => {
@@ -15,9 +15,6 @@ const customUserSort = (items, sortDescriptor) => {
     if (sortDescriptor.column === "name") {
       first = `${a.firstName || ""} ${a.lastName || ""}`.trim().toLowerCase();
       second = `${b.firstName || ""} ${b.lastName || ""}`.trim().toLowerCase();
-    } else if (sortDescriptor.column === "status") {
-      first = a.blocked ? "blocked" : "active";
-      second = b.blocked ? "blocked" : "active";
     }
 
     const isFirstEmpty = first === null || first === undefined || first === "";
@@ -38,7 +35,7 @@ const customUserSort = (items, sortDescriptor) => {
 };
 
 // Custom filter function for users
-const customUserFilter = (items, filterValue, statusFilter) => {
+const customUserFilter = (items, filterValue) => {
   let filtered = [...items];
 
   if (filterValue) {
@@ -49,13 +46,6 @@ const customUserFilter = (items, filterValue, statusFilter) => {
       (user.firstName || "").toLowerCase().includes(lowerFilter) ||
       (user.lastName || "").toLowerCase().includes(lowerFilter)
     );
-  }
-
-  if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-    filtered = filtered.filter((user) => {
-      const status = user.blocked ? "blocked" : "active";
-      return Array.from(statusFilter).includes(status);
-    });
   }
 
   return filtered;
@@ -69,8 +59,6 @@ export function TableUsers() {
     enableFiltering: true,
     enableSorting: true,
     enablePagination: true,
-    enableStatusFilter: true,
-    statusOptions,
     customSort: customUserSort,
     customFilter: customUserFilter,
     initialRowsPerPage: 5,
@@ -82,7 +70,6 @@ export function TableUsers() {
     filterValue,
     selectedKeys,
     visibleColumns,
-    statusFilter,
     sortDescriptor,
     page,
     pages,
@@ -91,7 +78,6 @@ export function TableUsers() {
     filteredItems,
     setSelectedKeys,
     setVisibleColumns,
-    setStatusFilter,
     setSortDescriptor,
     setPage,
     onNextPage,
@@ -123,16 +109,12 @@ export function TableUsers() {
           filterValue={filterValue}
           onClear={onClear}
           onSearchChange={onSearchChange}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           dataLength={data.length}
           onRowsPerPageChange={onRowsPerPageChange}
           columns={columns}
-          statusOptions={statusOptions}
           enableSearch={true}
-          enableStatusFilter={true}
           enableColumnFilter={true}
           enableRowsPerPage={true}
           searchPlaceholder="Search by name..."

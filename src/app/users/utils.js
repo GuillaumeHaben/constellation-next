@@ -1,6 +1,6 @@
 export const columns = [
     { name: "NAME", uid: "name", sortable: true },
-    { name: "STATUS", uid: "status", sortable: true },
+    { name: "ROLE", uid: "role", sortable: true },
     { name: "SITE", uid: "esaSite", sortable: true },
     { name: "POSITION", uid: "position", sortable: true },
     { name: "BIRTHDAY", uid: "birthday", sortable: true },
@@ -9,17 +9,19 @@ export const columns = [
     { name: "ACTIONS", uid: "actions" },
 ];
 
-export const statusOptions = [
-    { name: "Active", uid: "active" },
-    { name: "Blocked", uid: "blocked" },
+export const roleOptions = [
+    { name: "Admin", uid: "admin" },
+    { name: "Crew", uid: "crew" },
+    { name: "Manager", uid: "manager" },
 ];
 
-export const statusColorMap = {
-    active: "success",
-    blocked: "danger",
+export const roleColorMap = {
+    admin: "warning",
+    crew: "primary",
+    manager: "secondary",
 };
 
-export const INITIAL_VISIBLE_COLUMNS = ["name", "status", "position", "country", "directorate", "actions"];
+export const INITIAL_VISIBLE_COLUMNS = ["name", "role", "position", "country", "directorate", "actions"];
 
 export function capitalize(s) {
     return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";

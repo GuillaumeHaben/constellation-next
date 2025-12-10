@@ -1,31 +1,19 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { userService } from "@/service/userService";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
 
-    const fetchFullUser = async (token, id) => {
-        if (!token || !id) return null;
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${id}?populate=profilePicture`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (!res.ok) return null;
-            return await res.json();
-        } catch {
-            return null;
-        }
-    };
-
     const login = async (token, userData) => {
         localStorage.setItem("token", token);
         // Set immediate user for optimistic UI
         setUser(userData);
-        // Attempt enrichment with populated media
-        const enriched = await fetchFullUser(token, userData?.id);
+        // Attempt enrichment with populated media and role
+        const enriched = await userService.getMe(token);
         if (enriched) setUser(enriched);
     };
 
@@ -37,10 +25,8 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) return;
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me?populate=profilePicture`, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-            .then((res) => (res.ok ? res.json() : null))
+
+        userService.getMe(token)
             .then((data) => setUser(data))
             .catch(() => setUser(null));
     }, []);
