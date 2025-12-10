@@ -43,6 +43,7 @@ export function ModalUser({ isOpen, setIsModalOpen, editForm, setEditForm, targe
             onOpenChange={setIsModalOpen}
             size="3xl"
             scrollBehavior="inside"
+            backdrop="blur"
         >
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">Edit Profile</ModalHeader>

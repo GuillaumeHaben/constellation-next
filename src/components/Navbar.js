@@ -12,7 +12,8 @@ import {
     UsersIcon,
     UserGroupIcon,
     MapIcon,
-    ShoppingBagIcon
+    ShoppingBagIcon,
+    ClockIcon
 } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
@@ -26,6 +27,7 @@ const navigation = [
     { name: 'Clubs', href: '/clubs', icon: UserGroupIcon },
     { name: 'Map', href: '/map', icon: MapIcon },
     { name: 'MarketPins', href: '/marketPins', icon: ShoppingBagIcon },
+    { name: 'Changelog', href: '/changelog', icon: ClockIcon },
 ]
 
 function classNames(...classes) {

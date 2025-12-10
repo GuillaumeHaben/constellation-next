@@ -52,7 +52,7 @@ export function ModalClub({ isOpen, onOpenChange, onCreate, onUpdate, initialDat
     if (!isOpen) return null;
 
     return (
-        <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
+        <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange} backdrop="blur">
             <ModalContent>
                 {(internalOnClose) => (
                     <>
