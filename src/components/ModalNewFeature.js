@@ -25,8 +25,8 @@ export default function ModalNewFeature({ isOpen, onOpenChange }) {
                                 <AnimatedFeature />
                             </ModalHeader>
                             <ModalBody className="flex flex-col text-center mb-20 mr-20 ml-20">
-                                <h1 className="text-2xl font-bold">New Feature</h1>
-                                <p className="text-md">While you've been away, we've been working hard to improve Constellation. Check out our latest update!</p>
+                                <h1 className="text-2xl font-bold">We've been working hard while you were away!</h1>
+                                <p className="text-md">Check out our latest update! Add changelog last version description here.</p>
                             </ModalBody>
                             <ModalFooter className="mb-5">
                                 <Button

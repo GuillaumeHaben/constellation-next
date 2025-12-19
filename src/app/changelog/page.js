@@ -5,41 +5,59 @@ import NavBar from "@/components/Navbar";
 import BreadCrumbs from "@/components/BreadCrumbs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { ClockIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { ClockIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState, useCallback } from "react";
 import { changelogService } from "@/service/changelogService";
+import ModalCreateChangelog from "./ModalCreateChangelog";
+import { Button } from "@heroui/react";
 
 export default function Changelog() {
-    const { user, } = useAuth();
+    const { user } = useAuth();
     const [features, setFeatures] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    if (!user) return null;
+
+    const fetchChangelogs = useCallback(async () => {
+        const token = localStorage.getItem("token");
+        try {
+            const data = await changelogService.getAll(token);
+            // Map API data to component format
+            // Strapi v5 / client wrapper returns loose objects in array usually
+            const mappedFeatures = data.map(item => ({
+                id: `v${item.version.replace(/\./g, '-')}`, // Create valid ID for scroll
+                documentId: item.documentId,
+                version: item.version,
+                date: new Date(item.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' }),
+                title: item.title,
+                description: item.description,
+                tag: item.tag || 'Feature'
+            }));
+            setFeatures(mappedFeatures);
+        } catch (error) {
+            console.error("Failed to fetch changelogs:", error);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
-        const fetchChangelogs = async () => {
-            console.log("Fetching changelogs...");
-            const token = localStorage.getItem("token");
-            try {
-                const data = await changelogService.getAll(token);
-                // Map API data to component format
-                // Strapi v5 / client wrapper returns loose objects in array usually
-                const mappedFeatures = data.map(item => ({
-                    id: `v${item.version.replace(/\./g, '-')}`, // Create valid ID for scroll
-                    version: item.version,
-                    date: new Date(item.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-                    title: item.title,
-                    description: item.description,
-                    tag: item.tag || 'Feature'
-                }));
-                setFeatures(mappedFeatures);
-            } catch (error) {
-                console.error("Failed to fetch changelogs:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchChangelogs();
-    }, []);
+    }, [fetchChangelogs]);
+
+    const handleDelete = async (documentId) => {
+        if (!confirm("Are you sure you want to delete this changelog entry?")) return;
+
+        try {
+            const token = localStorage.getItem("token");
+            await changelogService.delete(token, documentId);
+            fetchChangelogs();
+        } catch (error) {
+            console.error("Failed to delete changelog:", error);
+            alert("Failed to delete changelog");
+        }
+    };
 
     if (!user) return null;
 
@@ -62,7 +80,21 @@ export default function Changelog() {
                     {/* Side Navigation - Sticky */}
                     <aside className="lg:w-1/4 hidden lg:block">
                         <div className="sticky top-24 space-y-4">
-                            <h3 className="text-xl font-semibold text-white/90 mb-4">Version History</h3>
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-xl font-semibold text-white/90">Version History</h3>
+                                {user.role?.type === 'admin' && (
+                                    <Button
+                                        isIconOnly
+                                        size="sm"
+                                        color="primary"
+                                        variant="light"
+                                        onPress={() => setIsModalOpen(true)}
+                                    >
+                                        <PlusIcon className="w-5 h-5" />
+                                    </Button>
+                                )}
+                            </div>
+
                             {loading ? (
                                 <div className="animate-pulse space-y-4">
                                     <div className="h-4 bg-slate-700/50 rounded w-3/4"></div>
@@ -112,7 +144,22 @@ export default function Changelog() {
                                         <div className={`absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full ring-4 ring-slate-900 ${feature.tag === 'bug-fix' ? 'bg-red-500' : 'bg-blue-500'}`} />
 
                                         {/* Feature Card */}
-                                        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow hover:border-slate-600">
+                                        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow hover:border-slate-600 relative group">
+                                            {/* Admin Delete Button */}
+                                            {user.role?.type === 'admin' && (
+                                                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <Button
+                                                        isIconOnly
+                                                        size="sm"
+                                                        color="danger"
+                                                        variant="light"
+                                                        onPress={() => handleDelete(feature.documentId)}
+                                                    >
+                                                        <TrashIcon className="w-5 h-5" />
+                                                    </Button>
+                                                </div>
+                                            )}
+
                                             <div className="flex flex-wrap items-center gap-3 mb-3">
                                                 <span className={`text-xs font-medium px-2.5 py-0.5 rounded border ${getTagStyle(feature.tag)}`}>
                                                     {feature.tag}
@@ -139,6 +186,11 @@ export default function Changelog() {
             </main>
 
             <Footer />
+            <ModalCreateChangelog
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSuccess={fetchChangelogs}
+            />
         </div>
     )
 }
