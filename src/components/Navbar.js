@@ -14,7 +14,9 @@ import {
     MapIcon,
     ShoppingBagIcon,
     ClockIcon,
-    InformationCircleIcon
+    InformationCircleIcon,
+    ShieldCheckIcon,
+    CheckBadgeIcon
 } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
@@ -54,8 +56,20 @@ export default function NavBar() {
 
     const normalize = (path) => path.replace(/\/$/, '');
 
+    // Clone navigation path and add Admin if generic
+    const fullNavigation = [...navigation];
+    if (user.role?.type === 'manager' || user.role?.type === 'admin') {
+        fullNavigation.push({
+            name: 'Admin',
+            icon: ShieldCheckIcon,
+            children: [
+                { name: 'Pin approval', href: '/admin/approvals', icon: CheckBadgeIcon }
+            ]
+        });
+    }
+
     // Process navigation for active states
-    const navWithCurrent = navigation.map(item => {
+    const navWithCurrent = fullNavigation.map(item => {
         if (item.children) {
             return {
                 ...item,

@@ -62,6 +62,8 @@ Build a clean, modular social platform where users can:
 - [ ] Automated tests & maintainability improvements  
 - [ ] Update collection by separating User and User Profile collections https://www.youtube.com/watch?v=jGvyGEw59jE
 - [ ] Check how to backup and easily restore the database
+- [ ] Add ownership permissions in strapi, not letting any users update/delete anything
+- [ ] When I delete a user, delete all dependencies (pins instances for example)
 
 ---
 
