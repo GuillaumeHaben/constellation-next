@@ -13,21 +13,35 @@ import {
     UserGroupIcon,
     MapIcon,
     ShoppingBagIcon,
-    ClockIcon
+    ClockIcon,
+    InformationCircleIcon
 } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
 import icon from '../../public/img/icon.png';
-import { Avatar } from "@heroui/react";
+import { Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { getProfilePictureUrl } from "@/utils/media";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
     { name: 'Home', href: '/home', icon: HomeIcon },
-    { name: 'Users', href: '/users', icon: UsersIcon },
-    { name: 'Clubs', href: '/clubs', icon: UserGroupIcon },
-    { name: 'Map', href: '/map', icon: MapIcon },
+    {
+        name: 'Social',
+        icon: UsersIcon,
+        children: [
+            { name: 'Users', href: '/users', icon: UsersIcon },
+            { name: 'Clubs', href: '/clubs', icon: UserGroupIcon },
+            { name: 'Map', href: '/map', icon: MapIcon },
+        ]
+    },
     { name: 'MarketPins', href: '/marketPins', icon: ShoppingBagIcon },
-    { name: 'Changelog', href: '/changelog', icon: ClockIcon },
+    {
+        name: 'About',
+        icon: InformationCircleIcon,
+        children: [
+            { name: 'Changelog', href: '/changelog', icon: ClockIcon },
+        ]
+    },
 ]
 
 function classNames(...classes) {
@@ -40,10 +54,27 @@ export default function NavBar() {
     if (!user) return null;
 
     const normalize = (path) => path.replace(/\/$/, '');
-    const navWithCurrent = navigation.map(item => ({
-        ...item,
-        current: normalize(pathname) === normalize(item.href)
-    }));
+
+    // Process navigation for active states
+    const navWithCurrent = navigation.map(item => {
+        if (item.children) {
+            return {
+                ...item,
+                current: item.children.some(child => normalize(pathname) === normalize(child.href)),
+                children: item.children.map(child => ({
+                    ...child,
+                    current: normalize(pathname) === normalize(child.href)
+                }))
+            };
+        }
+        return {
+            ...item,
+            current: normalize(pathname) === normalize(item.href)
+        };
+    });
+
+    // Flatten for mobile
+    const mobileNav = navWithCurrent.flatMap(item => item.children ? item.children : item);
 
     return (
         <Disclosure as="nav" className="bg-gray-900 border-b">
@@ -64,6 +95,52 @@ export default function NavBar() {
                         <div className="hidden md:block">
                             <div className="ml-10 flex items-baseline space-x-4">
                                 {navWithCurrent.map((item) => {
+                                    if (item.children) {
+                                        return (
+                                            <Dropdown key={item.name}>
+                                                <DropdownTrigger>
+                                                    <button
+                                                        className={classNames(
+                                                            item.current
+                                                                ? 'bg-gray-950/50 text-white'
+                                                                : 'text-gray-300 hover:bg-white/5 hover:text-white',
+                                                            'rounded-md px-3 py-2 text-sm font-medium flex items-center gap-2 outline-none',
+                                                        )}
+                                                    >
+                                                        {item.icon && <item.icon className="h-5 w-5" />}
+                                                        {item.name}
+                                                        <ChevronDownIcon className="h-3 w-3 ml-1" />
+                                                    </button>
+                                                </DropdownTrigger>
+                                                <DropdownMenu
+                                                    aria-label={item.name}
+                                                    className="w-[200px]"
+                                                    itemClasses={{
+                                                        base: [
+                                                            "rounded-md",
+                                                            "text-default-500",
+                                                            "transition-opacity",
+                                                            "data-[hover=true]:text-foreground",
+                                                            "data-[hover=true]:bg-default-100",
+                                                            "dark:data-[hover=true]:bg-default-50",
+                                                            "data-[selectable=true]:focus:bg-default-50",
+                                                            "data-[pressed=true]:opacity-70",
+                                                            "data-[focus-visible=true]:ring-default-500",
+                                                        ],
+                                                    }}
+                                                >
+                                                    {item.children.map((child) => (
+                                                        <DropdownItem key={child.name} textValue={child.name} startContent={<child.icon className="h-4 w-4" />}>
+                                                            <Link href={child.href} className="w-full block">
+                                                                {child.name}
+                                                            </Link>
+                                                        </DropdownItem>
+                                                    ))}
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        );
+                                    }
+
                                     const Icon = item.icon;
                                     return (
                                         <a
@@ -128,7 +205,7 @@ export default function NavBar() {
 
             <DisclosurePanel className="md:hidden">
                 <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                    {navWithCurrent.map((item) => (
+                    {mobileNav.map((item) => (
                         <DisclosureButton
                             key={item.name}
                             as="a"
