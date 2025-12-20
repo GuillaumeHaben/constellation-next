@@ -34,7 +34,6 @@ const navigation = [
             { name: 'Map', href: '/map', icon: MapIcon },
         ]
     },
-    { name: 'MarketPins', href: '/marketPins', icon: ShoppingBagIcon },
     {
         name: 'About',
         icon: InformationCircleIcon,

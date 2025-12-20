@@ -64,6 +64,8 @@ jest.mock('@heroui/react', () => ({
     Card: ({ children }) => <div data-testid="card">{children}</div>,
     CardBody: ({ children }) => <div data-testid="card-body">{children}</div>,
     Spinner: () => <div data-testid="spinner">Spinner</div>,
+    Tabs: ({ children }) => <div data-testid="tabs">{children}</div>,
+    Tab: ({ children, title }) => <div data-testid="tab" title={title}>{children}</div>,
 }));
 
 jest.mock('@heroicons/react/24/solid', () => ({
@@ -73,6 +75,8 @@ jest.mock('@heroicons/react/24/solid', () => ({
 
 jest.mock('@heroicons/react/24/outline', () => ({
     UserIcon: () => <span>UserIcon</span>,
+    TrophyIcon: () => <span>TrophyIcon</span>,
+    EllipsisHorizontalCircleIcon: () => <span>EllipsisHorizontalCircleIcon</span>,
 }));
 
 jest.mock('@/components/Icons', () => ({

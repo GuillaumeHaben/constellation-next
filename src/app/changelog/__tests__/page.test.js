@@ -129,9 +129,9 @@ describe('Changelog Page', () => {
 
         await waitFor(() => {
             expect(changelogService.getAll).toHaveBeenCalled();
-            expect(screen.getByText('v1.0.0 • January 2023')).toBeInTheDocument(); // Date formatted: 'long' month
+            expect(screen.getByText('v1.0.0 • January 1, 2023 at 1:00 AM')).toBeInTheDocument();
             expect(screen.getByText('Initial Release')).toBeInTheDocument();
-            expect(screen.getByText('v1.0.1 • January 2023')).toBeInTheDocument();
+            expect(screen.getByText('v1.0.1 • January 15, 2023 at 1:00 AM')).toBeInTheDocument();
             expect(screen.getByText('Bug Fixes')).toBeInTheDocument();
         });
 

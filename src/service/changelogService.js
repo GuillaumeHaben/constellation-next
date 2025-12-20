@@ -20,6 +20,15 @@ export const changelogService = {
         return changelogs.data; // keep documentId in each object
     },
 
+    getLatest: async (token) => {
+        const client = getClient(token);
+        const changelogs = await client.collection(RESOURCE).find({
+            sort: 'date:desc',
+            'pagination[limit]': 1
+        });
+        return changelogs.data.length > 0 ? changelogs.data[0] : null;
+    },
+
     create: async (token, data) => {
         console.log("Submitting changelog data:", data);
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/changelogs`, {

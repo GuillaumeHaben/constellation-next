@@ -11,14 +11,19 @@ export default function BreadCrumbs({ currentPage, targetUser }) {
             <BreadcrumbItem key="home" isCurrent={currentPage === "home"}>
                 Constellation
             </BreadcrumbItem>
+            {currentPage === "users" && (
+                <BreadcrumbItem key="users" isCurrent={true}>
+                    Users
+                </BreadcrumbItem>
+            )}
             {currentPage === "clubs" && (
                 <BreadcrumbItem key="clubs" isCurrent={true}>
                     Clubs
                 </BreadcrumbItem>
             )}
-            {currentPage === "users" && (
-                <BreadcrumbItem key="users" isCurrent={true}>
-                    Users
+            {currentPage === "Map" && (
+                <BreadcrumbItem key="map" isCurrent={true}>
+                    Map
                 </BreadcrumbItem>
             )}
             {currentPage?.startsWith("user/") && (
@@ -29,16 +34,6 @@ export default function BreadCrumbs({ currentPage, targetUser }) {
             {currentPage?.startsWith("user/") && (
                 <BreadcrumbItem key={currentPage} isCurrent={true}>
                     {targetUser?.firstName} {targetUser?.lastName}
-                </BreadcrumbItem>
-            )}
-            {currentPage === "marketPins" && (
-                <BreadcrumbItem key="marketPins" isCurrent={true}>
-                    MarketPins
-                </BreadcrumbItem>
-            )}
-            {currentPage === "Map" && (
-                <BreadcrumbItem key="map" isCurrent={true}>
-                    Map
                 </BreadcrumbItem>
             )}
             {currentPage === "Changelog" && (
