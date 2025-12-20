@@ -70,19 +70,29 @@ function SocialLink({ href, icon }) {
     );
 }
 
-export default function TabOverview({ targetUser }) {
+export default function TabSocial({ targetUser }) {
     return (
         <>
-            {/* <h3 className="text-xl font-bold text-white mb-6">Profile Information</h3> */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <ProfileField label="Age" value={getAgeDisplay(targetUser.birthday)} />
-                <ProfileField label="Country" value={targetUser.country ? COUNTRY_EMOJIS[targetUser.country] + " " + targetUser.country : null} />
-                <ProfileField label="ESA Site" value={targetUser.esaSite} />
-                <ProfileField label="Directorate" value={targetUser.directorate} />
-                <ProfileField label="Position" value={targetUser.position} />
-                {/* <ProfileField label="Work Domain" value={targetUser.workDomain} /> */}
-                <ProfileField label="Phone Number" value={targetUser.phoneNumber} />
-                <ProfileField label="Address" value={targetUser.address} />
+            {/* <h3 className="text-xl font-bold text-white mb-6">Social Media</h3> */}
+            <div className="flex gap-8 flex-wrap">
+                {targetUser.linkedin && (
+                    <SocialLink href={targetUser.linkedin} target="_blank" icon="linkedin" />
+                )}
+                {targetUser.instagram && (
+                    <SocialLink href={targetUser.instagram} target="_blank" icon="instagram" />
+                )}
+                {targetUser.facebook && (
+                    <SocialLink href={targetUser.facebook} target="_blank" icon="facebook" />
+                )}
+                {targetUser.github && (
+                    <SocialLink href={targetUser.github} target="_blank" icon="github" />
+                )}
+                {targetUser.twitter && (
+                    <SocialLink href={targetUser.twitter} target="_blank" icon="twitter" />
+                )}
+                {targetUser.website && (
+                    <SocialLink href={targetUser.website} target="_blank" icon="website" />
+                )}
             </div>
         </>
     );
