@@ -1,13 +1,31 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import circle from '../../public/img/circle.png';
+import { userService } from "@/service/userService";
 
 const Galaxy = () => {
     const mountRef = useRef(null);
+    const [starCount, setStarCount] = useState(null);
+    console.log(starCount)
 
     useEffect(() => {
+        const fetchUserCount = async () => {
+            try {
+                const count = await userService.count();
+                setStarCount(count || 50); // Fallback to 50 if count is 0
+            } catch (error) {
+                console.error("Failed to fetch user count for Galaxy", error);
+                setStarCount(500); // Default fallback
+            }
+        };
+        fetchUserCount();
+    }, []);
+
+    useEffect(() => {
+        if (starCount === null) return;
+
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(
             75,
@@ -22,7 +40,6 @@ const Galaxy = () => {
         mountRef.current.appendChild(renderer.domElement);
 
         // Parameters
-        const starCount = 500;
         const innerRadius = 2;
         const outerRadius = 10;
         const positions = [];
@@ -76,7 +93,7 @@ const Galaxy = () => {
 
         // Animation
         const animate = () => {
-            requestAnimationFrame(animate);
+            const frameId = requestAnimationFrame(animate);
             renderer.setClearColor(0x000000, 0.05);
 
             stars.rotation.x += 0.0005;
@@ -109,9 +126,10 @@ const Galaxy = () => {
             positionsAttr.needsUpdate = true;
 
             renderer.render(scene, camera);
+            return frameId;
         };
 
-        animate();
+        const frameId = animate();
 
         // Handle resize
         const handleResize = () => {
@@ -124,12 +142,15 @@ const Galaxy = () => {
         // Cleanup
         return () => {
             window.removeEventListener("resize", handleResize);
+            cancelAnimationFrame(frameId);
             if (mountRef.current && renderer.domElement.parentNode === mountRef.current) {
                 mountRef.current.removeChild(renderer.domElement);
             }
             renderer.dispose();
+            starGeometry.dispose();
+            starMaterial.dispose();
         };
-    }, []);
+    }, [starCount]);
 
     return <div ref={mountRef} style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }} />;
 };

@@ -34,7 +34,7 @@ export default function MainContent({ targetUser }) {
                             </div>
                         }
                     >
-                        <div className="pt-6">
+                        <div className="pt-2">
                             <TabOverview targetUser={targetUser} />
                         </div>
                     </Tab>

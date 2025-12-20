@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Avatar, Button, Tooltip } from "@heroui/react";
-import { PlusIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { Avatar, Button, Tooltip, Badge } from "@heroui/react";
+import { PlusIcon, QuestionMarkCircleIcon, InformationCircleIcon } from "@heroicons/react/24/solid";
 import { pinService } from "@/service/pinService";
 import { useAuth } from "@/context/AuthContext";
 import PinLibraryModal from "./PinLibraryModal";
 import PinSuggestionModal from "./PinSuggestionModal";
+import RarityInfoModal from "./RarityInfoModal";
 
 export default function TabPins({ targetUser }) {
     const { user } = useAuth(); // Current logged in user
@@ -16,6 +17,7 @@ export default function TabPins({ targetUser }) {
     // Modal states
     const [showLibrary, setShowLibrary] = useState(false);
     const [showSuggestion, setShowSuggestion] = useState(false);
+    const [showRarityInfo, setShowRarityInfo] = useState(false);
 
     const isOwnProfile = user && targetUser && user.slug === targetUser.slug;
     const isCrew = user && (user.role?.name === "Crew" || user.role?.name === "Manager" || user.role?.name === "Admin");
@@ -44,8 +46,7 @@ export default function TabPins({ targetUser }) {
         // if (!confirm("Are you sure you want to remove this pin?")) return;
         try {
             const token = localStorage.getItem("token");
-            // Use documentId if available, fallback to id
-            await pinService.unequipPin(instanceId, token);
+            await pinService.unequipPin(instanceId, targetUser.id, token);
             setPins(prev => prev.filter(p => (p.documentId || p.id) !== instanceId));
         } catch (error) {
             console.error("Failed to remove pin", error);
@@ -53,36 +54,53 @@ export default function TabPins({ targetUser }) {
         }
     };
 
-    // Extract owned pin IDs (of the Pin definition, not the instance) for the library check
-    const ownedPinIds = pins.map(p => p.pin?.documentId || p.pin?.id).filter(Boolean);
+    // Extract owned pin IDs for the library check
+    const ownedPinIds = pins.map(p => p.documentId || p.id).filter(Boolean);
 
     return (
         <div className="py-2">
-            {/* Header Actions - Mimicking Sidebar Style */}
-            {(isOwnProfile && isCrew) && (
-                <div className="flex flex-col sm:flex-row gap-3 mb-8">
-                    {/* Suggest Pin Button (Crew/Manager/Admin) */}
-                    <Button
-                        color="warning"
-                        variant="flat"
-                        onPress={() => setShowSuggestion(true)}
-                        className="flex-1 font-semibold"
-                    >
-                        <QuestionMarkCircleIcon className="w-4 h-4" />
-                        Suggest Pin
-                    </Button>
-                    {/* Add Pin Button (Owner) */}
-                    <Button
-                        color="success"
-                        variant="flat"
-                        onPress={() => setShowLibrary(true)}
-                        className="flex-1 font-semibold"
-                    >
-                        <PlusIcon className="w-4 h-4" />
-                        Add Pin
-                    </Button>
+            <div className="flex flex-col sm:flex-row gap-3 mb-8 sm:max-w-4xl">
+                {/* Header Actions - Stacked on Mobile, Row on Desktop */}
+                <div
+                    className="flex items-center justify-center px-4 py-2 rounded-xl border-1 border-white/60 text-white font-semibold text-sm bg-white/10 sm:flex-none"
+                >
+                    {ownedPinIds.length} pins owned
                 </div>
-            )}
+
+                {(isOwnProfile && isCrew) && (
+                    <>
+                        {/* Suggest Pin Button (Crew/Manager/Admin) */}
+                        <Button
+                            color="warning"
+                            variant="flat"
+                            onPress={() => setShowSuggestion(true)}
+                            className="w-full sm:w-auto sm:flex-1 font-semibold"
+                        >
+                            <QuestionMarkCircleIcon className="w-5 h-5 text-warning" />
+                            Suggest Pin
+                        </Button>
+                        {/* Add Pin Button (Owner) */}
+                        <Button
+                            color="success"
+                            variant="flat"
+                            onPress={() => setShowLibrary(true)}
+                            className="w-full sm:w-auto sm:flex-1 font-semibold"
+                        >
+                            <PlusIcon className="w-5 h-5 text-success" />
+                            Add Pin
+                        </Button>
+                    </>
+                )}
+                <Button
+                    color="primary"
+                    variant="flat"
+                    onPress={() => setShowRarityInfo(true)}
+                    className="w-full sm:w-auto sm:flex-1 font-semibold"
+                >
+                    <InformationCircleIcon className="w-5 h-5 text-primary" />
+                    How it works
+                </Button>
+            </div>
 
             {/* Pins Grid - Left aligned for better scalability */}
             {loading ? (
@@ -92,13 +110,10 @@ export default function TabPins({ targetUser }) {
                     No pins collected yet. Open the library to add your first pin!
                 </div>
             ) : (
-                <div>
-                    <h2 className="text-lg font-semibold mb-4">Owned: {ownedPinIds.length}</h2>
-                    <br />
-
-                    <div className="flex flex-wrap gap-4 sm:gap-6 justify-start items-start">
-                        {pins.map((instance) => {
-                            const pin = instance.pin;
+                <div className="flex flex-wrap gap-4 sm:gap-6 justify-start items-start">
+                    {[...pins]
+                        .sort((a, b) => (parseFloat(b.rarity) || 0) - (parseFloat(a.rarity) || 0))
+                        .map((pin) => {
                             if (!pin) return null;
 
                             // Image URL handling - standard Strapi behavior
@@ -107,14 +122,13 @@ export default function TabPins({ targetUser }) {
                                 : null;
 
                             return (
-                                <div key={instance.id} className="flex flex-col items-center group/item transition-transform duration-200">
-                                    {/* Trigger area limited strictly to the pin container using a named group */}
+                                <div key={pin.id} className="flex flex-col items-center group/item transition-transform duration-200">
                                     <div className="relative group/pin w-16 h-16 sm:w-20 sm:h-20">
                                         <Tooltip content={pin.name} placement="top" closeDelay={0}>
                                             <Avatar
                                                 className="w-full h-full cursor-default"
                                                 isBordered
-                                                color={getRarityColor(pin.rarity)}
+                                                color={getRarityInfo(pin.rarity).color}
                                                 src={imageUrl}
                                                 name={pin.name?.charAt(0)}
                                             />
@@ -124,7 +138,7 @@ export default function TabPins({ targetUser }) {
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    handleUnequip(instance.documentId || instance.id);
+                                                    handleUnequip(pin.documentId || pin.id);
                                                 }}
                                                 className="absolute -top-1 -right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover/pin:opacity-100 transition-all duration-200 z-20 shadow-xl scale-90 group-hover/pin:scale-100"
                                                 title="Remove Pin"
@@ -136,12 +150,11 @@ export default function TabPins({ targetUser }) {
                                         )}
                                     </div>
                                     <span className="text-[9px] sm:text-[10px] text-gray-400 mt-2 uppercase tracking-tight font-semibold opacity-70 group-hover/item:opacity-100 transition-opacity">
-                                        {pin.rarity}
+                                        {getRarityInfo(pin.rarity).label}
                                     </span>
                                 </div>
                             );
                         })}
-                    </div>
                 </div>
             )}
 
@@ -156,15 +169,19 @@ export default function TabPins({ targetUser }) {
                 isOpen={showSuggestion}
                 onClose={() => setShowSuggestion(false)}
             />
+            <RarityInfoModal
+                isOpen={showRarityInfo}
+                onClose={() => setShowRarityInfo(false)}
+            />
         </div>
     );
 }
 
-function getRarityColor(rarity) {
-    switch (rarity) {
-        case 'legendary': return 'warning'; // Gold-ish
-        case 'epic': return 'secondary'; // Purple
-        case 'rare': return 'primary'; // Blue
-        default: return 'default'; // Common/Gray
-    }
-}
+const getRarityInfo = (rarity) => {
+    // Rarity is a decimal from 0 to 1 (1 - ownership_percentage)
+    const val = parseFloat(rarity) || 0;
+    if (val >= 0.95) return { label: 'Legendary', color: 'warning' };
+    if (val >= 0.8) return { label: 'Epic', color: 'secondary' };
+    if (val >= 0.5) return { label: 'Rare', color: 'primary' };
+    return { label: 'Common', color: 'default' };
+};

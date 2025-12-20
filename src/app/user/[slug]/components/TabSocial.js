@@ -1,58 +1,6 @@
 "use client";
 
-import {
-    Card,
-    CardBody
-} from "@heroui/react";
 import { InstagramIcon, LinkedInIcon, FacebookIcon, GitHubIcon, TwitterIcon, WebsiteIcon } from "@/components/Icons";
-
-const COUNTRY_EMOJIS = {
-    "Austria": "🇦🇹",
-    "Belgium": "🇧🇪",
-    "Czech Republic": "🇨🇿",
-    "Denmark": "🇩🇰",
-    "Estonia": "🇪🇪",
-    "Finland": "🇫🇮",
-    "France": "🇫🇷",
-    "Germany": "🇩🇪",
-    "Greece": "🇬🇷",
-    "Hungary": "🇭🇺",
-    "Ireland": "🇮🇪",
-    "Italy": "🇮🇹",
-    "Luxembourg": "🇱🇺",
-    "Netherlands": "🇳🇱",
-    "Norway": "🇳🇴",
-    "Poland": "🇵🇱",
-    "Portugal": "🇵🇹",
-    "Romania": "🇷🇴",
-    "Slovenia": "🇸🇮",
-    "Spain": "🇪🇸",
-    "Sweden": "🇸🇪",
-    "Switzerland": "🇨🇭",
-    "United Kingdom": "🇬🇧"
-};
-
-const getAgeDisplay = (birthdayStr) => {
-    if (!birthdayStr) return null;
-    const date = new Date(birthdayStr);
-    if (isNaN(date)) return null;
-    const today = new Date();
-    let age = today.getFullYear() - date.getFullYear();
-    const hasHadBirthdayThisYear = (today.getMonth() > date.getMonth()) || (today.getMonth() === date.getMonth() && today.getDate() >= date.getDate());
-    if (!hasHadBirthdayThisYear) age--;
-    const isBirthdayToday = today.getMonth() === date.getMonth() && today.getDate() === date.getDate();
-    return `${isBirthdayToday ? ' 🎂' : ''} ${age} years old`;
-};
-
-// Helper component for profile fields
-function ProfileField({ label, value }) {
-    return (
-        <div>
-            <dt className="text-sm font-medium text-gray-400">{label}</dt>
-            <dd className="mt-1 text-sm text-white">{value || "Not specified"}</dd>
-        </div>
-    );
-}
 
 // Helper component for social media links
 function SocialLink({ href, icon }) {
@@ -73,8 +21,7 @@ function SocialLink({ href, icon }) {
 export default function TabSocial({ targetUser }) {
     return (
         <>
-            {/* <h3 className="text-xl font-bold text-white mb-6">Social Media</h3> */}
-            <div className="flex gap-8 flex-wrap">
+            <div className="flex justify-center gap-8 items-center">
                 {targetUser.linkedin && (
                     <SocialLink href={targetUser.linkedin} target="_blank" icon="linkedin" />
                 )}

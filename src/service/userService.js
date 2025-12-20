@@ -112,4 +112,13 @@ export const userService = {
     }
     return await response.json();
   },
+
+  count: async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/count`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch user count');
+    }
+    const count = await response.json();
+    return count; // Strapi usually returns the number directly for this endpoint
+  },
 };

@@ -1,7 +1,6 @@
 import { strapi } from "@strapi/client";
 
 const RESOURCE = "pins";
-const INSTANCE_RESOURCE = "pin-instances";
 
 // Initialize a Strapi client instance for GET requests (keeping it for convenient filtering/population)
 const getClient = (token) =>
@@ -60,13 +59,9 @@ export const pinService = {
     // Public/User: Get pins owned by a specific user
     getUserPins: async (userId, token) => {
         const client = getClient(token);
-        const res = await client.collection(INSTANCE_RESOURCE).find({
-            filters: { owner: userId },
-            populate: {
-                pin: {
-                    populate: ['image']
-                }
-            },
+        const res = await client.collection(RESOURCE).find({
+            filters: { users: { id: userId } },
+            populate: ['image'],
             pagination: { limit: 100 }
         });
         return res.data;
@@ -82,20 +77,24 @@ export const pinService = {
         return await apiRequest(RESOURCE, 'POST', payload, token);
     },
 
-    // User: Add a pin instance (Equip from library)
+    // User: Add a pin to a user profile (Many-to-Many connect)
     equipPin: async (pinId, userId, token) => {
         const payload = {
-            pin: pinId,
-            owner: userId,
-            quantity: 1,
-            publishedAt: new Date(), // Important: PinInstance has draft/publish enabled
+            users: {
+                connect: [userId]
+            }
         };
-        return await apiRequest(INSTANCE_RESOURCE, 'POST', payload, token);
+        return await apiRequest(`${RESOURCE}/${pinId}`, 'PUT', payload, token);
     },
 
-    // User: Remove a pin instance (Unequip)
-    unequipPin: async (instanceId, token) => {
-        return await apiRequest(`${INSTANCE_RESOURCE}/${instanceId}`, 'DELETE', null, token);
+    // User: Remove a pin from a user profile (Many-to-Many disconnect)
+    unequipPin: async (pinId, userId, token) => {
+        const payload = {
+            users: {
+                disconnect: [userId]
+            }
+        };
+        return await apiRequest(`${RESOURCE}/${pinId}`, 'PUT', payload, token);
     },
 
     // Admin: Get pending pins

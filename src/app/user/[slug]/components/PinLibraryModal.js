@@ -15,6 +15,15 @@ import { pinService } from "@/service/pinService";
 import { useAuth } from "@/context/AuthContext";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
+const getRarityInfo = (rarity) => {
+    const val = parseFloat(rarity) || 0;
+    console.log(val)
+    if (val >= 0.95) return { label: 'Legendary', color: 'warning' };
+    if (val >= 0.8) return { label: 'Epic', color: 'secondary' };
+    if (val >= 0.5) return { label: 'Rare', color: 'primary' };
+    return { label: 'Common', color: 'default' };
+};
+
 export default function PinLibraryModal({ isOpen, onClose, targetUser, onPinAdded, ownedPinIds = [] }) {
     const { user } = useAuth();
     const [pins, setPins] = useState([]);
@@ -92,11 +101,11 @@ export default function PinLibraryModal({ isOpen, onClose, targetUser, onPinAdde
                                                 : null}
                                             className="w-16 h-16"
                                             isBordered
-                                        // color={getRarityColor(pin.rarity)} // Reuse function if exported or duplicated. Default for now.
+                                            color={getRarityInfo(pin.rarity).color}
                                         />
                                         <div className="text-center">
                                             <p className="font-semibold text-sm truncate w-full">{pin.name}</p>
-                                            <p className="text-xs text-gray-500 capitalize">{pin.rarity}</p>
+                                            <p className="text-xs text-gray-500 capitalize">{getRarityInfo(pin.rarity).label}</p>
                                         </div>
                                         <Button
                                             size="sm"
