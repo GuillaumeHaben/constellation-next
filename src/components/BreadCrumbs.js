@@ -41,6 +41,11 @@ export default function BreadCrumbs({ currentPage, targetUser }) {
                     Changelog
                 </BreadcrumbItem>
             )}
+            {currentPage === "Pin Approval" && (
+                <BreadcrumbItem key="admin/approvals" isCurrent={true}>
+                    Pin Approval
+                </BreadcrumbItem>
+            )}
         </Breadcrumbs>
     )
 }

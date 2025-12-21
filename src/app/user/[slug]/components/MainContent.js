@@ -6,11 +6,12 @@ import {
     Tabs,
     Tab
 } from "@heroui/react";
-import { UserIcon, TrophyIcon, EllipsisHorizontalCircleIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
+import { UserIcon, TrophyIcon, EllipsisHorizontalCircleIcon, ChatBubbleLeftRightIcon, QrCodeIcon } from "@heroicons/react/24/outline";
 import TabOverview from "./TabOverview";
 import TabPins from "./TabPins";
 import TabAwards from "./TabAwards";
 import TabSocial from "./TabSocial";
+import TabQR from "./TabQR";
 
 export default function MainContent({ targetUser }) {
     return (
@@ -75,6 +76,19 @@ export default function MainContent({ targetUser }) {
                     >
                         <div className="pt-6">
                             <TabAwards targetUser={targetUser} />
+                        </div>
+                    </Tab>
+                    <Tab
+                        key="qr"
+                        title={
+                            <div className="flex items-center space-x-2">
+                                <QrCodeIcon className="w-5 h-5" />
+                                <span>QR</span>
+                            </div>
+                        }
+                    >
+                        <div className="pt-6">
+                            <TabQR targetUser={targetUser} />
                         </div>
                     </Tab>
                 </Tabs>

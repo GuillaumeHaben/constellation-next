@@ -84,10 +84,20 @@ export default function Home() {
           <Button
             color="secondary"
             onPress={() => setModalOpen(true)}
+            className="mb-2"
           >
             New feature
           </Button>
-
+          <p className="mb-2">
+            Among the stats I want:<br />
+            - User with the most pin<br />
+            - Country most represented<br />
+            - Language most spoken<br />
+            - Site most represented<br />
+            - Directorate / Position (however not proportional, sad)<br />
+            - Number of registered users<br />
+            - Number of users registered in the last 7 days<br />
+          </p>
         </div>
       </main>
       <Footer />

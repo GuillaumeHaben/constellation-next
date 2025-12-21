@@ -70,7 +70,7 @@ const Galaxy = () => {
 
         const starMaterial = new THREE.PointsMaterial({
             color: 0xffffff,
-            size: 0.05,
+            size: 0.1,
             map: starTexture,
             alphaTest: 0.5,
             transparent: true,
