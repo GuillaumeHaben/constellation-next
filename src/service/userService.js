@@ -169,4 +169,17 @@ export const userService = {
     const data = await response.json();
     return data.meta.pagination.total;
   },
+
+  getTotalEncounters: async (token) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/encounters?pagination[withCount]=true`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch total encounters');
+    }
+    const data = await response.json();
+    return data.meta?.pagination?.total ?? 0;
+  },
 };

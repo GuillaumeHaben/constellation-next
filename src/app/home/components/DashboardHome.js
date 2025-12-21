@@ -4,8 +4,9 @@ import {
     UsersIcon,
     GlobeAltIcon,
     BriefcaseIcon,
+    AcademicCapIcon,
     MapPinIcon,
-    CalendarIcon,
+    UserPlusIcon,
     LanguageIcon,
     TrophyIcon
 } from "@heroicons/react/24/outline";
@@ -20,9 +21,10 @@ export default function DashboardHome() {
         const fetchStats = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const [users, pins] = await Promise.all([
+                const [users, pins, totalEncounters] = await Promise.all([
                     userService.getAll(token),
-                    pinService.getAllApproved(token)
+                    pinService.getAllApproved(token),
+                    userService.getTotalEncounters(token)
                 ]);
 
                 // 1. Total & New Users
@@ -45,6 +47,7 @@ export default function DashboardHome() {
                 const mostCountry = getMostFrequent(users.map(u => u.country));
                 const mostSite = getMostFrequent(users.map(u => u.esaSite));
                 const mostPosition = getMostFrequent(users.map(u => u.position));
+                const mostDirectorate = getMostFrequent(users.map(u => u.directorate));
 
                 // 3. User with most pins
                 // This is slightly complex since one pin has multiple users
@@ -77,7 +80,9 @@ export default function DashboardHome() {
                     mostPosition,
                     topUserName,
                     topUserPins: maxPins,
-                    mostLanguage: "English" // Mocked as requested for first draft
+                    mostLanguage: "English", // Mocked as requested for first draft
+                    mostDirectorate,
+                    totalEncounters
                 });
             } catch (error) {
                 console.error("Failed to fetch dashboard stats:", error);
@@ -140,9 +145,25 @@ export default function DashboardHome() {
             title: "Common Position",
             value: stats.mostPosition || "N/A",
             sub: "Directorate / Lead",
-            icon: BriefcaseIcon,
+            icon: AcademicCapIcon,
             color: "from-slate-500/10 to-slate-400/10",
             border: "border-slate-500/20"
+        },
+        {
+            title: "Top Directorate",
+            value: stats.mostDirectorate || "N/A",
+            sub: "Most represented",
+            icon: BriefcaseIcon,
+            color: "from-indigo-500/10 to-violet-500/10",
+            border: "border-indigo-500/20"
+        },
+        {
+            title: "Total Encounters",
+            value: stats.totalEncounters ?? "-",
+            sub: "IRL connections",
+            icon: UserPlusIcon,
+            color: "from-green-500/10 to-emerald-500/10",
+            border: "border-green-500/20"
         }
     ];
 
