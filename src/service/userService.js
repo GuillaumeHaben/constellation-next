@@ -23,9 +23,16 @@ export const userService = {
   },
 
   getUserById: async (userId, token) => {
-    const client = getClient(token);
-    const res = await client.collection(RESOURCE).findOne({ id: userId, populate: ['profilePicture', 'role'] });
-    return res; // single user object
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${encodeURIComponent(userId)}?populate[0]=profilePicture&populate[1]=role`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error?.message || 'Failed to fetch user');
+    }
+    return await response.json(); // single user object
   },
 
   getByEmailAddress: async (email, token) => {
@@ -120,5 +127,46 @@ export const userService = {
     }
     const count = await response.json();
     return count; // Strapi usually returns the number directly for this endpoint
+  },
+
+  getEncounterToken: async (token) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/qr-token`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch QR token');
+    }
+    return await response.json();
+  },
+
+  validateEncounter: async (encounterToken, token) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/encounters/validate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ token: encounterToken }),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || 'Failed to validate encounter');
+    }
+    return await response.json();
+  },
+
+  getEncountersCount: async (userId, token) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/encounters?filters[$or][0][userLow][id][$eq]=${userId}&filters[$or][1][userHigh][id][$eq]=${userId}&pagination[withCount]=true`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch encounters count');
+    }
+    const data = await response.json();
+    return data.meta.pagination.total;
   },
 };

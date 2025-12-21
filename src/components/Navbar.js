@@ -14,7 +14,8 @@ import {
     ClockIcon,
     InformationCircleIcon,
     ShieldCheckIcon,
-    CheckBadgeIcon
+    CheckBadgeIcon,
+    ChatBubbleBottomCenterTextIcon
 } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
@@ -38,6 +39,8 @@ const navigation = [
         name: 'About',
         icon: InformationCircleIcon,
         children: [
+            { name: 'Info', href: '/info', icon: InformationCircleIcon },
+            { name: 'Feedback', href: '/feedback', icon: ChatBubbleBottomCenterTextIcon },
             { name: 'Changelog', href: '/changelog', icon: ClockIcon },
         ]
     },

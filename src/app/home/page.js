@@ -8,10 +8,13 @@ import Footer from "@/components/Footer";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import ModalNewFeature from "@/components/ModalNewFeature";
 import { Button } from "@heroui/react";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { userService } from "@/service/userService";
 import { changelogService } from "@/service/changelogService";
 import ModalReleaseNotes from "./ModalReleaseNotes";
+import DashboardHome from "./components/DashboardHome";
+import Quote from "@/components/Quote";
 
 export default function Home() {
   const { user } = useAuth();
@@ -77,27 +80,31 @@ export default function Home() {
 
       <Header title={"Home"} breadcrumbs={<BreadCrumbs currentPage="home" />} icon={HomeIcon} />
       <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <p className="mb-2">Oh! A new star is born!</p>
-          <p className="mb-2">Welcome to our galaxy, {user.firstName} {user.lastName}!</p>
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-blue-600/10 to-transparent p-6 rounded-2xl border border-blue-500/10">
+            <div>
+              <h2 className="text-2xl font-black text-white tracking-tight">Welcome to the Galaxy, {user.firstName}!</h2>
+              <p className="text-base text-gray-400 tracking-tight w-2/3">Constellation connects Young Professionals at ESA, helping them discover peers, share the pride behind their initiatives, and build a lasting community beyond their mission.</p>
+            </div>
+            <Button
+              color="primary"
+              variant="shadow"
+              onPress={() => setModalOpen(true)}
+              className="font-black uppercase tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/20"
+            >
+              New feature
+            </Button>
+          </div>
 
-          <Button
-            color="secondary"
-            onPress={() => setModalOpen(true)}
-            className="mb-2"
-          >
-            New feature
-          </Button>
-          <p className="mb-2">
-            Among the stats I want:<br />
-            - User with the most pin<br />
-            - Country most represented<br />
-            - Language most spoken<br />
-            - Site most represented<br />
-            - Directorate / Position (however not proportional, sad)<br />
-            - Number of registered users<br />
-            - Number of users registered in the last 7 days<br />
-          </p>
+          <Quote text="We are all of us stars, and we deserve to twinkle" author="Marilyn Monroe" authorTitle="Hollywood Icon" picture="/img/marilyn-monroe.jpg" />
+
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 px-2">
+              <div className="w-1 h-4 bg-blue-500 rounded-full" />
+              <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Community Insights</h3>
+            </div>
+            <DashboardHome />
+          </section>
         </div>
       </main>
       <Footer />
