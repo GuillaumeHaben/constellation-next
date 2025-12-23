@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
     Modal,
     ModalContent,
@@ -25,15 +26,19 @@ const COUNTRIES = [
 const POSITIONS = ["Intern", "YGT", "IRF", "JP", "Staff", "Contractor", "Visiting researcher"];
 
 export function ModalUser({ isOpen, setIsModalOpen, editForm, setEditForm, targetUser, setTargetUser }) {
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSaveProfile = async () => {
         try {
+            setIsLoading(true);
             const token = localStorage.getItem("token");
             await userService.update(targetUser.id, editForm, token);
             setTargetUser({ ...targetUser, ...editForm });
             setIsModalOpen(false);
         } catch (error) {
             console.error("Failed to update profile:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -164,10 +169,10 @@ export function ModalUser({ isOpen, setIsModalOpen, editForm, setEditForm, targe
                     </div>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="danger" variant="light" onPress={() => setIsModalOpen(false)}>
+                    <Button color="danger" variant="light" onPress={() => setIsModalOpen(false)} isDisabled={isLoading}>
                         Cancel
                     </Button>
-                    <Button color="primary" onPress={handleSaveProfile}>
+                    <Button color="primary" onPress={handleSaveProfile} isLoading={isLoading}>
                         Save Changes
                     </Button>
                 </ModalFooter>

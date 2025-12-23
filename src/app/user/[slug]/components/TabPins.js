@@ -178,9 +178,11 @@ export default function TabPins({ targetUser }) {
             {loading ? (
                 <div className="text-center text-gray-500 py-4">Loading pins...</div>
             ) : pins.length === 0 ? (
-                <div className="text-center text-gray-500 py-8 border-2 border-dashed border-slate-700/50 rounded-2xl">
-                    No pins collected yet. Open the library to add your first pin!
-                </div>
+                isOwnProfile ? (
+                    <div className="text-center text-gray-500 py-8 border-2 border-dashed border-slate-700/50 rounded-2xl">
+                        No pins collected yet. Open the library to add your first pin!
+                    </div>
+                ) : null
             ) : (
                 <div className="flex flex-wrap gap-4 sm:gap-6 justify-start items-start">
                     {[...pins]

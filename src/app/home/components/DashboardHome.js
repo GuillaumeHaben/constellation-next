@@ -100,6 +100,12 @@ export default function DashboardHome() {
         </div>
     );
 
+    if (!stats) return (
+        <div className="flex justify-center p-12 text-slate-400">
+            Failed to load stats. Please try again later.
+        </div>
+    );
+
     const statCards = [
         {
             title: "Community Size",

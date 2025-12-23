@@ -166,7 +166,7 @@ export default function Sidebar({
                                     <h2 className="text-2xl font-bold text-white tracking-tight">
                                         {targetUser.firstName} {targetUser.lastName}
                                     </h2>
-                                    <p className="text-slate-200 font-semibold text-xs tracking-widest inline">{ageDisplay}, </p>
+                                    {ageDisplay && <p className="text-slate-200 font-semibold text-xs tracking-widest inline">{ageDisplay}, </p>}
                                     <p className="text-blue-400 font-semibold text-xs tracking-widest uppercase inline">{targetUser.position || "ESA Member"}</p>
                                     <p className="text-slate-500 font-medium text-xs tracking-wide">{targetUser.esaSite || "ESA"}</p>
                                 </div>

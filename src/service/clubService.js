@@ -1,12 +1,14 @@
 import { strapi } from "@strapi/client";
 
+import { getApiBaseUrl } from "@/utils/apiHelper";
+
 const RESOURCE = "clubs";
 
 // Initialize a Strapi client instance
 // token is passed per function call to handle dynamic auth
 const getClient = (token) =>
   strapi({
-    baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
+    baseURL: `${getApiBaseUrl()}/api`,
     auth: token, // JWT token for authentication
   });
 
@@ -31,7 +33,7 @@ export const clubService = {
 
   updateByDocumentId: async (documentId, name, description, token) => {
     const client = getClient(token);
-    const updated = await client.collection(RESOURCE).update(documentId, {name, description});
+    const updated = await client.collection(RESOURCE).update(documentId, { name, description });
     return updated;
   },
 

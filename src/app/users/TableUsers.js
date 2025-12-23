@@ -5,6 +5,7 @@ import { DataTable, useDataTable, TableTopContent, TableBottomContent } from "@/
 import { userService } from "@/service/userService";
 import { RenderCell } from "./components/RenderCell";
 import { columns, INITIAL_VISIBLE_COLUMNS } from "./utils";
+import { useAuth } from "@/context/AuthContext";
 
 // Custom sort function for users
 const customUserSort = (items, sortDescriptor) => {
@@ -52,6 +53,9 @@ const customUserFilter = (items, filterValue) => {
 };
 
 export function TableUsers() {
+  const { user: currentUser } = useAuth();
+  const isAdmin = currentUser?.role?.name === 'Admin';
+
   const tableState = useDataTable({
     fetchData: userService.getAll,
     columns,
@@ -91,8 +95,8 @@ export function TableUsers() {
   const onRemove = handleRemove(userService.remove);
 
   const renderCell = useCallback((user, columnKey) => {
-    return <RenderCell user={user} columnKey={columnKey} onRemove={onRemove} />;
-  }, [onRemove]);
+    return <RenderCell user={user} columnKey={columnKey} onRemove={onRemove} canDelete={isAdmin} />;
+  }, [onRemove, isAdmin]);
 
   return (
     <DataTable

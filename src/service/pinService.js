@@ -1,18 +1,20 @@
 import { strapi } from "@strapi/client";
 
+import { getApiBaseUrl } from "@/utils/apiHelper";
+
 const RESOURCE = "pins";
 
 // Initialize a Strapi client instance for GET requests (keeping it for convenient filtering/population)
 const getClient = (token) =>
     strapi({
-        baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
+        baseURL: `${getApiBaseUrl()}/api`,
         auth: token,
     });
 
 // Helper for write operations to ensure consistent error handling and headers
 const apiRequest = async (endpoint, method, body, token) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/${endpoint}`, {
+        const response = await fetch(`${getApiBaseUrl()}/api/${endpoint}`, {
             method,
             headers: {
                 'Content-Type': 'application/json',
@@ -75,6 +77,28 @@ export const pinService = {
             publishedAt: new Date(), // Ensure it's not a draft
         };
         return await apiRequest(RESOURCE, 'POST', payload, token);
+    },
+
+    // Generic Image Upload for Pins
+    uploadImage: async (file, token) => {
+        const formData = new FormData();
+        formData.append("files", file);
+
+        const response = await fetch(`${getApiBaseUrl()}/api/upload`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error?.message || "Failed to upload file");
+        }
+
+        const data = await response.json();
+        return data[0];
     },
 
     // User: Add a pin to a user profile (Many-to-Many connect)

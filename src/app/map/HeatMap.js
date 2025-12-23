@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { mapService } from '@/service/mapService';
 
 const HeatMap = () => {
     const mapContainer = useRef(null);
@@ -21,9 +22,9 @@ const HeatMap = () => {
 
         map.current.on('load', async () => {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}/api/heat-maps/geojson`);
-                if (!response.ok) throw new Error('Failed to fetch heatmap data');
-                const data = await response.json();
+                const data = await mapService.getHeatmapData();
+
+                // Add GeoJSON source
 
                 // Add GeoJSON source
                 map.current.addSource('heatmap', {

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import icon from '../../../public/img/icon.png';
+import { authService } from "@/service/authService";
 
 export default function Login() {
   const [form, setForm] = useState({ identifier: "", password: "" });
@@ -21,22 +22,13 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/local`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      const data = await authService.login(form.identifier, form.password);
 
-      const data = await res.json();
-
-      if (res.ok) {
-        login(data.jwt, data.user);
-        router.push("/home");
-      } else {
-        setError(data.error?.message || "Invalid credentials");
-      }
+      // Remove the direct res.ok check as authService throws on error
+      login(data.jwt, data.user);
+      router.push("/home");
     } catch (err) {
-      setError("Something went wrong");
+      setError(err.message || "Something went wrong");
     }
   };
 

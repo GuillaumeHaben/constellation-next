@@ -5,7 +5,7 @@ import { TeamsIcon } from "@/components/Icons";
 import { getProfilePictureUrl } from "@/utils/media";
 import { roleColorMap } from "../utils";
 
-export function RenderCell({ user, columnKey, onRemove }) {
+export function RenderCell({ user, columnKey, onRemove, canDelete }) {
     const cellValue = user[columnKey];
 
     switch (columnKey) {
@@ -47,11 +47,17 @@ export function RenderCell({ user, columnKey, onRemove }) {
                             <TeamsIcon className="h-5 w-5 text-indigo-600" />
                         </Button>
                     </Tooltip>
-                    <Tooltip content="Delete user" placement="bottom">
-                        <Button isIconOnly onPress={() => onRemove(user.id)} size="sm" variant="light">
-                            <TrashIcon className="h-5 w-5 text-red-800" />
-                        </Button>
-                    </Tooltip>
+                    {onRemove && canDelete && (
+                        <Tooltip content="Delete user" placement="bottom">
+                            <Button isIconOnly onPress={() => {
+                                if (window.confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
+                                    onRemove(user.id);
+                                }
+                            }} size="sm" variant="light">
+                                <TrashIcon className="h-5 w-5 text-red-800" />
+                            </Button>
+                        </Tooltip>
+                    )}
                 </div>
             );
         default:

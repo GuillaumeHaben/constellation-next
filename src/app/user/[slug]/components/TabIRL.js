@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { userService } from "@/service/userService";
+import { useAuth } from "@/context/AuthContext";
 import { Card, CardBody, Avatar } from "@heroui/react";
 import { UsersIcon, ChartBarIcon, CalendarIcon } from "@heroicons/react/24/outline";
 import Quote from "@/components/Quote";
@@ -9,9 +10,12 @@ import Link from "next/link";
 import { getProfilePictureUrl } from "@/utils/media";
 
 export default function TabIRL({ targetUser }) {
+    const { user } = useAuth();
     const [encounterCount, setEncounterCount] = useState(0);
     const [encounteredUsers, setEncounteredUsers] = useState([]);
     const [isLoadingEncounters, setIsLoadingEncounters] = useState(true);
+
+    const isOwnProfile = user && targetUser && user.slug === targetUser.slug;
 
     useEffect(() => {
         let isMounted = true;
@@ -87,7 +91,7 @@ export default function TabIRL({ targetUser }) {
                 </Card>
 
                 {/* Placeholder for future stats */}
-                <Card className="bg-slate-800/40 border-slate-700/50 rounded-2xl">
+                {/* <Card className="bg-slate-800/40 border-slate-700/50 rounded-2xl">
                     <CardBody className="p-6 flex flex-col items-center text-center gap-2">
                         <CalendarIcon className="w-8 h-8 text-slate-500" />
                         <div>
@@ -115,51 +119,54 @@ export default function TabIRL({ targetUser }) {
                             <p className="text-slate-400 text-sm">Very High</p>
                         </div>
                     </CardBody>
-                </Card>
+                </Card> */}
             </div>
 
             <div className="mt-6">
-                <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
-                    <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Recently Met Crew</h3>
-                    {encounterCount > 0 && (
-                        <span className="text-xs text-slate-500">{encounterCount} total encounters</span>
+                <div className="mt-6">
+                    {encounteredUsers.length > 0 && (
+                        <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+                            <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Crew</h3>
+                        </div>
+                    )}
+                    {isLoadingEncounters ? (
+                        <div className="text-center text-slate-500 border border-dashed border-slate-700/50 rounded-2xl py-6">
+                            Loading encounters...
+                        </div>
+                    ) : encounteredUsers.length === 0 ? (
+                        isOwnProfile ? (
+                            <div className="text-center text-slate-500 border border-dashed border-slate-700/50 rounded-2xl py-8">
+                                No IRL encounters recorded yet. Grab a QR and meet someone!
+                            </div>
+                        ) : null
+                    ) : (
+                        <div className="flex flex-wrap justify-center md:justify-start gap-6">
+                            {encounteredUsers.slice(0, 18).map((person) => {
+                                const fullName = [person.firstName, person.lastName].filter(Boolean).join(" ") || person.username || "Constellation Explorer";
+                                const profileHref = person.slug ? `/user/${person.slug}` : `#`; // fallback if slug missing
+                                const avatarSrc = getProfilePictureUrl(person);
+
+                                return (
+                                    <Link
+                                        key={person.id}
+                                        href={profileHref}
+                                        className="group flex flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1"
+                                    >
+                                        <Avatar
+                                            src={avatarSrc || undefined}
+                                            name={fullName.charAt(0).toUpperCase()}
+                                            className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-800/70 text-white text-lg"
+                                            radius="full"
+                                        />
+                                        <span className="text-xs font-semibold text-slate-300 text-center group-hover:text-white transition-colors max-w-[6rem] truncate">
+                                            {fullName}
+                                        </span>
+                                    </Link>
+                                );
+                            })}
+                        </div>
                     )}
                 </div>
-                {isLoadingEncounters ? (
-                    <div className="text-center text-slate-500 border border-dashed border-slate-700/50 rounded-2xl py-6">
-                        Loading encounters...
-                    </div>
-                ) : encounteredUsers.length === 0 ? (
-                    <div className="text-center text-slate-500 border border-dashed border-slate-700/50 rounded-2xl py-8">
-                        No IRL encounters recorded yet. Grab a QR and meet someone!
-                    </div>
-                ) : (
-                    <div className="flex flex-wrap justify-center md:justify-start gap-6">
-                        {encounteredUsers.slice(0, 18).map((person) => {
-                            const fullName = [person.firstName, person.lastName].filter(Boolean).join(" ") || person.username || "Constellation Explorer";
-                            const profileHref = person.slug ? `/user/${person.slug}` : `#`; // fallback if slug missing
-                            const avatarSrc = getProfilePictureUrl(person);
-
-                            return (
-                                <Link
-                                    key={person.id}
-                                    href={profileHref}
-                                    className="group flex flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1"
-                                >
-                                    <Avatar
-                                        src={avatarSrc || undefined}
-                                        name={fullName.charAt(0).toUpperCase()}
-                                        className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-800/70 text-white text-lg"
-                                        radius="full"
-                                    />
-                                    <span className="text-xs font-semibold text-slate-300 text-center group-hover:text-white transition-colors max-w-[6rem] truncate">
-                                        {fullName}
-                                    </span>
-                                </Link>
-                            );
-                        })}
-                    </div>
-                )}
             </div>
         </div>
     );

@@ -1,12 +1,14 @@
 import { strapi } from "@strapi/client";
 
+import { getApiBaseUrl } from "@/utils/apiHelper";
+
 const RESOURCE = "changelogs";
 
 // Initialize a Strapi client instance
 // token is passed per function call to handle dynamic auth
 const getClient = (token) =>
     strapi({
-        baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
+        baseURL: `${getApiBaseUrl()}/api`,
         auth: token, // JWT token for authentication
     });
 
@@ -31,7 +33,7 @@ export const changelogService = {
 
     create: async (token, data) => {
         console.log("Submitting changelog data:", data);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/changelogs`, {
+        const response = await fetch(`${getApiBaseUrl()}/api/changelogs`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -51,7 +53,7 @@ export const changelogService = {
     },
 
     delete: async (token, documentId) => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/changelogs/${documentId}`, {
+        const response = await fetch(`${getApiBaseUrl()}/api/changelogs/${documentId}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`,
