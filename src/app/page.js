@@ -1,9 +1,6 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { useState } from 'react'
-import { Dialog, DialogPanel } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Parisienne } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
@@ -20,14 +17,12 @@ const parisienne = Parisienne({
 });
 
 export default function Home() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { user } = useAuth();
 
   return (
-    <div style={{ zIndex: 10, width: "100%", position: 'absolute', top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
-      className="flex min-h-screen flex-col items-center justify-center bg-gray-900">
+    <div className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-gray-900">
       <header className="absolute inset-x-0 top-0 z-50">
-        <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
+        <nav aria-label="Global" className="mx-auto max-w-7xl flex items-center justify-between p-4 sm:p-6 lg:px-8">
           <div className="flex lg:flex-1">
             <Link href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Constellation</span>
@@ -40,82 +35,25 @@ export default function Home() {
               />
             </Link>
           </div>
-          <div className="flex lg:hidden">
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(true)}
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-200"
-            >
-              <span className="sr-only">Open main menu</span>
-              <Bars3Icon aria-hidden="true" className="size-6" />
-            </button>
-          </div>
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          <div className="flex flex-1 justify-end" data-mobile-actions>
             {user ? (
-              <Link href="/home" className="flex items-center gap-2 text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-blue-500 px-3 py-2 rounded-md">
-                {HomeIcon && <HomeIcon className="h-6 w-6 text-white" />} Home <span aria-hidden="true">&rarr;</span>
-              </Link>
+              <div className="flex gap-3">
+                <Link href="/home" className="flex items-center gap-2 text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-blue-500 px-3 py-2 rounded-md">
+                  {HomeIcon && <HomeIcon className="h-6 w-6 text-white" />} Home <span aria-hidden="true">&rarr;</span>
+                </Link>
+              </div>
             ) : (
-              <Link href="/login" className="flex items-center gap-2 text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-blue-500 px-3 py-2 rounded-md">
-                Log in <span aria-hidden="true">{ArrowRightEndOnRectangleIcon && <ArrowRightEndOnRectangleIcon className="h-6 w-6 text-white" />}</span>
-              </Link>
+              <div className="flex gap-3">
+                <Link href="/login" className="flex items-center gap-2 text-sm/6 font-semibold text-white outline-2 -outline-offset-1 outline-white/10 hover:outline-2 hover:-outline-offset-2 hover:outline-blue-500 px-3 py-2 rounded-md">
+                  Log in <span aria-hidden="true">{ArrowRightEndOnRectangleIcon && <ArrowRightEndOnRectangleIcon className="h-6 w-6 text-white" />}</span>
+                </Link>
+              </div>
             )}
           </div>
         </nav>
-        <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
-          <div className="fixed inset-0 z-50" />
-          <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
-            <div className="flex items-center justify-between">
-              <Link href="/" className="-m-1.5 p-1.5">
-                <span className="sr-only">Constellation</span>
-                <Image
-                  alt=""
-                  src={icon}
-                  width={32}
-                  height={32}
-                  className="h-8 w-auto"
-                />
-              </Link>
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen(false)}
-                className="-m-2.5 rounded-md p-2.5 text-gray-200"
-              >
-                <span className="sr-only">Close menu</span>
-                <XMarkIcon aria-hidden="true" className="size-6" />
-              </button>
-            </div>
-            <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-gray-500/10">
-                <div className="space-y-2 py-6">
-                  {user ? (
-                    <Link
-                      href="/home"
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-gray-800"
-                    >
-                      <div className="flex items-center gap-2">
-                        {HomeIcon && <HomeIcon className="h-5 w-5 text-white" />}
-                        Home
-                      </div>
-                    </Link>
-                  ) : (
-                    <Link
-                      href="/login"
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-gray-800"
-                    >
-                      <div className="flex items-center gap-2">
-                        Log in  {ArrowRightEndOnRectangleIcon && <ArrowRightEndOnRectangleIcon className="h-5 w-5 text-white" />}
-                      </div>
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </div>
-          </DialogPanel>
-        </Dialog>
       </header>
 
-      <div className="relative isolate px-6 pt-14 lg:px-8">
+      <main className="relative isolate flex w-full flex-1 flex-col items-center justify-center gap-10 px-6 text-center lg:px-8">
         <div
           aria-hidden="true"
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -128,9 +66,9 @@ export default function Home() {
             className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
           />
         </div>
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-            <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20">
+        <div className="mx-auto max-w-2xl space-y-10">
+          <div className="hidden sm:flex justify-center">
+            <div className="relative rounded-full px-4 py-1 text-sm/6 text-gray-300 ring-1 ring-white/10 hover:ring-white/20 whitespace-nowrap">
               Something exciting is about to happen at {" "}
               <span className="inline-flex items-center align-middle">
                 <Image
@@ -143,14 +81,14 @@ export default function Home() {
               </span>
             </div>
           </div>
-          <div className="text-center">
+          <div className="space-y-8">
             <h1 className={parisienne.className + " text-5xl font-semibold tracking-tight text-balance text-white sm:text-9xl"}>
               Constellation
             </h1>
-            <p className="mt-8 text-lg font-medium text-pretty text-gray-400 sm:text-xl/8">
+            <p className="text-lg font-medium text-pretty text-gray-400 sm:text-xl/8">
               Connecting all the ⭐ together
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            <div className="flex items-center justify-center gap-x-6">
               <Link
                 target="_blank"
                 href="https://docs.google.com/document/d/1cWwAar7skvMQOlLjMmb8TLNhKaZcticAWuBFdh-cb9g/edit?usp=drive_link"
@@ -173,7 +111,7 @@ export default function Home() {
             className="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75"
           />
         </div>
-      </div>
+      </main>
       <Galaxy />
     </div>
   )

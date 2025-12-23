@@ -24,7 +24,7 @@ export default function InfoPage() {
                     <div className="text-center space-y-4">
                         <h2 className="text-4xl font-black text-white tracking-tight">Our Mission</h2>
                         <p className="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
-                            Constellation is more than a platform. It's a digital space designed to connect
+                            Constellation is more than a platform. It&apos;s a digital space designed to connect
                             the next generation of space pioneers at the European Space Agency.
                         </p>
                     </div>
@@ -78,7 +78,7 @@ export default function InfoPage() {
                         <h2 className="text-3xl font-black text-white px-4">Built by YPs, for YPs</h2>
                         <p className="text-slate-300 max-w-3xl mx-auto text-lg leading-relaxed">
                             Constellation was born from a simple observation: our agency is full of brilliant individuals,
-                            yet crossing orbits isn't always easy. We built this tool to make our galaxy a bit smaller
+                            yet crossing orbits isn&apos;t always easy. We built this tool to make our galaxy a bit smaller
                             and our community a lot stronger.
                         </p>
                     </div>

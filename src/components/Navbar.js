@@ -15,7 +15,9 @@ import {
     InformationCircleIcon,
     ShieldCheckIcon,
     CheckBadgeIcon,
-    ChatBubbleBottomCenterTextIcon
+    ChatBubbleBottomCenterTextIcon,
+    ShoppingBagIcon,
+    LinkIcon
 } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
@@ -33,6 +35,14 @@ const navigation = [
             { name: 'Users', href: '/users', icon: UsersIcon },
             { name: 'Clubs', href: '/clubs', icon: UserGroupIcon },
             { name: 'Map', href: '/map', icon: MapIcon },
+        ]
+    },
+    {
+        name: 'Coming soon',
+        icon: ClockIcon,
+        children: [
+            { name: 'Market place', href: '#', icon: ShoppingBagIcon },
+            { name: 'Families', href: '#', icon: LinkIcon },
         ]
     },
     {
@@ -87,8 +97,12 @@ export default function NavBar() {
         };
     });
 
-    // Flatten for mobile
-    const mobileNav = navWithCurrent.flatMap(item => item.children ? item.children : item);
+    // Prepare sections for mobile view
+    const mobileSections = navWithCurrent.map(item => (
+        item.children
+            ? { key: item.name, title: item.name, items: item.children }
+            : { key: item.name, title: undefined, items: [item] }
+    ));
 
     return (
         <Disclosure as="nav" className="bg-gray-900 border-b">
@@ -129,14 +143,13 @@ export default function NavBar() {
                                                 <DropdownMenu
                                                     aria-label={item.name}
                                                     className="w-[200px]"
+                                                    variant="faded"
+                                                    disabledKeys={["Market place", "Families"]}
                                                     itemClasses={{
                                                         base: [
                                                             "rounded-md",
                                                             "text-default-500",
                                                             "transition-opacity",
-                                                            "data-[hover=true]:text-foreground",
-                                                            "data-[hover=true]:bg-default-100",
-                                                            "dark:data-[hover=true]:bg-default-50",
                                                             "data-[selectable=true]:focus:bg-default-50",
                                                             "data-[pressed=true]:opacity-70",
                                                             "data-[focus-visible=true]:ring-default-500",
@@ -144,10 +157,14 @@ export default function NavBar() {
                                                     }}
                                                 >
                                                     {item.children.map((child) => (
-                                                        <DropdownItem key={child.name} textValue={child.name} startContent={<child.icon className="h-4 w-4" />}>
-                                                            <Link href={child.href} className="w-full block">
-                                                                {child.name}
-                                                            </Link>
+                                                        <DropdownItem
+                                                            key={child.name}
+                                                            as={Link}
+                                                            href={child.href}
+                                                            textValue={child.name}
+                                                            startContent={<child.icon className="h-4 w-4" />}
+                                                        >
+                                                            {child.name}
                                                         </DropdownItem>
                                                     ))}
                                                 </DropdownMenu>
@@ -218,23 +235,38 @@ export default function NavBar() {
             </div>
 
             <DisclosurePanel className="md:hidden">
-                <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                    {mobileNav.map((item) => (
-                        <DisclosureButton
-                            key={item.name}
-                            as="a"
-                            href={item.href}
-                            aria-current={item.current ? 'page' : undefined}
+                <div className="space-y-4 px-2 pb-3 pt-3 sm:px-3">
+                    {mobileSections.map((section, index) => (
+                        <div
+                            key={section.key}
                             className={classNames(
-                                item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                'block rounded-md px-3 py-2 text-base font-medium',
+                                'rounded-lg border border-white/5 bg-white/5/50 backdrop-blur-sm',
+                                index > 0 ? 'pt-3' : 'pt-2'
                             )}
                         >
-                            <div className="flex items-center gap-2">
-                                {item.icon && <item.icon className="h-5 w-5" />}
-                                {item.name}
+                            {section.title && (
+                                <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                    {section.title}
+                                </p>
+                            )}
+                            <div className="flex flex-col gap-2 px-2 pb-2">
+                                {section.items.map((item) => (
+                                    <Link
+                                        key={item.name}
+                                        href={item.href}
+                                        className={classNames(
+                                            item.current
+                                                ? 'bg-white/10 text-white'
+                                                : 'text-gray-300 hover:bg-white/5 hover:text-white',
+                                            'flex items-center gap-2 rounded-md px-3 py-2 text-base font-medium transition-colors'
+                                        )}
+                                    >
+                                        {item.icon && <item.icon className="h-5 w-5" />}
+                                        {item.name}
+                                    </Link>
+                                ))}
                             </div>
-                        </DisclosureButton>
+                        </div>
                     ))}
                 </div>
                 <div className="border-t border-white/10 pt-4 pb-3 space-y-4">

@@ -71,7 +71,6 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
-      <ModalNewFeature isOpen={isModalOpen} onOpenChange={setModalOpen} />
       <ModalReleaseNotes
         isOpen={isReleaseNotesOpen}
         onClose={handleCloseReleaseNotes}
@@ -81,22 +80,14 @@ export default function Home() {
       <Header title={"Home"} breadcrumbs={<BreadCrumbs currentPage="home" />} icon={HomeIcon} />
       <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+          <Quote text="We are all of us stars, and we deserve to twinkle" author="Marilyn Monroe" authorTitle="Hollywood Icon" picture="/img/marilyn-monroe.jpg" />
+
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-blue-600/10 to-transparent p-6 rounded-2xl border border-blue-500/10">
             <div>
-              <h2 className="text-2xl font-black text-white tracking-tight">Welcome to the Galaxy, {user.firstName}!</h2>
+              <h2 className="text-2xl font-black text-white tracking-tight">Welcome to the Galaxy, <span className="text-cyan-600"> {user.firstName}</span>!</h2>
               <p className="text-base text-gray-400 tracking-tight w-2/3">Constellation connects Young Professionals at ESA, helping them discover peers, share the pride behind their initiatives, and build a lasting community beyond their mission.</p>
             </div>
-            <Button
-              color="primary"
-              variant="shadow"
-              onPress={() => setModalOpen(true)}
-              className="font-black uppercase tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/20"
-            >
-              New feature
-            </Button>
           </div>
-
-          <Quote text="We are all of us stars, and we deserve to twinkle" author="Marilyn Monroe" authorTitle="Hollywood Icon" picture="/img/marilyn-monroe.jpg" />
 
           <section className="space-y-4">
             <div className="flex items-center gap-2 px-2">

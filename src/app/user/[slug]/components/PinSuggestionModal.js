@@ -18,7 +18,6 @@ import { useAuth } from "@/context/AuthContext";
 export default function PinSuggestionModal({ isOpen, onClose }) {
     const { user } = useAuth();
     const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -70,7 +69,6 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
 
             await pinService.suggestPin({
                 name,
-                description, // Optional but good to have
                 image: imageId,
                 suggestedBy: user.id,
                 status: isAdminOrManager ? 'approved' : 'pending'
@@ -78,7 +76,6 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
 
             onClose();
             setName("");
-            setDescription("");
             setSelectedFile(null);
             setPreviewUrl(null);
 
@@ -105,12 +102,6 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
                             value={name}
                             onValueChange={setName}
                             isRequired
-                        />
-                        <Input
-                            label="Description"
-                            placeholder="Short description..."
-                            value={description}
-                            onValueChange={setDescription}
                         />
 
                         {/* Image Upload */}

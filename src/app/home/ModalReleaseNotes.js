@@ -32,7 +32,7 @@ export default function ModalReleaseNotes({ isOpen, onClose, changelog }) {
                                 <AnimatedFeature />
                             </ModalHeader>
                             <ModalBody className="flex flex-col text-center mb-10 px-6 sm:px-12 w-full">
-                                <h1 className="text-2xl font-bold mb-2">We've been working hard while you were away!</h1>
+                                <h1 className="text-2xl font-bold mb-2">We&apos;ve been working hard while you were away!</h1>
                                 {/* Feature Card */}
                                 <div className="mt-6 bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/50 p-6 rounded-2xl shadow-xl relative overflow-hidden group hover:border-blue-500/30 transition-all duration-300">
                                     {/* Decorative background effects */}

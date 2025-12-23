@@ -18,11 +18,11 @@ export default function Quote({ text, author, authorTitle, picture }) {
                 <figcaption className="flex items-center space-x-3 rtl:space-x-reverse min-w-max">
                     <div className="relative">
                         <Image
-                            className="w-11 h-11 rounded-full border-2 border-slate-700/50 group-hover:border-blue-500/40 transition-all duration-500 shadow-xl object-cover grayscale group-hover:grayscale-0"
+                            className="w-14 h-14 rounded-full border-2 border-slate-700/50 group-hover:border-blue-500/40 transition-all duration-500 shadow-xl object-cover grayscale group-hover:grayscale-0"
                             src={picture}
                             alt={author}
-                            width={44}
-                            height={44}
+                            width={128}
+                            height={128}
                             unoptimized
                         />
                     </div>

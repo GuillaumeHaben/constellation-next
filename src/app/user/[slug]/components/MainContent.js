@@ -6,7 +6,7 @@ import {
     Tabs,
     Tab
 } from "@heroui/react";
-import { UserIcon, TrophyIcon, EllipsisHorizontalCircleIcon, ChatBubbleLeftRightIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { UserIcon, TrophyIcon, SparklesIcon, ChatBubbleLeftRightIcon, UsersIcon } from "@heroicons/react/24/outline";
 import TabOverview from "./TabOverview";
 import TabPins from "./TabPins";
 import TabAwards from "./TabAwards";
@@ -56,26 +56,13 @@ export default function MainContent({ targetUser }) {
                         key="pins"
                         title={
                             <div className="flex items-center space-x-2">
-                                <EllipsisHorizontalCircleIcon className="w-5 h-5" />
+                                <SparklesIcon className="w-5 h-5" />
                                 <span>Pins</span>
                             </div>
                         }
                     >
                         <div className="pt-6">
                             <TabPins targetUser={targetUser} />
-                        </div>
-                    </Tab>
-                    <Tab
-                        key="awards"
-                        title={
-                            <div className="flex items-center space-x-2">
-                                <TrophyIcon className="w-5 h-5" />
-                                <span>Awards</span>
-                            </div>
-                        }
-                    >
-                        <div className="pt-6">
-                            <TabAwards targetUser={targetUser} />
                         </div>
                     </Tab>
                     <Tab
@@ -89,6 +76,19 @@ export default function MainContent({ targetUser }) {
                     >
                         <div className="pt-3">
                             <TabQR targetUser={targetUser} />
+                        </div>
+                    </Tab>
+                    <Tab
+                        key="awards"
+                        title={
+                            <div className="flex items-center space-x-2">
+                                <TrophyIcon className="w-5 h-5" />
+                                <span>Awards</span>
+                            </div>
+                        }
+                    >
+                        <div className="pt-6">
+                            <TabAwards targetUser={targetUser} />
                         </div>
                     </Tab>
                 </Tabs>

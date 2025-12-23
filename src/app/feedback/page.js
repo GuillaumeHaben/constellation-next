@@ -19,7 +19,8 @@ export default function FeedbackPage() {
             />
 
             <main className="flex-1">
-                <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 space-y-12">
+                <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+                    <Quote text="Be the change you want to see in the world" author="Mahatma Gandhi" authorTitle="Defender of Freedom" picture="/img/mahatma-gandhi.jpg" />
 
                     <div className="text-center space-y-6">
                         <h2 className="text-4xl font-black text-white tracking-tight">Help us grow the Galaxy</h2>
@@ -28,10 +29,8 @@ export default function FeedbackPage() {
                             Found a bug? Have a stellar idea? We want to hear it.
                         </p>
                     </div>
-
-                    <Quote text="Be the change you want to see in the world" author="Mahatma Gandhi" authorTitle="Defender of Freedom" picture="/img/mahatma-gandhi.jpg" />
-
-
+                </div>
+                <div className="mx-auto max-w-4xl px-4 py-4 sm:px-6 lg:px-8 space-y-12">
                     <div className="grid grid-cols-1 gap-6">
                         <Card className="bg-slate-800/20 border-slate-700/30 backdrop-blur-md overflow-hidden group hover:border-blue-500/30 transition-all duration-300">
                             <CardBody className="p-0">
@@ -49,7 +48,7 @@ export default function FeedbackPage() {
                                         <h3 className="text-xl font-bold text-white">Share your thoughts directly</h3>
                                         <p className="text-slate-400 text-sm leading-relaxed">
                                             The most direct way to reach the team is via email. We read every message and
-                                            respond to every idea. Whether it's a small tweak or a major vision, let's talk.
+                                            respond to every idea. Whether it&apos;s a small tweak or a major vision, let&apos;s talk.
                                         </p>
                                         <Button
                                             className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 shadow-lg shadow-blue-900/40"
@@ -71,7 +70,7 @@ export default function FeedbackPage() {
                                         <h4 className="text-white font-bold">Report a bug</h4>
                                     </div>
                                     <p className="text-slate-400 text-xs leading-relaxed">
-                                        If something isn't working as expected, let us know under the hood.
+                                        If something isn&apos;t working as expected, let us know under the hood.
                                         Every fix makes the galaxy safer for everyone.
                                     </p>
                                 </CardBody>

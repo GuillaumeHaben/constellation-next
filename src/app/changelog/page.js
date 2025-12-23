@@ -5,11 +5,13 @@ import NavBar from "@/components/Navbar";
 import BreadCrumbs from "@/components/BreadCrumbs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Quote from "@/components/Quote";
 import { ClockIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState, useCallback } from "react";
 import { changelogService } from "@/service/changelogService";
 import ModalCreateChangelog from "./ModalCreateChangelog";
 import { Button } from "@heroui/react";
+
 
 export default function Changelog() {
     const { user } = useAuth();
@@ -17,7 +19,6 @@ export default function Changelog() {
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    if (!user) return null;
 
     const fetchChangelogs = useCallback(async () => {
         const token = localStorage.getItem("token");
@@ -75,7 +76,9 @@ export default function Changelog() {
             <Header title={"Changelog"} breadcrumbs={<BreadCrumbs currentPage="Changelog" />} icon={ClockIcon} />
 
             <main className="flex-1 container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-                <div className="flex flex-col lg:flex-row gap-12">
+                <Quote text="One small step for man, one giant leap for mankind" author="Neil Armstrong" authorTitle="Humankind Ambassador" picture="/img/neil-armstrong.jpg" />
+
+                <div className="flex flex-col lg:flex-row gap-12 mt-6">
 
                     {/* Side Navigation - Sticky */}
                     <aside className="lg:w-1/4 hidden lg:block">

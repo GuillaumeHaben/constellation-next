@@ -114,7 +114,20 @@ export default function Sidebar({
         }
     }, [qrToken, QRCodeStyling]);
 
+    const getAgeDisplay = (birthdayStr) => {
+        if (!birthdayStr) return null;
+        const date = new Date(birthdayStr);
+        if (isNaN(date)) return null;
+        const today = new Date();
+        let age = today.getFullYear() - date.getFullYear();
+        const hasHadBirthdayThisYear = (today.getMonth() > date.getMonth()) || (today.getMonth() === date.getMonth() && today.getDate() >= date.getDate());
+        if (!hasHadBirthdayThisYear) age--;
+        const isBirthdayToday = today.getMonth() === date.getMonth() && today.getDate() === date.getDate();
+        return `${isBirthdayToday ? ' 🎂' : ''} ${age} years old`;
+    };
+
     const toggleFlip = () => setIsFlipped(!isFlipped);
+    const ageDisplay = getAgeDisplay(targetUser.birthday);
 
     return (
         <div
@@ -153,7 +166,8 @@ export default function Sidebar({
                                     <h2 className="text-2xl font-bold text-white tracking-tight">
                                         {targetUser.firstName} {targetUser.lastName}
                                     </h2>
-                                    <p className="text-blue-400 font-semibold text-xs tracking-widest uppercase">{targetUser.position || "ESA Member"}</p>
+                                    <p className="text-slate-200 font-semibold text-xs tracking-widest inline">{ageDisplay}, </p>
+                                    <p className="text-blue-400 font-semibold text-xs tracking-widest uppercase inline">{targetUser.position || "ESA Member"}</p>
                                     <p className="text-slate-500 font-medium text-xs tracking-wide">{targetUser.esaSite || "ESA"}</p>
                                 </div>
 

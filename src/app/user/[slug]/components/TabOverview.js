@@ -1,10 +1,15 @@
 "use client";
 
+import { Card, CardBody } from "@heroui/react";
 import {
-    Card,
-    CardBody
-} from "@heroui/react";
-import { InstagramIcon, LinkedInIcon, FacebookIcon, GitHubIcon, TwitterIcon, WebsiteIcon } from "@/components/Icons";
+    CalendarIcon,
+    GlobeAltIcon,
+    MapPinIcon,
+    BuildingOffice2Icon,
+    BriefcaseIcon,
+    PhoneIcon,
+    HomeIcon
+} from "@heroicons/react/24/outline";
 
 const COUNTRY_EMOJIS = {
     "Austria": "🇦🇹",
@@ -32,57 +37,63 @@ const COUNTRY_EMOJIS = {
     "United Kingdom": "🇬🇧"
 };
 
-const getAgeDisplay = (birthdayStr) => {
-    if (!birthdayStr) return null;
-    const date = new Date(birthdayStr);
-    if (isNaN(date)) return null;
-    const today = new Date();
-    let age = today.getFullYear() - date.getFullYear();
-    const hasHadBirthdayThisYear = (today.getMonth() > date.getMonth()) || (today.getMonth() === date.getMonth() && today.getDate() >= date.getDate());
-    if (!hasHadBirthdayThisYear) age--;
-    const isBirthdayToday = today.getMonth() === date.getMonth() && today.getDate() === date.getDate();
-    return `${isBirthdayToday ? ' 🎂' : ''} ${age} years old`;
-};
-
-// Helper component for profile fields
-function ProfileField({ label, value }) {
-    return (
-        <div>
-            <dt className="text-sm font-medium text-gray-400">{label}</dt>
-            <dd className="mt-1 text-sm text-white">{value || "Not specified"}</dd>
-        </div>
-    );
-}
-
-// Helper component for social media links
-function SocialLink({ href, icon }) {
-    const iconClass = "w-8 h-8 text-gray-400 hover:text-white transition-colors";
-
-    return (
-        <a href={href} target="_blank" rel="noopener noreferrer" className={iconClass}>
-            {icon === "instagram" && <InstagramIcon />}
-            {icon === "linkedin" && <LinkedInIcon />}
-            {icon === "facebook" && <FacebookIcon />}
-            {icon === "github" && <GitHubIcon />}
-            {icon === "website" && <WebsiteIcon />}
-            {icon === "twitter" && <TwitterIcon />}
-        </a>
-    );
-}
-
 export default function TabOverview({ targetUser }) {
+
+    const overviewTiles = [
+        {
+            key: "country",
+            label: "Country",
+            value: targetUser.country ? `${COUNTRY_EMOJIS[targetUser.country] ?? ""} ${targetUser.country}`.trim() : null,
+            icon: GlobeAltIcon
+        },
+        {
+            key: "site",
+            label: "ESA Site",
+            value: targetUser.esaSite,
+            icon: MapPinIcon
+        },
+        {
+            key: "directorate",
+            label: "Directorate",
+            value: targetUser.directorate,
+            icon: BuildingOffice2Icon
+        },
+        {
+            key: "position",
+            label: "Position",
+            value: targetUser.position,
+            icon: BriefcaseIcon
+        },
+        {
+            key: "phone",
+            label: "Phone Number",
+            value: targetUser.phoneNumber,
+            icon: PhoneIcon
+        },
+        {
+            key: "address",
+            label: "Address",
+            value: targetUser.address,
+            icon: HomeIcon
+        }
+    ];
+
     return (
         <>
-            {/* <h3 className="text-xl font-bold text-white mb-6">Profile Information</h3> */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <ProfileField label="Age" value={getAgeDisplay(targetUser.birthday)} />
-                <ProfileField label="Country" value={targetUser.country ? COUNTRY_EMOJIS[targetUser.country] + " " + targetUser.country : null} />
-                <ProfileField label="ESA Site" value={targetUser.esaSite} />
-                <ProfileField label="Directorate" value={targetUser.directorate} />
-                <ProfileField label="Position" value={targetUser.position} />
-                {/* <ProfileField label="Work Domain" value={targetUser.workDomain} /> */}
-                <ProfileField label="Phone Number" value={targetUser.phoneNumber} />
-                <ProfileField label="Address" value={targetUser.address} />
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {overviewTiles.map((tile) => (
+                    <Card key={tile.key} className="bg-slate-800/40 border-slate-700/50 rounded-2xl">
+                        <CardBody className="p-6 flex flex-col items-center text-center gap-3">
+                            {tile.icon && <tile.icon className="w-8 h-8 text-slate-500" />}
+                            <div className="space-y-1">
+                                <p className="text-white font-semibold">{tile.label}</p>
+                                <p className="text-slate-400 text-sm break-words">
+                                    {tile.value || "Not specified"}
+                                </p>
+                            </div>
+                        </CardBody>
+                    </Card>
+                ))}
             </div>
         </>
     );

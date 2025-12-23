@@ -110,7 +110,6 @@ export default function AdminApprovalsPage() {
                                     {/* Details */}
                                     <div className="flex-1 text-center sm:text-left">
                                         <h3 className="text-xl font-semibold">{pin.name}</h3>
-                                        {pin.description && <p className="text-gray-400 mt-1">{pin.description}</p>}
                                         <div className="flex flex-wrap gap-2 mt-3 justify-center sm:justify-start">
                                             <Chip size="sm" variant="flat">Status: {pin.status}</Chip>
                                             {pin.suggestedBy && (

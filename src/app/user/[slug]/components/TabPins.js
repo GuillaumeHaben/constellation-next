@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Avatar, Button, Tooltip, Badge } from "@heroui/react";
-import { PlusIcon, QuestionMarkCircleIcon, InformationCircleIcon } from "@heroicons/react/24/solid";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { Avatar, Button, Tooltip, Chip, Card, CardBody } from "@heroui/react";
+import { PlusIcon, LightBulbIcon, InformationCircleIcon, SparklesIcon } from "@heroicons/react/24/solid";
 import { pinService } from "@/service/pinService";
 import { useAuth } from "@/context/AuthContext";
 import PinLibraryModal from "./PinLibraryModal";
@@ -42,65 +42,137 @@ export default function TabPins({ targetUser }) {
 
     // Handle unequip
     const handleUnequip = async (instanceId) => {
-        // Confirmation removed as requested
-        // if (!confirm("Are you sure you want to remove this pin?")) return;
         try {
             const token = localStorage.getItem("token");
             await pinService.unequipPin(instanceId, targetUser.id, token);
             setPins(prev => prev.filter(p => (p.documentId || p.id) !== instanceId));
         } catch (error) {
             console.error("Failed to remove pin", error);
-            // Alert removed as requested
         }
     };
 
     // Extract owned pin IDs for the library check
     const ownedPinIds = pins.map(p => p.documentId || p.id).filter(Boolean);
 
-    return (
-        <div className="py-2">
-            <div className="flex flex-col sm:flex-row gap-3 mb-8 sm:max-w-4xl">
-                {/* Header Actions - Stacked on Mobile, Row on Desktop */}
-                <div
-                    className="flex items-center justify-center px-4 py-2 rounded-xl border-1 border-white/60 text-white font-semibold text-sm bg-white/10 sm:flex-none"
-                >
-                    {ownedPinIds.length} pins owned
-                </div>
+    // Calculate rarity breakdown
+    const rarityBreakdown = useMemo(() => {
+        const counts = { legendary: 0, epic: 0, rare: 0, common: 0 };
+        pins.forEach(pin => {
+            const info = getRarityInfo(pin.rarity);
+            if (info.label === 'Legendary') counts.legendary++;
+            else if (info.label === 'Epic') counts.epic++;
+            else if (info.label === 'Rare') counts.rare++;
+            else counts.common++;
+        });
+        return counts;
+    }, [pins]);
 
-                {(isOwnProfile && isCrew) && (
-                    <>
-                        {/* Suggest Pin Button (Crew/Manager/Admin) */}
-                        <Button
-                            color="warning"
-                            variant="flat"
-                            onPress={() => setShowSuggestion(true)}
-                            className="w-full sm:w-auto sm:flex-1 font-semibold"
-                        >
-                            <QuestionMarkCircleIcon className="w-5 h-5 text-warning" />
-                            Suggest Pin
-                        </Button>
-                        {/* Add Pin Button (Owner) */}
-                        <Button
-                            color="success"
-                            variant="flat"
-                            onPress={() => setShowLibrary(true)}
-                            className="w-full sm:w-auto sm:flex-1 font-semibold"
-                        >
-                            <PlusIcon className="w-5 h-5 text-success" />
-                            Add Pin
-                        </Button>
-                    </>
+    return (
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Stats Summary Card - Matching TabIRL style */}
+            <Card className="mb-6 bg-gradient-to-br from-purple-600/20 to-indigo-600/20 border-purple-500/30 rounded-2xl overflow-hidden shadow-lg backdrop-blur-md">
+                <CardBody className="p-8">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-6">
+                            <div className="p-4 bg-purple-600 rounded-2xl shadow-xl shadow-purple-600/40">
+                                <SparklesIcon className="w-10 h-10 text-white" />
+                            </div>
+                            <div>
+                                <h3 className="text-purple-200/70 text-sm font-bold uppercase tracking-widest">Pin Collection</h3>
+                                <p className="text-5xl font-black text-white mt-1">{pins.length}</p>
+                            </div>
+                        </div>
+                        <div className="text-center md:text-right">
+                            <p className="text-purple-100/60 text-sm mb-2 font-medium">Rarity Info</p>
+                            <Tooltip content="Learn about pin rarity" placement="left">
+                                <button
+                                    onClick={() => setShowRarityInfo(true)}
+                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/20 border border-purple-400/30 text-purple-300 font-bold hover:bg-purple-500/30 transition-colors"
+                                >
+                                    <InformationCircleIcon className="w-5 h-5" />
+                                    How it works
+                                </button>
+                            </Tooltip>
+                        </div>
+                    </div>
+                </CardBody>
+            </Card>
+
+            {/* Rarity Breakdown */}
+            <div className="flex flex-wrap gap-2 mb-6">
+                {rarityBreakdown.legendary > 0 && (
+                    <Chip
+                        size="sm"
+                        variant="flat"
+                        classNames={{
+                            base: "bg-warning/15 border border-warning/30",
+                            content: "text-warning font-semibold text-xs"
+                        }}
+                    >
+                        ✦ {rarityBreakdown.legendary} Legendary
+                    </Chip>
                 )}
-                <Button
-                    color="primary"
-                    variant="flat"
-                    onPress={() => setShowRarityInfo(true)}
-                    className="w-full sm:w-auto sm:flex-1 font-semibold"
-                >
-                    <InformationCircleIcon className="w-5 h-5 text-primary" />
-                    How it works
-                </Button>
+                {rarityBreakdown.epic > 0 && (
+                    <Chip
+                        size="sm"
+                        variant="flat"
+                        classNames={{
+                            base: "bg-secondary/15 border border-secondary/30",
+                            content: "text-secondary font-semibold text-xs"
+                        }}
+                    >
+                        ◆ {rarityBreakdown.epic} Epic
+                    </Chip>
+                )}
+                {rarityBreakdown.rare > 0 && (
+                    <Chip
+                        size="sm"
+                        variant="flat"
+                        classNames={{
+                            base: "bg-primary/15 border border-primary/30",
+                            content: "text-primary font-semibold text-xs"
+                        }}
+                    >
+                        ● {rarityBreakdown.rare} Rare
+                    </Chip>
+                )}
+                {rarityBreakdown.common > 0 && (
+                    <Chip
+                        size="sm"
+                        variant="flat"
+                        classNames={{
+                            base: "bg-default/15 border border-default/30",
+                            content: "text-default-500 font-semibold text-xs"
+                        }}
+                    >
+                        ○ {rarityBreakdown.common} Common
+                    </Chip>
+                )}
             </div>
+
+            {/* Action Buttons - Only for own profile */}
+            {(isOwnProfile && isCrew) && (
+                <div className="flex flex-col sm:flex-row gap-3 mb-6">
+                    <Button
+                        color="success"
+                        variant="flat"
+                        onPress={() => setShowLibrary(true)}
+                        className="flex-1 font-semibold h-12"
+                        startContent={<PlusIcon className="w-5 h-5" />}
+                    >
+                        Add Pin
+                    </Button>
+                    <Button
+                        color="warning"
+                        variant="flat"
+                        onPress={() => setShowSuggestion(true)}
+                        className="flex-1 font-semibold h-12"
+                        startContent={<LightBulbIcon className="w-5 h-5" />}
+                    >
+                        Suggest New Pin
+                    </Button>
+                </div>
+            )}
 
             {/* Pins Grid - Left aligned for better scalability */}
             {loading ? (
