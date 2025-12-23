@@ -11,7 +11,7 @@ export function useDataTable({
     statusOptions = [],
     customSort = null,
     customFilter = null,
-    initialRowsPerPage = 5,
+    initialRowsPerPage = 10,
     initialSortColumn = null,
 }) {
     const [data, setData] = useState([]);

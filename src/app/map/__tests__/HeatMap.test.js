@@ -61,13 +61,13 @@ const mockGeoJson = {
     features: [
         {
             type: 'Feature',
-            geometry: { type: 'Polygon', coordinates: [[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]] },
+            geometry: { type: 'Point', coordinates: [0, 0] },
             properties: { count: 1, h3Index: 'abc123' },
         },
         // Duplicate cell – count should be 3 (simulating three users in the same hex)
         {
             type: 'Feature',
-            geometry: { type: 'Polygon', coordinates: [[[2, 2], [2, 3], [3, 3], [3, 2], [2, 2]]] },
+            geometry: { type: 'Point', coordinates: [2, 2] },
             properties: { count: 3, h3Index: 'def456' },
         },
     ],

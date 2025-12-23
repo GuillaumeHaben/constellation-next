@@ -65,7 +65,7 @@ export function TableUsers() {
     enablePagination: true,
     customSort: customUserSort,
     customFilter: customUserFilter,
-    initialRowsPerPage: 5,
+    initialRowsPerPage: 10,
     initialSortColumn: "name",
   });
 

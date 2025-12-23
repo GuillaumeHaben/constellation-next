@@ -28,7 +28,11 @@ export default function Login() {
       login(data.jwt, data.user);
       router.push("/home");
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      if (err.message?.toLowerCase().includes("not confirmed")) {
+        setError("Your account email is not confirmed. Please check your inbox for the activation link.");
+      } else {
+        setError(err.message || "Something went wrong");
+      }
     }
   };
 

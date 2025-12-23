@@ -16,7 +16,7 @@ import { userService } from "@/service/userService";
 
 // Constants for dropdown options
 const ESA_SITES = ["ESTEC", "HQ", "ESOC", "ESAC", "ESRIN", "EAC", "Space Port", "ESEC", "ECSAT"];
-const DIRECTORATES = ["TEC", "NAV", "RES", "CIC", "SCI", "STS", "SLE", "HRE", "EOP", "OPS", "CSC"];
+const DIRECTORATES = ["TEC", "NAV", "DG", "RES", "CIC", "SCI", "STS", "SLE", "HRE", "EOP", "OPS", "CSC"];
 const COUNTRIES = [
     "Austria", "Belgium", "Czech Republic", "Denmark", "Estonia", "Finland", "France",
     "Germany", "Greece", "Hungary", "Ireland", "Italy", "Luxembourg", "Netherlands",

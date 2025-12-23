@@ -22,7 +22,8 @@ const HeatMap = () => {
 
         map.current.on('load', async () => {
             try {
-                const data = await mapService.getHeatmapData();
+                const token = localStorage.getItem("token");
+                const data = await mapService.getHeatmapData(token);
 
                 // Add GeoJSON source
 

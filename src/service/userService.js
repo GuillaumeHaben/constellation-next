@@ -19,7 +19,7 @@ export const userService = {
     try {
       const client = getClient(token);
       const res = await client.collection(RESOURCE).find({
-        populate: ['profilePicture', 'role'],
+        populate: ['profilePicture', 'role', 'pins'],
         pagination: {
           limit: 100
         }

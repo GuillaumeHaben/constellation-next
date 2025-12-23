@@ -52,6 +52,7 @@ describe('Signup Component', () => {
     it('renders signup form correctly', () => {
         render(<Signup />);
         expect(screen.getByText('Create your account')).toBeInTheDocument();
+        expect(screen.getByText(/Registration is restricted to/i)).toBeInTheDocument();
         expect(screen.getByLabelText('First name')).toBeInTheDocument();
         expect(screen.getByLabelText('Last name')).toBeInTheDocument();
         expect(screen.getByLabelText('Email address')).toBeInTheDocument();
@@ -71,13 +72,13 @@ describe('Signup Component', () => {
 
         await user.type(firstNameInput, 'John');
         await user.type(lastNameInput, 'Doe');
-        await user.type(emailInput, 'john.doe@example.com');
+        await user.type(emailInput, 'john.doe@esa.int');
         await user.type(passwordInput, 'password123');
         await user.type(repeatPasswordInput, 'password123');
 
         expect(firstNameInput.value).toBe('John');
         expect(lastNameInput.value).toBe('Doe');
-        expect(emailInput.value).toBe('john.doe@example.com');
+        expect(emailInput.value).toBe('john.doe@esa.int');
         expect(passwordInput.value).toBe('password123');
         expect(repeatPasswordInput.value).toBe('password123');
     });
@@ -86,15 +87,14 @@ describe('Signup Component', () => {
         const user = userEvent.setup();
         global.fetch.mockResolvedValueOnce({
             ok: true,
-            json: async () => ({ jwt: 'fake-token', user: { id: 1, email: 'john.doe@example.com' } }),
+            json: async () => ({ jwt: 'fake-token', user: { id: 1, email: 'john.doe@esa.int' } }),
         });
-        userService.update.mockResolvedValueOnce({});
 
         render(<Signup />);
 
         await user.type(screen.getByLabelText('First name'), 'John');
         await user.type(screen.getByLabelText('Last name'), 'Doe');
-        await user.type(screen.getByLabelText('Email address'), 'john.doe@example.com');
+        await user.type(screen.getByLabelText('Email address'), 'john.doe@esa.int');
         await user.type(screen.getByLabelText('Password'), 'password123');
         await user.type(screen.getByLabelText('Repeat password'), 'password123');
 
@@ -103,13 +103,30 @@ describe('Signup Component', () => {
         await waitFor(() => {
             expect(createUserSlug).toHaveBeenCalledWith('John', 'Doe');
             expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/api/auth/local/register'), expect.any(Object));
-            expect(mockLogin).toHaveBeenCalledWith('fake-token', { id: 1, email: 'john.doe@example.com' });
-            expect(userService.update).toHaveBeenCalledWith(1, { slug: 'john-doe', firstName: 'John', lastName: 'Doe' }, 'fake-token');
-            expect(mockPush).toHaveBeenCalledWith('/home');
+            expect(screen.getByText('Check your email')).toBeInTheDocument();
+            expect(screen.getByText(/We've sent a confirmation link/i)).toBeInTheDocument();
+            expect(mockLogin).not.toHaveBeenCalled();
+            expect(mockPush).not.toHaveBeenCalled();
         });
     });
 
-    it('handles failed signup', async () => {
+    it('handles invalid email domain', async () => {
+        const user = userEvent.setup();
+        render(<Signup />);
+
+        await user.type(screen.getByLabelText('Email address'), 'john.doe@example.com');
+        await user.type(screen.getByLabelText('Password'), 'password123');
+        await user.type(screen.getByLabelText('Repeat password'), 'password123');
+
+        await user.click(screen.getByRole('button', { name: 'Sign up' }));
+
+        await waitFor(() => {
+            expect(screen.getByText(/Registration is restricted/i)).toBeInTheDocument();
+            expect(global.fetch).not.toHaveBeenCalled();
+        });
+    });
+
+    it('handles failed signup from backend', async () => {
         const user = userEvent.setup();
         global.fetch.mockResolvedValueOnce({
             ok: false,
@@ -120,7 +137,7 @@ describe('Signup Component', () => {
 
         await user.type(screen.getByLabelText('First name'), 'John');
         await user.type(screen.getByLabelText('Last name'), 'Doe');
-        await user.type(screen.getByLabelText('Email address'), 'john.doe@example.com');
+        await user.type(screen.getByLabelText('Email address'), 'john.doe@esa.int');
         await user.type(screen.getByLabelText('Password'), 'password123');
         await user.type(screen.getByLabelText('Repeat password'), 'password123');
 
@@ -140,7 +157,7 @@ describe('Signup Component', () => {
 
         await user.type(screen.getByLabelText('First name'), 'John');
         await user.type(screen.getByLabelText('Last name'), 'Doe');
-        await user.type(screen.getByLabelText('Email address'), 'john.doe@example.com');
+        await user.type(screen.getByLabelText('Email address'), 'john.doe@esa.int');
         await user.type(screen.getByLabelText('Password'), 'password123');
         await user.type(screen.getByLabelText('Repeat password'), 'password123');
 

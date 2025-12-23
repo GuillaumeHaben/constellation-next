@@ -31,17 +31,23 @@ export default function Home() {
         const changelogs = await changelogService.getAll(token);
 
         if (changelogs && changelogs.length > 0) {
-          // Filter out bug fixes, we only celebrate features
-          const features = changelogs.filter(item => item.tag !== 'bug-fix');
+          // Filter out bug fixes and non-major features
+          // Major feature is defined by version string ending in .0.0
+          const majorFeatures = changelogs.filter(item => {
+            if (item.tag === 'bug-fix') return false;
+            return item.version && item.version.endsWith('.0.0');
+          });
 
-          if (features.length > 0) {
-            const latest = features[0];
-
-            // Use createdAt for precise comparison (Strapi 'date' field might truncate time)
-            const latestTimestamp = new Date(latest.createdAt); // System creation time
+          if (majorFeatures.length > 0) {
+            const latest = majorFeatures[0];
+            const latestTimestamp = new Date(latest.createdAt);
             const lastSeenDate = user.lastSeenChangelogAt ? new Date(user.lastSeenChangelogAt) : null;
 
-            if (!lastSeenDate || lastSeenDate < latestTimestamp) {
+            // If user has never seen any changelog (new user), or if latest is newer than last seen
+            if (!lastSeenDate) {
+              // Silently mark as seen and don't show modal for first login
+              await userService.update(user.id, { lastSeenChangelogAt: new Date().toISOString() }, token);
+            } else if (lastSeenDate < latestTimestamp) {
               setReleaseNotes(latest);
               setIsReleaseNotesOpen(true);
             }

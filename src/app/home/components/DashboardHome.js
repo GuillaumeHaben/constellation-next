@@ -12,6 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { userService } from "@/service/userService";
 import { pinService } from "@/service/pinService";
+import Link from 'next/link';
 
 export default function DashboardHome() {
     const [stats, setStats] = useState(null);
@@ -50,27 +51,28 @@ export default function DashboardHome() {
                 const mostDirectorate = getMostFrequent(users.map(u => u.directorate));
 
                 // 3. User with most pins
-                // This is slightly complex since one pin has multiple users
                 const userPinCounts = {};
-                pins.forEach(pin => {
-                    if (pin.users) {
-                        pin.users.forEach(u => {
-                            userPinCounts[u.id] = (userPinCounts[u.id] || 0) + 1;
-                        });
-                    }
+                users.forEach(u => {
+                    // Strapi v5 populated relations are directly on the object as arrays
+                    userPinCounts[u.id] = Array.isArray(u.pins) ? u.pins.length : 0;
                 });
 
-                let topUserId = null;
-                let maxPins = 0;
-                Object.entries(userPinCounts).forEach(([id, count]) => {
-                    if (count > maxPins) {
-                        maxPins = count;
-                        topUserId = parseInt(id);
-                    }
-                });
+                const counts = Object.values(userPinCounts);
+                const maxPins = counts.length > 0 ? Math.max(...counts) : 0;
 
-                const topUser = topUserId ? users.find(u => u.id === topUserId) : null;
-                const topUserName = topUser ? `${topUser.firstName} ${topUser.lastName}` : "None yet";
+                const topUsers = users
+                    .filter(u => userPinCounts[u.id] === maxPins && maxPins > 0)
+                    .sort((a, b) => {
+                        const nameA = `${a.firstName || ""} ${a.lastName || ""}`.trim().toLowerCase();
+                        const nameB = `${b.firstName || ""} ${b.lastName || ""}`.trim().toLowerCase();
+                        return nameA.localeCompare(nameB);
+                    });
+
+                const topUser = topUsers[0] || null;
+                console.log(topUser);
+                const topUserName = topUser
+                    ? `${topUser.firstName || ""} ${topUser.lastName || ""}`.trim() || topUser.username
+                    : "None yet";
 
                 setStats({
                     totalUsers,
@@ -80,6 +82,7 @@ export default function DashboardHome() {
                     mostPosition,
                     topUserName,
                     topUserPins: maxPins,
+                    topUserSlug: topUser?.slug,
                     mostLanguage: "English", // Mocked as requested for first draft
                     mostDirectorate,
                     totalEncounters
@@ -137,7 +140,8 @@ export default function DashboardHome() {
             sub: `${stats.topUserPins} pins collected`,
             icon: TrophyIcon,
             color: "from-purple-500/10 to-pink-500/10",
-            border: "border-purple-500/20"
+            border: "border-purple-500/20",
+            href: stats.topUserSlug ? `/user/${stats.topUserSlug}` : null
         },
         {
             title: "Most Spoken",
@@ -175,8 +179,8 @@ export default function DashboardHome() {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            {statCards.map((card, i) => (
-                <Card key={i} className={`bg-gradient-to-br ${card.color} ${card.border} border shadow-xl backdrop-blur-md`}>
+            {statCards.map((card, i) => {
+                const CardContent = (
                     <CardBody className="p-6 relative overflow-hidden group">
                         {/* Decorative background icon */}
                         <card.icon className="absolute -right-4 -bottom-4 w-24 h-24 text-white/5 rotate-12 group-hover:scale-110 transition-transform duration-500" />
@@ -188,14 +192,26 @@ export default function DashboardHome() {
                                 </div>
                                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{card.title}</span>
                             </div>
-                            <div className="mt-2">
-                                <span className="text-2xl font-black text-white tracking-tight">{card.value}</span>
+                            <div className="mt-2 flex items-center gap-3">
+                                <span className="text-2xl font-black text-white tracking-tight truncate">{card.value}</span>
                             </div>
                             <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-tighter">{card.sub}</span>
                         </div>
                     </CardBody>
-                </Card>
-            ))}
+                );
+
+                return (
+                    <Card key={i} className={`bg-gradient-to-br ${card.color} ${card.border} border shadow-xl backdrop-blur-md hover:scale-[1.02] transition-transform duration-300`}>
+                        {card.href ? (
+                            <Link href={card.href}>
+                                {CardContent}
+                            </Link>
+                        ) : (
+                            CardContent
+                        )}
+                    </Card>
+                );
+            })}
         </div>
     );
 }
