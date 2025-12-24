@@ -22,9 +22,8 @@ export default function DashboardHome() {
         const fetchStats = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const [users, pins, totalEncounters] = await Promise.all([
+                const [users, totalEncounters] = await Promise.all([
                     userService.getAll(token),
-                    pinService.getAllApproved(token),
                     userService.getTotalEncounters(token)
                 ]);
 
@@ -54,7 +53,14 @@ export default function DashboardHome() {
                 const userPinCounts = {};
                 users.forEach(u => {
                     // Strapi v5 populated relations are directly on the object as arrays
-                    userPinCounts[u.id] = Array.isArray(u.pins) ? u.pins.length : 0;
+                    // We only want to count unique 'approved' pins
+                    const approvedPins = Array.isArray(u.pins)
+                        ? u.pins.filter(p => p.status === 'approved')
+                        : [];
+
+                    // Use a Set to ensure we only count unique pin IDs
+                    const uniquePinIds = new Set(approvedPins.map(p => p.id));
+                    userPinCounts[u.id] = uniquePinIds.size;
                 });
 
                 const counts = Object.values(userPinCounts);
@@ -69,7 +75,6 @@ export default function DashboardHome() {
                     });
 
                 const topUser = topUsers[0] || null;
-                console.log(topUser);
                 const topUserName = topUser
                     ? `${topUser.firstName || ""} ${topUser.lastName || ""}`.trim() || topUser.username
                     : "None yet";

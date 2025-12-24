@@ -73,7 +73,7 @@ export default function Signup() {
           />
           <h2 className="mt-10 text-2xl/9 font-bold tracking-tight text-white">Check your email</h2>
           <p className="mt-4 text-gray-300">
-            We've sent a confirmation link to <span className="font-semibold text-white">{form.email}</span>.
+            We&apos;ve sent a confirmation link to <span className="font-semibold text-white">{form.email}</span>.
             Please click the link to activate your account.
           </p>
           <div className="mt-10">

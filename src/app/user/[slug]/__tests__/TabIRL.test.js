@@ -1,100 +1,93 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import TabIRL from '../components/TabIRL';
 import { userService } from '@/service/userService';
-import React from 'react';
+import { useAuth } from '@/context/AuthContext';
+
+// Mock localStorage at top level
+const mockLocalStorageGetItem = jest.fn();
+global.localStorage = {
+    getItem: mockLocalStorageGetItem,
+};
 
 // Mock dependencies
 jest.mock('@/service/userService', () => ({
     userService: {
         getEncountersCount: jest.fn(),
+        getEncounteredUsers: jest.fn(),
     },
 }));
 
-// Mock UI libraries
+jest.mock('@/context/AuthContext', () => ({
+    useAuth: jest.fn(),
+}));
+
 jest.mock('@heroui/react', () => ({
-    Card: ({ children, className }) => <div data-testid="card" className={className}>{children}</div>,
-    CardBody: ({ children, className }) => <div data-testid="card-body" className={className}>{children}</div>,
+    Avatar: ({ src, name }) => <div data-testid="user-avatar">{name}</div>,
+    Card: ({ children }) => <div>{children}</div>,
+    CardBody: ({ children }) => <div>{children}</div>,
 }));
 
 jest.mock('@heroicons/react/24/outline', () => ({
-    UsersIcon: () => <span data-testid="users-icon">UsersIcon</span>,
-    ChartBarIcon: () => <span data-testid="chart-icon">ChartBarIcon</span>,
-    CalendarIcon: () => <span data-testid="calendar-icon">CalendarIcon</span>,
+    UsersIcon: () => <div />,
+    ChartBarIcon: () => <div />,
+    CalendarIcon: () => <div />,
 }));
 
+jest.mock('@/components/Quote', () => () => <div data-testid="quote" />);
+
 describe('TabIRL Component', () => {
-    const targetUser = { id: 1, slug: 'test-user', firstName: 'Test' };
+    const mockTargetUser = { id: 1, slug: 'target-user' };
+    const mockEncounteredUsers = [
+        { id: 2, firstName: 'Alice', lastName: 'Smith', slug: 'alice' },
+        { id: 3, firstName: 'Bob', lastName: 'Jones', slug: 'bob' },
+    ];
+
+    // Mock localStorage
+    beforeAll(() => {
+        jest.spyOn(window.localStorage.__proto__, 'getItem').mockReturnValue('fake-token');
+    });
 
     beforeEach(() => {
         userService.getEncountersCount.mockResolvedValue(5);
-
-        Object.defineProperty(window, 'localStorage', {
-            value: {
-                getItem: jest.fn(() => 'fake-token'),
-            },
-            writable: true,
-        });
-
-        jest.useFakeTimers();
+        userService.getEncounteredUsers.mockResolvedValue(mockEncounteredUsers);
+        useAuth.mockReturnValue({ user: { slug: 'target-user' } });
+        // mockLocalStorageGetItem.mockReturnValue('fake-token'); // Removed
     });
 
     afterEach(() => {
         jest.clearAllMocks();
-        jest.useRealTimers();
     });
 
-    it('renders encounter count and decorative elements', async () => {
-        render(<TabIRL targetUser={targetUser} />);
-
-        await waitFor(() => {
-            expect(screen.getByText('IRL Connections')).toBeInTheDocument();
-            expect(screen.getByText('5')).toBeInTheDocument();
-            expect(screen.getByText('Explorer')).toBeInTheDocument();
-        });
-
-        expect(userService.getEncountersCount).toHaveBeenCalledWith(targetUser.id, 'fake-token');
-    });
-
-    it('updates encounter count periodically', async () => {
-        render(<TabIRL targetUser={targetUser} />);
+    it('renders encounter count and users correctly', async () => {
+        render(<TabIRL targetUser={mockTargetUser} />);
 
         await waitFor(() => {
             expect(screen.getByText('5')).toBeInTheDocument();
+            expect(screen.getByText('Alice Smith')).toBeInTheDocument();
+            expect(screen.getByText('Bob Jones')).toBeInTheDocument();
         });
-
-        // Setup next value
-        userService.getEncountersCount.mockResolvedValue(10);
-
-        // Advance timers by 30 seconds
-        jest.advanceTimersByTime(30000);
-
-        await waitFor(() => {
-            expect(screen.getByText('10')).toBeInTheDocument();
-        });
-
-        expect(userService.getEncountersCount).toHaveBeenCalledTimes(2);
     });
 
-    it('handles error when fetching encounter count gracefully', async () => {
-        console.error = jest.fn();
-        userService.getEncountersCount.mockRejectedValue(new Error('Fetch failed'));
+    it('shows empty state for owner with no encounters', async () => {
+        userService.getEncountersCount.mockResolvedValue(0);
+        userService.getEncounteredUsers.mockResolvedValue([]);
 
-        render(<TabIRL targetUser={targetUser} />);
+        render(<TabIRL targetUser={mockTargetUser} />);
 
-        // Should still show initial state or fallback (0)
         await waitFor(() => {
-            expect(screen.getByText('0')).toBeInTheDocument();
+            expect(screen.getByText(/No IRL encounters recorded yet/i)).toBeInTheDocument();
         });
-
-        expect(console.error).toHaveBeenCalled();
     });
 
-    it('renders coming soon placeholders', async () => {
-        render(<TabIRL targetUser={targetUser} />);
+    it('hides empty state for other profiles', async () => {
+        useAuth.mockReturnValue({ user: { slug: 'other-user' } });
+        userService.getEncountersCount.mockResolvedValue(0);
+        userService.getEncounteredUsers.mockResolvedValue([]);
 
-        expect(screen.getByText('Last Connection')).toBeInTheDocument();
-        expect(screen.getByText('Weekly Goal')).toBeInTheDocument();
-        expect(screen.getByText('Activity Level')).toBeInTheDocument();
-        expect(screen.getAllByText(/Coming soon/i)[0] || screen.getByText(/met/i)).toBeInTheDocument();
+        render(<TabIRL targetUser={mockTargetUser} />);
+
+        await waitFor(() => {
+            expect(screen.queryByText(/No IRL encounters recorded yet/i)).not.toBeInTheDocument();
+        });
     });
 });

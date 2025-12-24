@@ -1,22 +1,18 @@
-import { TextEncoder, TextDecoder } from 'util';
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
-
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, waitFor } from '@testing-library/react';
 import User from '../page';
 import { userService } from '@/service/userService';
 import { useAuth } from '@/context/AuthContext';
-import React from 'react';
+
+// Mock localStorage
+beforeAll(() => {
+    jest.spyOn(window.localStorage.__proto__, 'getItem').mockReturnValue('fake-token');
+});
 
 // Mock React.use
-jest.mock('react', () => {
-    const originalReact = jest.requireActual('react');
-    return {
-        ...originalReact,
-        use: (promise) => promise,
-    };
-});
+jest.mock('react', () => ({
+    ...jest.requireActual('react'),
+    use: jest.fn(),
+}));
 
 // Mock dependencies
 jest.mock('@/service/userService', () => ({
@@ -24,137 +20,64 @@ jest.mock('@/service/userService', () => ({
         getBySlug: jest.fn(),
         upload: jest.fn(),
         update: jest.fn(),
-        getEncounterToken: jest.fn(() => Promise.resolve({ token: 'fake-qr' })),
-        getEncountersCount: jest.fn(() => Promise.resolve(0)),
-        getUserById: jest.fn(),
     },
 }));
 
 jest.mock('@/context/AuthContext', () => ({
-    useAuth: jest.fn(() => ({
-        user: {
-            id: 1,
-            slug: 'test-user',
-            firstName: 'Test',
-            lastName: 'User',
-        }
-    })),
+    useAuth: jest.fn(),
 }));
 
-jest.mock('next/navigation', () => ({
-    usePathname: () => '/user/test-user',
-}));
+// Mock child components
+jest.mock('../components/Sidebar', () => {
+    return function MockSidebar() { return <div data-testid="sidebar">Sidebar</div>; };
+});
+jest.mock('../components/MainContent', () => {
+    return function MockMainContent() { return <div data-testid="main-content">MainContent</div>; };
+});
+jest.mock('../ModalUser', () => {
+    return {
+        ModalUser: function MockModalUser() { return <div data-testid="modal-user">ModalUser</div>; }
+    };
+});
 
-jest.mock('@/components/Navbar', () => ({
-    __esModule: true,
-    default: () => <div data-testid="navbar">NavBar</div>,
-}));
-
-jest.mock('@/components/Header', () => ({
-    __esModule: true,
-    default: ({ title }) => <div data-testid="header">{title}</div>,
-}));
-
-jest.mock('@/components/Footer', () => ({
-    __esModule: true,
-    default: () => <div data-testid="footer">Footer</div>,
-}));
-
-// Mock UI libraries
-jest.mock('@heroui/react', () => ({
-    Avatar: () => <div data-testid="avatar">Avatar</div>,
-    Button: ({ children, onPress }) => <button onClick={onPress}>{children}</button>,
-    Card: ({ children }) => <div data-testid="card">{children}</div>,
-    CardBody: ({ children }) => <div data-testid="card-body">{children}</div>,
-    Spinner: () => <div data-testid="spinner">Spinner</div>,
-    Tabs: ({ children }) => <div data-testid="tabs">{children}</div>,
-    Tab: ({ children, title }) => <div data-testid="tab" title={title}>{children}</div>,
-}));
-
-jest.mock('@heroicons/react/24/solid', () => ({
-    PencilIcon: () => <span data-testid="pencil-icon">PencilIcon</span>,
-    CameraIcon: () => <span data-testid="camera-icon">CameraIcon</span>,
-    QrCodeIcon: () => <span data-testid="qr-icon">QrCodeIcon</span>,
-    ArrowLeftIcon: () => <span data-testid="back-icon">ArrowLeftIcon</span>,
-}));
-
-jest.mock('@heroicons/react/24/outline', () => ({
-    UserIcon: () => <span>UserIcon</span>,
-    TrophyIcon: () => <span>TrophyIcon</span>,
-    EllipsisHorizontalCircleIcon: () => <span>EllipsisHorizontalCircleIcon</span>,
-    UsersIcon: () => <span>UsersIcon</span>,
-    QrCodeIcon: () => <span>QrCodeIcon</span>,
-    ChatBubbleLeftRightIcon: () => <span>ChatBubbleLeftRightIcon</span>,
-}));
-
-jest.mock('@/components/Icons', () => ({
-    InstagramIcon: () => <span>InstagramIcon</span>,
-    LinkedInIcon: () => <span>LinkedInIcon</span>,
-    FacebookIcon: () => <span>FacebookIcon</span>,
-    GitHubIcon: () => <span>GitHubIcon</span>,
-    TwitterIcon: () => <span>TwitterIcon</span>,
-    WebsiteIcon: () => <span>WebsiteIcon</span>,
-}));
-
-jest.mock('../ModalUser', () => ({
-    ModalUser: ({ isOpen }) => isOpen ? <div data-testid="modal-user">ModalUser</div> : null,
-}));
-
-jest.mock('../progressBar', () => ({
-    __esModule: true,
-    default: () => <div data-testid="progress-bar">ProgressBar</div>,
-}));
-
-jest.mock('@/utils/media', () => ({
-    getProfilePictureUrl: () => 'http://example.com/pic.jpg',
-}));
+// Mock layout components
+jest.mock('@/components/Navbar', () => () => <div />);
+jest.mock('@/components/Header', () => () => <div />);
+jest.mock('@/components/Footer', () => () => <div />);
+jest.mock('@/components/BreadCrumbs', () => () => <div />);
 
 describe('User Profile Page', () => {
-    const mockUser = {
-        id: 1,
-        slug: 'test-user',
-        firstName: 'Test',
-        lastName: 'User',
-        email: 'test@example.com',
-        position: 'Engineer',
-        esaSite: 'ESTEC',
-        country: 'France',
-        birthday: '1990-01-01',
-        linkedin: 'https://linkedin.com/in/test',
-    };
-
-    const mockCurrentUser = {
-        id: 1,
-        slug: 'test-user',
-        firstName: 'Test',
-        lastName: 'User',
-    };
+    const mockParams = { slug: 'john-doe' };
+    const mockTargetUser = { id: 1, firstName: 'John', lastName: 'Doe', slug: 'john-doe' };
+    const mockCurrentUser = { id: 1, slug: 'john-doe' };
 
     beforeEach(() => {
+        const { use } = require('react');
+        use.mockReturnValue(mockParams);
         useAuth.mockReturnValue({ user: mockCurrentUser });
-        userService.getBySlug.mockResolvedValue(mockUser);
-        Object.defineProperty(window, 'localStorage', {
-            value: {
-                getItem: jest.fn(() => 'fake-token'),
-                setItem: jest.fn(),
-                removeItem: jest.fn(),
-                clear: jest.fn(),
-            },
-            writable: true,
-        });
+        userService.getBySlug.mockResolvedValue(mockTargetUser);
     });
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    it('does not show edit buttons for other profiles', async () => {
-        useAuth.mockReturnValue({ user: { ...mockCurrentUser, slug: 'other-user' } });
-        render(<User params={{ slug: 'test-user' }} />);
+    it('fetches and renders user data', async () => {
+        render(<User params={Promise.resolve(mockParams)} />);
 
         await waitFor(() => {
-            expect(screen.queryByText(/Edit/i)).not.toBeInTheDocument();
-            expect(screen.queryByText(/Pic/i)).not.toBeInTheDocument();
+            expect(userService.getBySlug).toHaveBeenCalledWith('john-doe', 'fake-token');
+            expect(screen.getByTestId('sidebar')).toBeInTheDocument();
+            expect(screen.getByTestId('main-content')).toBeInTheDocument();
+        });
+    });
+
+    it('shows error message if user not found', async () => {
+        userService.getBySlug.mockResolvedValue(null);
+        render(<User params={Promise.resolve(mockParams)} />);
+
+        await waitFor(() => {
+            expect(screen.getByText('User profile not found.')).toBeInTheDocument();
         });
     });
 });

@@ -90,8 +90,8 @@ export default function Home() {
 
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-blue-600/10 to-transparent p-6 rounded-2xl border border-blue-500/10">
             <div>
-              <h2 className="text-2xl font-black text-white tracking-tight">Welcome to the Galaxy, <span className="text-[#3b82f6]"> {user.firstName}</span>!</h2>
-              <p className="text-base text-gray-400 tracking-tight w-2/3">Constellation connects Young Professionals at ESA, helping them discover peers, share the pride behind their initiatives, and build a lasting community beyond their mission.</p>
+              <h2 className="text-2xl font-black text-white tracking-tight">Welcome to Constellation, <span className="text-[#3b82f6]"> {user.firstName}</span>!</h2>
+              <p className="text-base text-gray-400 tracking-tight lg:w-2/3">Constellation connects Young Professionals at ESA, helping them discover peers, share the pride behind their initiatives, and build a lasting community beyond their mission.</p>
             </div>
           </div>
 

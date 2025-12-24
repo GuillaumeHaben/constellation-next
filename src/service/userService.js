@@ -24,20 +24,27 @@ export const userService = {
           limit: 100
         }
       });
-      console.log(`[DEBUG] getAll users res:`, res?.length || 0, 'users found');
-      return res;
+
+      // Deduplicate pins for each user to ensure data integrity
+      const deduplicatedUsers = (res || []).map(user => {
+        if (user.pins && Array.isArray(user.pins)) {
+          const seenIds = new Set();
+          const uniquePins = user.pins.filter(pin => {
+            if (seenIds.has(pin.id)) return false;
+            seenIds.add(pin.id);
+            return true;
+          });
+          return { ...user, pins: uniquePins };
+        }
+        return user;
+      });
+
+      console.log(`[DEBUG] getAll users res:`, deduplicatedUsers.length, 'users found');
+      return deduplicatedUsers;
     } catch (error) {
       console.error(`[DEBUG] getAll users error:`, error);
       return [];
     }
-  },
-
-  getUserById: async (userId, token) => {
-    // ...
-  },
-
-  getByEmailAddress: async (email, token) => {
-    // ...
   },
 
   getBySlug: async (slug, token) => {

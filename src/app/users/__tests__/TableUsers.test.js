@@ -3,12 +3,25 @@ import userEvent from '@testing-library/user-event';
 import { TableUsers } from '../TableUsers';
 import { userService } from '@/service/userService';
 
+// Mock localStorage at top level
+const mockLocalStorageGetItem = jest.fn();
+global.localStorage = {
+    getItem: mockLocalStorageGetItem,
+    setItem: jest.fn(),
+    removeItem: jest.fn(),
+    clear: jest.fn(),
+};
+
 // Mock dependencies
 jest.mock('@/service/userService', () => ({
     userService: {
         getAll: jest.fn(),
         remove: jest.fn(),
     },
+}));
+
+jest.mock('@/context/AuthContext', () => ({
+    useAuth: jest.fn(),
 }));
 
 jest.mock('@/components/DataTable', () => ({
@@ -78,7 +91,8 @@ jest.mock('@/components/DataTable', () => ({
             onSearchChange: (value) => setFilterValue(value),
             onClear: () => setFilterValue(''),
             handleRemove: (removeFunc) => async (id) => {
-                await removeFunc(id, 'token');
+                const token = mockLocalStorageGetItem('token');
+                await removeFunc(id, token);
                 setData((prev) => prev.filter((item) => item.id !== id));
             },
             hasSearchFilter: Boolean(filterValue),
@@ -103,7 +117,7 @@ jest.mock('@/components/DataTable', () => ({
 }));
 
 jest.mock('../components/RenderCell', () => ({
-    RenderCell: ({ user, columnKey, onRemove }) => {
+    RenderCell: ({ user, columnKey, onRemove, canDelete }) => {
         if (columnKey === 'name') {
             return <span>{user.firstName} {user.lastName}</span>;
         }
@@ -111,6 +125,7 @@ jest.mock('../components/RenderCell', () => ({
             return <span>{user.blocked ? 'blocked' : 'active'}</span>;
         }
         if (columnKey === 'actions') {
+            if (!canDelete) return null;
             return (
                 <button data-testid={`delete-${user.id}`} onClick={() => onRemove(user.id)}>
                     Delete
@@ -152,9 +167,11 @@ describe('TableUsers Component', () => {
     beforeEach(() => {
         userService.getAll.mockResolvedValue(mockUsers);
         userService.remove.mockResolvedValue({});
-        global.localStorage = {
-            getItem: jest.fn(() => 'fake-token'),
-        };
+        const { useAuth } = require('@/context/AuthContext');
+        useAuth.mockReturnValue({
+            user: { role: { name: 'Admin' } }
+        });
+        mockLocalStorageGetItem.mockReturnValue('fake-token');
     });
 
     afterEach(() => {
@@ -221,7 +238,7 @@ describe('TableUsers Component', () => {
         });
     });
 
-    it('deletes a user', async () => {
+    it('deletes a user when current user is Admin', async () => {
         const user = userEvent.setup();
         render(<TableUsers />);
 
@@ -233,16 +250,23 @@ describe('TableUsers Component', () => {
         await user.click(deleteButton);
 
         await waitFor(() => {
-            expect(userService.remove).toHaveBeenCalledWith(1, 'token');
+            expect(userService.remove).toHaveBeenCalledWith(1, 'fake-token');
             expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
         });
     });
 
-    it('fetches users on mount', async () => {
+    it('does not show delete button for non-Admin users', async () => {
+        const { useAuth } = require('@/context/AuthContext');
+        useAuth.mockReturnValue({
+            user: { role: { name: 'User' } }
+        });
+
         render(<TableUsers />);
 
         await waitFor(() => {
-            expect(userService.getAll).toHaveBeenCalled();
+            expect(screen.getByText('John Doe')).toBeInTheDocument();
         });
+
+        expect(screen.queryByTestId('delete-1')).not.toBeInTheDocument();
     });
 });

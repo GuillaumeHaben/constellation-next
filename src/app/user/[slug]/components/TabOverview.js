@@ -124,7 +124,7 @@ export default function TabOverview({ targetUser }) {
                         {/* Decorative background icon */}
                         <tile.icon className="absolute -right-3 -bottom-3 w-20 h-20 text-white/5 rotate-12 group-hover:scale-110 transition-transform duration-500" />
 
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-3">
                             {/* Header with icon, label, and privacy badge */}
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">

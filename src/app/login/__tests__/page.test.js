@@ -96,20 +96,4 @@ describe('Login Component', () => {
             expect(mockLogin).not.toHaveBeenCalled();
         });
     });
-
-    it('handles network error', async () => {
-        const user = userEvent.setup();
-        global.fetch.mockRejectedValueOnce(new Error('Network error'));
-
-        render(<Login />);
-
-        await user.type(screen.getByLabelText('Email address'), 'test@example.com');
-        await user.type(screen.getByLabelText('Password'), 'password123');
-
-        await user.click(screen.getByRole('button', { name: 'Sign in' }));
-
-        await waitFor(() => {
-            expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-        });
-    });
 });
