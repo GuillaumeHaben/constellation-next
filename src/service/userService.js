@@ -27,15 +27,18 @@ export const userService = {
 
       // Deduplicate pins for each user to ensure data integrity
       const deduplicatedUsers = (res || []).map(user => {
-        if (user.pins && Array.isArray(user.pins)) {
-          const seenIds = new Set();
-          const uniquePins = user.pins.filter(pin => {
-            if (seenIds.has(pin.id)) return false;
-            seenIds.add(pin.id);
-            return true;
-          });
-          return { ...user, pins: uniquePins };
+        // Deduplicate by documentId, prefer published version
+        const map = new Map()
+
+        for (const pin of user.pins) {
+          const existing = map.get(pin.documentId)
+
+          if (!existing || (!existing.publishedAt && pin.publishedAt)) {
+            map.set(pin.documentId, pin)
+          }
         }
+
+        user.pins = Array.from(map.values())
         return user;
       });
 
