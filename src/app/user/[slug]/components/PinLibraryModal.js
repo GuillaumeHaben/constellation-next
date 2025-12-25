@@ -17,7 +17,6 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const getRarityInfo = (rarity) => {
     const val = parseFloat(rarity) || 0;
-    console.log(val)
     if (val >= 0.95) return { label: 'Legendary', color: 'warning' };
     if (val >= 0.8) return { label: 'Epic', color: 'secondary' };
     if (val >= 0.5) return { label: 'Rare', color: 'primary' };

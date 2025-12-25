@@ -35,9 +35,7 @@ export default function MainContent({ targetUser }) {
                             </div>
                         }
                     >
-                        <div className="pt-2">
-                            <TabOverview targetUser={targetUser} />
-                        </div>
+                        <TabOverview targetUser={targetUser} />
                     </Tab>
                     <Tab
                         key="social"
@@ -48,9 +46,7 @@ export default function MainContent({ targetUser }) {
                             </div>
                         }
                     >
-                        <div className="pt-6">
-                            <TabSocial targetUser={targetUser} />
-                        </div>
+                        <TabSocial targetUser={targetUser} />
                     </Tab>
                     <Tab
                         key="pins"
@@ -61,9 +57,7 @@ export default function MainContent({ targetUser }) {
                             </div>
                         }
                     >
-                        <div className="pt-6">
-                            <TabPins targetUser={targetUser} />
-                        </div>
+                        <TabPins targetUser={targetUser} />
                     </Tab>
                     <Tab
                         key="qr"
@@ -74,9 +68,7 @@ export default function MainContent({ targetUser }) {
                             </div>
                         }
                     >
-                        <div className="pt-3">
-                            <TabQR targetUser={targetUser} />
-                        </div>
+                        <TabQR targetUser={targetUser} />
                     </Tab>
                     <Tab
                         key="awards"
@@ -87,9 +79,7 @@ export default function MainContent({ targetUser }) {
                             </div>
                         }
                     >
-                        <div className="pt-6">
-                            <TabAwards targetUser={targetUser} />
-                        </div>
+                        <TabAwards targetUser={targetUser} />
                     </Tab>
                 </Tabs>
             </CardBody>

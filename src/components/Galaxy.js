@@ -8,13 +8,12 @@ import { userService } from "@/service/userService";
 const Galaxy = () => {
     const mountRef = useRef(null);
     const [starCount, setStarCount] = useState(null);
-    console.log(starCount)
 
     useEffect(() => {
         const fetchUserCount = async () => {
             try {
                 const count = await userService.count();
-                setStarCount(count || 50); // Fallback to 50 if count is 0
+                setStarCount(100); // count || 50
             } catch (error) {
                 console.error("Failed to fetch user count for Galaxy", error);
                 setStarCount(500); // Default fallback

@@ -68,7 +68,8 @@ export default function TabPins({ targetUser }) {
     }, [pins]);
 
     return (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="flex flex-col gap-2 pt-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
+
             {/* Stats Summary Card - Matching TabIRL style */}
             <Card className="mb-6 bg-gradient-to-br from-purple-600/20 to-indigo-600/20 border-purple-500/30 rounded-2xl overflow-hidden shadow-lg backdrop-blur-md">
                 <CardBody className="p-8">

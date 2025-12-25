@@ -86,7 +86,6 @@ export default function Home() {
       <Header title={"Home"} breadcrumbs={<BreadCrumbs currentPage="home" />} icon={HomeIcon} />
       <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-          <Quote text="We are all of us stars, and we deserve to twinkle" author="Marilyn Monroe" authorTitle="Hollywood Icon" picture="/img/marilyn-monroe.jpg" />
 
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-blue-600/10 to-transparent p-6 rounded-2xl border border-blue-500/10">
             <div>

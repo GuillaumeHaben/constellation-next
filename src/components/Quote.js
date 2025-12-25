@@ -4,34 +4,34 @@ import Image from "next/image";
 
 export default function Quote({ text, author, authorTitle, picture }) {
     return (
-        <div className="hidden md:block bg-slate-800/10 border border-slate-700/20 rounded-2xl p-6 shadow-inner backdrop-blur-sm group" >
-            <figure className="max-w-screen-lg mx-auto flex items-center justify-center gap-8">
-                <blockquote className="max-w-xl">
-                    <p className="text-base italic font-medium tracking-tight text-slate-500 group-hover:text-slate-200 leading-relaxed text-right transition-colors duration-500">
-                        {text}
+        <div className="hidden lg:block backdrop-blur-sm group align-right" >
+            <figure className="max-w-screen-lg mx-auto flex items-center justify-end gap-8">
+                <blockquote className="max-w-xl w-1/2">
+                    <p className="text-base italic font-medium tracking-tight text-slate-300 group-hover:text-slate-200 leading-relaxed text-right transition-colors duration-500">
+                        "{text}"
                     </p>
                 </blockquote>
 
-                {/* Vertical Separator */}
-                <div className="h-10 w-[1px] bg-slate-700/50 group-hover:bg-blue-500/30 transition-colors duration-500" />
-
-                <figcaption className="flex items-center space-x-3 rtl:space-x-reverse min-w-max">
-                    <div className="relative">
+                <div className="flex items-center gap-4 border-l-1 border-slate-300 group-hover:border-slate-200 pl-8 transition-all duration-500">
+                    <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full ring-2 ring-slate-400 group-hover:ring-slate-200 transition-all duration-500">
                         <Image
-                            className="w-14 h-14 rounded-full border-2 border-slate-700/50 group-hover:border-blue-500/40 transition-all duration-500 shadow-xl object-cover grayscale group-hover:grayscale-0"
                             src={picture}
                             alt={author}
-                            width={128}
-                            height={128}
+                            fill
                             unoptimized
+                            className="object-cover grayscale group-hover:grayscale-0 scale-100 group-hover:scale-130 transition-all duration-700"
                         />
                     </div>
-                    <div className="flex flex-col items-start">
-                        <cite className="font-bold text-slate-200 not-italic text-sm tracking-tight transition-colors duration-300 group-hover:text-blue-100">{author}</cite>
-                        <cite className="text-[10px] text-slate-500 font-bold uppercase tracking-widest not-italic opacity-80">{authorTitle}</cite>
+                    <div className="text-left">
+                        <div className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors duration-500">
+                            {author}
+                        </div>
+                        <div className="text-xs font-semibold text-slate-400 group-hover:text-slate-300 transition-colors duration-500 uppercase tracking-widest">
+                            {authorTitle}
+                        </div>
                     </div>
-                </figcaption>
+                </div>
             </figure>
-        </div >
-    )
+        </div>
+    );
 }

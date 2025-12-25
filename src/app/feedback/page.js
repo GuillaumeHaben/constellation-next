@@ -20,8 +20,6 @@ export default function FeedbackPage() {
 
             <main className="flex-1">
                 <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-                    <Quote text="Be the change you want to see in the world" author="Mahatma Gandhi" authorTitle="Defender of Freedom" picture="/img/mahatma-gandhi.jpg" />
-
                     <div className="text-center space-y-6">
                         <h2 className="text-4xl font-black text-white tracking-tight">Help us grow the Galaxy</h2>
                         <p className="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed text-center">

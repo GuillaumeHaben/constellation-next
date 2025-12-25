@@ -76,10 +76,7 @@ export default function Changelog() {
             <Header title={"Changelog"} breadcrumbs={<BreadCrumbs currentPage="Changelog" />} icon={ClockIcon} />
 
             <main className="flex-1 container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-                <Quote text="One small step for man, one giant leap for mankind" author="Neil Armstrong" authorTitle="Humankind Ambassador" picture="/img/neil-armstrong.jpg" />
-
                 <div className="flex flex-col lg:flex-row gap-12 mt-6">
-
                     {/* Side Navigation - Sticky */}
                     <aside className="lg:w-1/4 hidden lg:block">
                         <div className="sticky top-24 space-y-4">

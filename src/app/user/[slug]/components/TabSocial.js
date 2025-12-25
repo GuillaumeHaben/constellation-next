@@ -72,7 +72,7 @@ export default function TabSocial({ targetUser }) {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <div className="grid grid-cols-1 pt-3 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
             {activeSocialLinks.map((link) => (
                 <a
                     key={link.key}
@@ -86,7 +86,7 @@ export default function TabSocial({ targetUser }) {
                             <div className="flex flex-col gap-3">
                                 {/* Header with icon, label, and privacy badge */}
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-2">
                                         <div className="p-2 rounded-lg bg-slate-700/50 border border-slate-600/50 text-slate-300" style={{ color: link.color }}>
                                             {link.icon}
                                         </div>
@@ -98,7 +98,7 @@ export default function TabSocial({ targetUser }) {
                                 </div>
 
                                 {/* Action text */}
-                                <div>
+                                <div className="mt-1">
                                     <span className="text-sm font-medium text-slate-300 hover:text-white">
                                         {link.action} →
                                     </span>

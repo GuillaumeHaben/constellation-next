@@ -62,7 +62,7 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
 
             if (!uploadRes.ok) throw new Error("Upload failed");
             const uploadData = await uploadRes.json();
-
+            const imageId = uploadData[0].id;
 
             // 2. Create Pin Suggestion
             const isAdminOrManager = user?.role?.type === 'admin' || user?.role?.type === 'manager';

@@ -114,7 +114,7 @@ export default function TabOverview({ targetUser }) {
     });
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <div className="grid grid-cols-1 pt-3 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
             {visibleTiles.map((tile) => (
                 <Card
                     key={tile.key}

@@ -17,7 +17,8 @@ import {
     CheckBadgeIcon,
     ChatBubbleBottomCenterTextIcon,
     ShoppingBagIcon,
-    LinkIcon
+    LinkIcon,
+    GlobeAltIcon
 } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
@@ -41,8 +42,9 @@ const navigation = [
         name: 'Coming soon',
         icon: ClockIcon,
         children: [
-            { name: 'Market place', href: '#', icon: ShoppingBagIcon },
             { name: 'Families', href: '#', icon: LinkIcon },
+            { name: 'Alumni', href: '#', icon: GlobeAltIcon },
+            { name: 'Market place', href: '#', icon: ShoppingBagIcon },
         ]
     },
     {
@@ -144,7 +146,7 @@ export default function NavBar() {
                                                     aria-label={item.name}
                                                     className="w-[200px]"
                                                     variant="faded"
-                                                    disabledKeys={["Market place", "Families"]}
+                                                    disabledKeys={["Market place", "Families", "Alumni"]}
                                                     itemClasses={{
                                                         base: [
                                                             "rounded-md",
