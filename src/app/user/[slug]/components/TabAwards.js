@@ -14,7 +14,8 @@ import {
     RocketLaunchIcon,
     FlagIcon,
     WrenchScrewdriverIcon,
-    LockClosedIcon
+    LockClosedIcon,
+    MagnifyingGlassCircleIcon
 } from "@heroicons/react/24/outline";
 
 const AwardTile = ({ award }) => {
@@ -77,9 +78,9 @@ export default function TabAwards({ targetUser }) {
             color: "bg-yellow-500",
             awards: [
                 { id: 1, name: "Site Hopper", requirement: "Met someone from each site", status: "achieved", icon: BuildingOfficeIcon, bgGradient: "bg-gradient-to-br from-yellow-400 to-amber-600" },
-                { id: 2, name: "Globetrotter", requirement: "Met someone from each member state", status: "achieved", icon: GlobeAltIcon, bgGradient: "bg-gradient-to-br from-orange-400 to-red-600" },
+                { id: 2, name: "Globetrotter", requirement: "Met someone from each member state", status: "achieved", icon: GlobeAltIcon, bgGradient: "bg-gradient-to-br from-amber-500 to-orange-600" },
                 { id: 3, name: "Directorate Guru", requirement: "Met someone from each directorate", status: "locked", icon: IdentificationIcon, bgGradient: "" },
-                { id: 4, name: "Socialite", requirement: "Met more than 10 colleagues", status: "achieved", icon: UserGroupIcon, bgGradient: "bg-gradient-to-br from-amber-500 to-orange-600" },
+                { id: 4, name: "Socialite", requirement: "Met more than 10 colleagues", status: "achieved", icon: UserGroupIcon, bgGradient: "bg-gradient-to-br from-orange-400 to-red-600" },
                 { id: 5, name: "Connector", requirement: "Met more than 50 colleagues", status: "locked", icon: UsersIcon, bgGradient: "bg-gradient-to-br from-yellow-500 to-yellow-500" },
             ]
         },
@@ -89,27 +90,28 @@ export default function TabAwards({ targetUser }) {
             awards: [
                 { id: 6, name: "Collector", requirement: "Collected more than 10 pins", status: "achieved", icon: TicketIcon, bgGradient: "bg-gradient-to-br from-purple-400 to-fuchsia-600" },
                 { id: 7, name: "Hoarder", requirement: "Collected more than 50 pins", status: "achieved", icon: SparklesIcon, bgGradient: "bg-gradient-to-br from-fuchsia-500 to-pink-600" },
+                { id: 8, name: "Legendary", requirement: "Collected a legendary pin", status: "achieved", icon: MagnifyingGlassCircleIcon, bgGradient: "bg-gradient-to-br from-pink-600 to-pink-800" },
             ]
         },
         {
             title: "Clubs awards",
             color: "bg-green-500",
             awards: [
-                { id: 8, name: "Newbie", requirement: "Join your first club", status: "achieved", icon: PlusCircleIcon, bgGradient: "bg-gradient-to-br from-lime-400 to-green-600" },
-                { id: 9, name: "Social Butterfly", requirement: "Joined 5 clubs", status: "achieved", icon: HashtagIcon, bgGradient: "bg-gradient-to-br from-green-400 to-emerald-600" },
-                { id: 10, name: "Club Legend", requirement: "Joined 10 clubs", status: "achieved", icon: RocketLaunchIcon, bgGradient: "bg-gradient-to-br from-green-500 to-emerald-700" },
-                { id: 11, name: "The Visionary", requirement: "Club founder", status: "achieved", icon: FlagIcon, bgGradient: "bg-gradient-to-br from-emerald-400 to-teal-600" },
-                { id: 12, name: "The Shepherd", requirement: "Club manager", status: "achieved", icon: WrenchScrewdriverIcon, bgGradient: "bg-gradient-to-br from-teal-500 to-cyan-600" },
+                { id: 9, name: "Newbie", requirement: "Join your first club", status: "achieved", icon: PlusCircleIcon, bgGradient: "bg-gradient-to-br from-lime-400 to-green-600" },
+                { id: 10, name: "Social Butterfly", requirement: "Joined 5 clubs", status: "achieved", icon: HashtagIcon, bgGradient: "bg-gradient-to-br from-green-500 to-emerald-400" },
+                { id: 11, name: "Club Legend", requirement: "Joined 10 clubs", status: "achieved", icon: RocketLaunchIcon, bgGradient: "bg-gradient-to-br from-green-400 to-emerald-600" },
+                { id: 12, name: "The Visionary", requirement: "Club founder", status: "achieved", icon: FlagIcon, bgGradient: "bg-gradient-to-br from-emerald-400 to-teal-600" },
+                { id: 13, name: "The Shepherd", requirement: "Club manager", status: "achieved", icon: WrenchScrewdriverIcon, bgGradient: "bg-gradient-to-br from-teal-600 to-cyan-600" },
             ]
         },
         {
             title: "Young ESA awards",
             color: "bg-cyan-500",
             awards: [
-                { id: 13, name: "Part of the Crew", requirement: "Belonging to a group", status: "achieved", icon: UserGroupIcon, bgGradient: "bg-gradient-to-br from-cyan-400 to-blue-600" },
-                { id: 14, name: "Skipper", requirement: "Leading a group", status: "achieved", icon: RocketLaunchIcon, bgGradient: "bg-gradient-to-br from-blue-400 to-sky-600" },
-                { id: 15, name: "Expedition Leader", requirement: "Trip organizer", status: "achieved", icon: GlobeAltIcon, bgGradient: "bg-gradient-to-br from-sky-500 to-blue-700" },
-                { id: 16, name: "Star Guide", requirement: "Open days benevol", status: "achieved", icon: SparklesIcon, bgGradient: "bg-gradient-to-br from-blue-600 to-indigo-800" },
+                { id: 14, name: "Part of the Crew", requirement: "Belonging to a group", status: "achieved", icon: UserGroupIcon, bgGradient: "bg-gradient-to-br from-cyan-400 to-blue-600" },
+                { id: 15, name: "Skipper", requirement: "Leading a group", status: "achieved", icon: RocketLaunchIcon, bgGradient: "bg-gradient-to-br from-blue-400 to-sky-600" },
+                { id: 16, name: "Expedition Leader", requirement: "Trip organizer", status: "achieved", icon: GlobeAltIcon, bgGradient: "bg-gradient-to-br from-sky-500 to-blue-700" },
+                { id: 17, name: "Star Guide", requirement: "Open days benevol", status: "achieved", icon: SparklesIcon, bgGradient: "bg-gradient-to-br from-blue-600 to-indigo-800" },
             ]
         }
     ];
