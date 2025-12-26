@@ -1,106 +1,89 @@
-import { strapi } from "@strapi/client";
+import { getClient, request } from "./apiBase";
 import { getApiBaseUrl } from "@/utils/apiHelper";
 
 const RESOURCE = "users";
 
-// Initialize a Strapi client instance
-// token is passed per function call to handle dynamic auth
-const getClient = (token) => {
-  const baseURL = `${getApiBaseUrl()}/api`;
-  // console.log(`[DEBUG] getClient baseURL: ${baseURL}`);
-  return strapi({
-    baseURL,
-    auth: token, // JWT token for authentication
-  });
+/**
+ * Internal helper to deduplicate pins for a user.
+ * Prefers published versions.
+ */
+const deduplicateUserPins = (user) => {
+  if (!user.pins) return user;
+  const map = new Map();
+  for (const pin of user.pins) {
+    const existing = map.get(pin.documentId);
+    if (!existing || (!existing.publishedAt && pin.publishedAt)) {
+      map.set(pin.documentId, pin);
+    }
+  }
+  user.pins = Array.from(map.values());
+  return user;
 };
 
+/**
+ * userService.js
+ * Comprehensive user management, encounters, and auth status.
+ * Endpoint: /api/users
+ */
 export const userService = {
+  /**
+   * Fetches all users with populated roles and pins.
+   * Role: Authenticated
+   */
   getAll: async (token) => {
-    try {
-      const client = getClient(token);
-      const res = await client.collection(RESOURCE).find({
-        populate: ['profilePicture', 'role', 'pins'],
-        pagination: {
-          limit: 100
-        }
-      });
-
-      // Deduplicate pins for each user to ensure data integrity
-      const deduplicatedUsers = (res || []).map(user => {
-        // Deduplicate by documentId, prefer published version
-        const map = new Map()
-
-        for (const pin of user.pins) {
-          const existing = map.get(pin.documentId)
-
-          if (!existing || (!existing.publishedAt && pin.publishedAt)) {
-            map.set(pin.documentId, pin)
-          }
-        }
-
-        user.pins = Array.from(map.values())
-        return user;
-      });
-
-      console.log(`[DEBUG] getAll users res:`, deduplicatedUsers.length, 'users found');
-      return deduplicatedUsers;
-    } catch (error) {
-      console.error(`[DEBUG] getAll users error:`, error);
-      return [];
-    }
+    const client = getClient(token);
+    const res = await client.collection(RESOURCE).find({
+      populate: ['profilePicture', 'role', 'pins'],
+      pagination: { limit: 100 }
+    });
+    return (res || []).map(deduplicateUserPins);
   },
 
+  /**
+   * Fetches a single user by their slug.
+   * Role: Authenticated
+   */
   getBySlug: async (slug, token) => {
-    console.log(`[DEBUG] getBySlug called for slug: ${slug}`);
-    try {
-      const client = getClient(token);
-      const res = await client.collection(RESOURCE).find({ filters: { slug }, populate: ['profilePicture'] });
-      console.log(`[DEBUG] getBySlug result:`, res);
-      if (!res) { return null };
-      return res.length > 0 ? res[0] : null;
-    } catch (error) {
-      console.error(`[DEBUG] getBySlug error:`, error);
-      return null;
-    }
+    const client = getClient(token);
+    const res = await client.collection(RESOURCE).find({
+      filters: { slug },
+      populate: ['profilePicture']
+    });
+    return res?.length > 0 ? res[0] : null;
   },
 
+  /**
+   * Creates a new user entry.
+   * Role: Admin
+   */
   create: async (userData, token) => {
     const client = getClient(token);
     const res = await client.collection(RESOURCE).create({ data: userData });
     return res.data;
   },
 
+  /**
+   * Updates an existing user's data.
+   * Role: Owner / Admin
+   */
   update: async (id, userData, token) => {
-    // For users, we need to use the direct API endpoint, not the collection method
-    const response = await fetch(`${getApiBaseUrl()}/api/users/${id}`, {
+    return await request(`${RESOURCE}/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify(userData),
     });
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('Update failed:', error);
-      throw new Error(error.error?.message || 'Failed to update user');
-    }
-
-    const data = await response.json();
-    console.log('Update successful:', data);
-    return data;
   },
 
+  /**
+   * Updates the lastSeenAt timestamp for a user.
+   * Role: Owner (Heartbeat)
+   */
   updateLastSeen: async (id, token) => {
     if (!id || !token) return;
     try {
-      await fetch(`${getApiBaseUrl()}/api/users/${id}`, {
+      await request(`${RESOURCE}/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: JSON.stringify({ lastSeenAt: new Date().toISOString() }),
       });
     } catch (error) {
@@ -108,239 +91,146 @@ export const userService = {
     }
   },
 
+  /**
+   * Uploads a profile picture for a user.
+   * Role: Owner / Admin
+   */
   upload: async (file, token, userId) => {
     const formData = new FormData();
     formData.append("files", file);
-    formData.append('ref', 'plugin::users-permissions.user'); // user model
+    formData.append('ref', 'plugin::users-permissions.user');
     formData.append('refId', userId);
     formData.append('field', 'profilePicture');
 
     const response = await fetch(`${getApiBaseUrl()}/api/upload`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
 
     if (!response.ok) {
       const error = await response.json();
-      console.error("Upload failed:", error);
       throw new Error(error.error?.message || "Failed to upload file");
     }
 
     const data = await response.json();
-    return data[0]; // Strapi returns an array of uploaded files
+    return data[0];
   },
 
-  remove: async (id, token) => {
+  /**
+   * Deletes a user profile.
+   * Role: Admin
+   */
+  delete: async (id, token) => {
     const client = getClient(token);
     await client.collection(RESOURCE).delete(id);
     return true;
   },
 
+  /**
+   * Fetches the current authenticated user's details.
+   * Role: Authenticated
+   */
   getMe: async (token) => {
-    const response = await fetch(`${getApiBaseUrl()}/api/users/me?populate[0]=profilePicture&populate[1]=role`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    return await request(`${RESOURCE}/me?populate[0]=profilePicture&populate[1]=role`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-    if (!response.ok) {
-      return null; // or throw, but existing code returns null on error
-    }
-    return await response.json();
   },
 
+  /**
+   * Gets total user count.
+   * Role: Public / Authenticated
+   */
   count: async () => {
-    const response = await fetch(`${getApiBaseUrl()}/api/users/count`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch user count');
-    }
-    const count = await response.json();
-    return count; // Strapi usually returns the number directly for this endpoint
+    return await request(`${RESOURCE}/count`);
   },
 
+  /**
+   * ENCOUNTERS: Fetches a temporary token for QR encounters.
+   * Role: Authenticated
+   */
   getEncounterToken: async (token) => {
-    const response = await fetch(`${getApiBaseUrl()}/api/qr-token`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    return await request("qr-token", {
+      headers: { Authorization: `Bearer ${token}` },
     });
-    if (!response.ok) {
-      throw new Error('Failed to fetch QR token');
-    }
-    return await response.json();
   },
 
+  /**
+   * ENCOUNTERS: Validates a QR encounter token.
+   * Role: Authenticated
+   */
   validateEncounter: async (encounterToken, token) => {
-    const response = await fetch(`${getApiBaseUrl()}/api/encounters/validate`, {
+    return await request("encounters/validate", {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify({ token: encounterToken }),
     });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || 'Failed to validate encounter');
-    }
-    return await response.json();
   },
 
+  /**
+   * ENCOUNTERS: Gets total encounters for a user.
+   * Role: Authenticated
+   */
   getEncountersCount: async (userId, token) => {
-    const response = await fetch(`${getApiBaseUrl()}/api/encounters?filters[$or][0][userLow][id][$eq]=${userId}&filters[$or][1][userHigh][id][$eq]=${userId}&pagination[withCount]=true`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const res = await request(`encounters?filters[$or][0][userLow][id][$eq]=${userId}&filters[$or][1][userHigh][id][$eq]=${userId}&pagination[withCount]=true`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-    if (!response.ok) {
-      throw new Error('Failed to fetch encounters count');
-    }
-    const data = await response.json();
-    return data.meta.pagination.total;
+    return res.meta.pagination.total;
   },
-  getEncounteredUsers: async (userId, token) => {
-    const params = new URLSearchParams();
-    params.append('filters[$or][0][userLow][id][$eq]', String(userId));
-    params.append('filters[$or][1][userHigh][id][$eq]', String(userId));
-    params.append('populate[0]', 'userLow.profilePicture');
-    params.append('populate[1]', 'userHigh.profilePicture');
-    params.append('sort[0]', 'validatedAt:desc');
 
-    const response = await fetch(`${getApiBaseUrl()}/api/encounters?${params.toString()}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  /**
+   * ENCOUNTERS: Fetches detailed list of users encountered.
+   * Role: Authenticated
+   */
+  getEncounteredUsers: async (userId, token) => {
+    const params = new URLSearchParams({
+      'filters[$or][0][userLow][id][$eq]': String(userId),
+      'filters[$or][1][userHigh][id][$eq]': String(userId),
+      'populate[0]': 'userLow.profilePicture',
+      'populate[1]': 'userHigh.profilePicture',
+      'sort[0]': 'validatedAt:desc'
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch encountered users');
-    }
-
-    const payload = await response.json();
+    const payload = await request(`encounters?${params.toString()}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const encounters = Array.isArray(payload?.data) ? payload.data : [];
-
     const seen = new Map();
-    const missingDetails = new Set();
 
-    const extractProfilePicture = (raw) => {
-      if (!raw) return null;
-      const dataNode = raw.data ?? raw;
-      if (!dataNode) return null;
-      if (dataNode.attributes) {
-        const { url, alternativeText, name } = dataNode.attributes;
-        return { url, alternativeText, name };
-      }
-      return dataNode.url ? { url: dataNode.url } : null;
-    };
-
+    // Internal helper to extract simple user object from encounter relation
     const extractUser = (relation) => {
-      if (!relation) return null;
-
-      if (relation.data) {
-        return extractUser(relation.data);
-      }
-
-      if (typeof relation === 'number' || typeof relation === 'string') {
-        const numericId = Number(relation);
-        return Number.isFinite(numericId) ? { id: numericId } : null;
-      }
-
-      const attributes = relation.attributes ?? {};
-      const id = relation.id ?? attributes.id;
-      if (id == null) return null;
-
+      const data = relation?.data || relation;
+      if (!data || typeof data === 'number' || typeof data === 'string') return null;
+      const attrs = data.attributes || data;
       return {
-        id: Number(id),
-        firstName: attributes.firstName,
-        lastName: attributes.lastName,
-        username: attributes.username,
-        slug: attributes.slug,
-        profilePicture: extractProfilePicture(attributes.profilePicture ?? relation.profilePicture),
+        id: data.id,
+        ...attrs,
+        profilePicture: attrs.profilePicture?.data?.attributes || attrs.profilePicture
       };
     };
 
     encounters.forEach((entry) => {
-      const attrs = entry?.attributes || entry || {};
-      const userLow = extractUser(attrs.userLow);
-      const userHigh = extractUser(attrs.userHigh);
+      const attrs = entry?.attributes || entry;
+      const otherUser = extractUser(attrs.userLow)?.id === Number(userId)
+        ? extractUser(attrs.userHigh)
+        : extractUser(attrs.userLow);
 
-      const normalizedUserId = Number(userId);
-      const otherUser = userLow?.id === normalizedUserId ? userHigh : userLow;
-
-      if (!otherUser?.id) return;
-
-      const summary = {
-        id: otherUser.id,
-        firstName: otherUser.firstName,
-        lastName: otherUser.lastName,
-        username: otherUser.username,
-        slug: otherUser.slug,
-        profilePicture: otherUser.profilePicture ?? null,
-        validatedAt: attrs.validatedAt,
-      };
-
-      if (!summary.firstName && !summary.lastName && !summary.username) {
-        missingDetails.add(otherUser.id);
+      if (otherUser?.id) {
+        seen.set(otherUser.id, { ...otherUser, validatedAt: attrs.validatedAt });
       }
-
-      seen.set(otherUser.id, summary);
     });
-
-    if (missingDetails.size > 0) {
-      const detailResponses = await Promise.all(
-        Array.from(missingDetails).map(async (id) => {
-          try {
-            const res = await fetch(`${getApiBaseUrl()}/api/users/${encodeURIComponent(id)}?populate[0]=profilePicture`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
-            if (!res.ok) return null;
-            const detail = await res.json();
-            return { id, detail };
-          } catch (error) {
-            console.error('Failed to fetch user detail for encounter:', error);
-            return null;
-          }
-        })
-      );
-
-      detailResponses.forEach((entry) => {
-        if (!entry) return;
-        const existing = seen.get(entry.id);
-        if (!existing) return;
-
-        const detail = entry.detail ?? {};
-        const enrichedProfilePicture = detail.profilePicture
-          ? extractProfilePicture(detail.profilePicture)
-          : existing.profilePicture;
-
-        seen.set(entry.id, {
-          ...existing,
-          firstName: detail.firstName ?? existing.firstName,
-          lastName: detail.lastName ?? existing.lastName,
-          username: detail.username ?? existing.username,
-          slug: detail.slug ?? existing.slug,
-          profilePicture: enrichedProfilePicture,
-        });
-      });
-    }
 
     return Array.from(seen.values());
   },
 
+  /**
+   * ENCOUNTERS: Global count for analytics.
+   * Role: Admin
+   */
   getTotalEncounters: async (token) => {
-    const response = await fetch(`${getApiBaseUrl()}/api/encounters?pagination[withCount]=true`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const res = await request("encounters?pagination[limit]=1", { // Just need meta
+      headers: { Authorization: `Bearer ${token}` },
     });
-    if (!response.ok) {
-      throw new Error('Failed to fetch total encounters');
-    }
-    const data = await response.json();
-    return data.meta?.pagination?.total ?? 0;
+    return res.meta?.pagination?.total ?? 0;
   },
 };

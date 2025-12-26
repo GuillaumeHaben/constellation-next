@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import PinSuggestionModal from '../components/PinSuggestionModal';
 import { pinService } from '@/service/pinService';
 import { useAuth } from '@/context/AuthContext';
+import Image from 'next/image';
 
 // Mock localStorage at top level
 const mockLocalStorageGetItem = jest.fn();
@@ -36,7 +37,7 @@ jest.mock('@heroui/react', () => ({
             <input value={value} onChange={(e) => onValueChange(e.target.value)} data-testid={`input-${label}`} />
         </div>
     ),
-    Image: ({ src, alt }) => <img src={src} alt={alt} data-testid="preview-image" />,
+    Image: ({ src, alt }) => <Image src={src} alt={alt} data-testid="preview-image" />,
 }));
 
 jest.mock('@heroicons/react/24/outline', () => ({

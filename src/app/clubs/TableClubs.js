@@ -41,7 +41,7 @@ export function TableClubs() {
     handleRemove,
   } = tableState;
 
-  const onRemove = handleRemove(clubService.removeByDocumentId);
+  const onRemove = handleRemove(clubService.delete);
 
   const handleCreate = async (name, description) => {
     try {
@@ -56,7 +56,7 @@ export function TableClubs() {
   const handleUpdate = async (documentId, name, description) => {
     try {
       const token = localStorage.getItem("token");
-      const updated = await clubService.updateByDocumentId(documentId, name, description, token);
+      const updated = await clubService.update(documentId, name, description, token);
       setData((prev) =>
         prev.map((club) =>
           club.documentId === documentId ? updated.data : club

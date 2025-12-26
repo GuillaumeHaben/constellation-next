@@ -76,7 +76,7 @@ export default function ModalCreateChangelog({ isOpen, onClose, onSuccess }) {
             };
             fetchLatest();
         }
-    }, [isOpen]);
+    }, [isOpen, incrementType]);
 
     // Recalculate when increment type changes
     useEffect(() => {

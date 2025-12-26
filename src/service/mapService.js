@@ -1,26 +1,18 @@
-import { getApiBaseUrl } from "@/utils/apiHelper";
+import { request } from "./apiBase";
 
+/**
+ * mapService.js
+ * Handles geospatial data and heatmap generation.
+ * Endpoint: /api/heat-maps
+ */
 export const mapService = {
+    /**
+     * Fetches heatmap data in GeoJSON format.
+     * Role: Authenticated / Public (depending on backend config)
+     */
     getHeatmapData: async (token) => {
-        try {
-            const headers = {};
-            if (token) {
-                headers['Authorization'] = `Bearer ${token}`;
-            }
-
-            const response = await fetch(`${getApiBaseUrl()}/api/heat-maps/geojson`, {
-                headers
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                console.error('Heatmap fetch failed:', response.status, errorData);
-                throw new Error('Failed to fetch heatmap data');
-            }
-            return await response.json();
-        } catch (error) {
-            console.error('Heatmap fetch error:', error);
-            throw error;
-        }
+        return await request("heat-maps/geojson", {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
     }
 };

@@ -38,9 +38,23 @@ jest.mock('@heroicons/react/24/solid', () => ({
 }));
 
 // Mock Modals
-jest.mock('../components/PinLibraryModal', () => () => <div data-testid="library-modal" />);
-jest.mock('../components/PinSuggestionModal', () => () => <div data-testid="suggestion-modal" />);
-jest.mock('../components/RarityInfoModal', () => () => <div data-testid="rarity-info-modal" />);
+jest.mock('../components/PinLibraryModal', () => {
+    const MockQuote = () => <div data-testid="library-modal" />;
+    MockQuote.displayName = 'MockLibraryModal';
+    return MockQuote;
+});
+
+jest.mock('../components/PinSuggestionModal', () => {
+    const MockQuote = () => <div data-testid="suggestion-modal" />;
+    MockQuote.displayName = 'MockSuggestionModal';
+    return MockQuote;
+});
+
+jest.mock('../components/RarityInfoModal', () => {
+    const MockQuote = () => <div data-testid="rarity-info-modal" />;
+    MockQuote.displayName = 'MockRarityInfoModal';
+    return MockQuote;
+});
 
 describe('TabPins Component', () => {
     const mockTargetUser = { id: 1, slug: 'target-user' };

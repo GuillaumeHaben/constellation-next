@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Sidebar from '../components/Sidebar';
-import { userService } from '@/service/userService';
+import Image from 'next/image';
 
 // Mock utils
 jest.mock('@/utils/media', () => ({
@@ -16,7 +16,11 @@ jest.mock('@/service/userService', () => ({
 }));
 
 // Mock ProgressBar
-jest.mock('../progressBar', () => () => <div data-testid="progress-bar" />);
+jest.mock('../progressBar', () => {
+    const MockProgressBar = () => <div data-testid="progress-bar" />;
+    MockProgressBar.displayName = 'MockProgressBar';
+    return MockProgressBar;
+});
 
 // Mock heroicons
 jest.mock('@heroicons/react/24/solid', () => ({
@@ -28,7 +32,7 @@ jest.mock('@heroicons/react/24/solid', () => ({
 
 // Mock heroui components
 jest.mock('@heroui/react', () => ({
-    Avatar: ({ src, name }) => <img data-testid="avatar" src={src} alt={name} />,
+    Avatar: ({ src, name }) => <Image data-testid="avatar" src={src} alt={name} />,
     Button: ({ children, onPress, isLoading }) => (
         <button onClick={onPress} disabled={isLoading}>{children}</button>
     ),

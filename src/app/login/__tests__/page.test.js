@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import Login from '../page';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 // Mock dependencies
 jest.mock('@/context/AuthContext', () => ({
@@ -17,8 +18,8 @@ jest.mock('next/navigation', () => ({
 jest.mock('next/image', () => ({
     __esModule: true,
     default: (props) => {
-        // eslint-disable-next-line @next/next/no-img-element
-        return <img {...props} alt={props.alt} />;
+         
+        return <Image {...props} alt={props.alt} />;
     },
 }));
 

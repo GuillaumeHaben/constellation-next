@@ -33,7 +33,11 @@ jest.mock('@heroicons/react/24/outline', () => ({
     CalendarIcon: () => <div />,
 }));
 
-jest.mock('@/components/Quote', () => () => <div data-testid="quote" />);
+jest.mock('@/components/Quote', () => {
+    const MockQuote = () => <div data-testid="quote" />;
+    MockQuote.displayName = 'MockQuote';
+    return MockQuote;
+});
 
 describe('TabIRL Component', () => {
     const mockTargetUser = { id: 1, slug: 'target-user' };

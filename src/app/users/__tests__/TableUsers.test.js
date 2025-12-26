@@ -16,7 +16,7 @@ global.localStorage = {
 jest.mock('@/service/userService', () => ({
     userService: {
         getAll: jest.fn(),
-        remove: jest.fn(),
+        delete: jest.fn(),
     },
 }));
 
@@ -166,7 +166,7 @@ describe('TableUsers Component', () => {
 
     beforeEach(() => {
         userService.getAll.mockResolvedValue(mockUsers);
-        userService.remove.mockResolvedValue({});
+        userService.delete.mockResolvedValue({});
         const { useAuth } = require('@/context/AuthContext');
         useAuth.mockReturnValue({
             user: { role: { name: 'Admin' } }
@@ -250,7 +250,7 @@ describe('TableUsers Component', () => {
         await user.click(deleteButton);
 
         await waitFor(() => {
-            expect(userService.remove).toHaveBeenCalledWith(1, 'fake-token');
+            expect(userService.delete).toHaveBeenCalledWith(1, 'fake-token');
             expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
         });
     });

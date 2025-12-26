@@ -1,70 +1,58 @@
-import { strapi } from "@strapi/client";
-
-import { getApiBaseUrl } from "@/utils/apiHelper";
+import { getClient, request } from "./apiBase";
 
 const RESOURCE = "changelogs";
 
-// Initialize a Strapi client instance
-// token is passed per function call to handle dynamic auth
-const getClient = (token) =>
-    strapi({
-        baseURL: `${getApiBaseUrl()}/api`,
-        auth: token, // JWT token for authentication
-    });
-
+/**
+ * changelogService.js
+ * Handles system changelogs and release notes.
+ * Endpoint: /api/changelogs
+ */
 export const changelogService = {
+    /**
+     * Fetches all changelogs.
+     * Role: Authenticated
+     */
     getAll: async (token) => {
         const client = getClient(token);
-        // Sort by date descending (newest first)
-        const changelogs = await client.collection(RESOURCE).find({
+        const res = await client.collection(RESOURCE).find({
             sort: 'createdAt:desc'
         });
-        return changelogs.data; // keep documentId in each object
-    },
-
-    getLatest: async (token) => {
-        const client = getClient(token);
-        const changelogs = await client.collection(RESOURCE).find({
-            sort: 'date:desc',
-            'pagination[limit]': 1
-        });
-        return changelogs.data.length > 0 ? changelogs.data[0] : null;
-    },
-
-    create: async (token, data) => {
-        console.log("Submitting changelog data:", data);
-        const response = await fetch(`${getApiBaseUrl()}/api/changelogs`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ data }),
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            console.error("Strapi Error Details:", error);
-            throw new Error(error.error?.message || "Failed to create changelog");
-        }
-
-        const res = await response.json();
         return res.data;
     },
 
-    delete: async (token, documentId) => {
-        const response = await fetch(`${getApiBaseUrl()}/api/changelogs/${documentId}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+    /**
+     * Fetches the single latest changelog.
+     * Role: Authenticated
+     */
+    getLatest: async (token) => {
+        const client = getClient(token);
+        const res = await client.collection(RESOURCE).find({
+            sort: 'date:desc',
+            pagination: { limit: 1 }
         });
+        return res.data.length > 0 ? res.data[0] : null;
+    },
 
-        if (!response.ok) {
-            const error = await response.json();
-            console.error("Strapi Error Details:", error);
-            throw new Error(error.error?.message || "Failed to delete changelog");
-        }
-        return true;
+    /**
+     * Creates a new changelog entry.
+     * Role: Admin
+     */
+    create: async (token, data) => {
+        return await request(RESOURCE, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ data }),
+        });
+    },
+
+    /**
+     * Deletes a changelog entry.
+     * Role: Admin
+     */
+    delete: async (token, documentId) => {
+        return await request(`${RESOURCE}/${documentId}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+        });
     },
 };

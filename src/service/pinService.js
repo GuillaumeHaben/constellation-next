@@ -1,52 +1,17 @@
-import { strapi } from "@strapi/client";
-
-import { getApiBaseUrl } from "@/utils/apiHelper";
+import { getClient, request } from "./apiBase";
 
 const RESOURCE = "pins";
 
-// Initialize a Strapi client instance for GET requests (keeping it for convenient filtering/population)
-const getClient = (token) =>
-    strapi({
-        baseURL: `${getApiBaseUrl()}/api`,
-        auth: token,
-    });
-
-// Helper for write operations to ensure consistent error handling and headers
-const apiRequest = async (endpoint, method, body, token) => {
-    try {
-        const response = await fetch(`${getApiBaseUrl()}/api/${endpoint}`, {
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: body ? JSON.stringify({ data: body }) : undefined,
-        });
-
-        if (response.status === 204) {
-            return null;
-        }
-
-        const text = await response.text();
-        const res = text ? JSON.parse(text) : {};
-
-        if (!response.ok) {
-            console.error(`${method} ${endpoint} Error:`, JSON.stringify(res, null, 2));
-            throw new Error(res.error?.message || `Failed to ${method} ${endpoint}`);
-        }
-
-        return res.data;
-    } catch (error) {
-        if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
-            console.error("Network error or API unreachable");
-            throw new Error("Network error: Please check your connection or server status.");
-        }
-        throw error;
-    }
-};
-
+/**
+ * pinService.js
+ * Handles pin library, user collections, and approval workflow.
+ * Endpoint: /api/pins
+ */
 export const pinService = {
-    // Public/User: Get all approved pins (Library)
+    /**
+     * Fetches all approved pins for the library.
+     * Role: Authenticated
+     */
     getAllApproved: async (token) => {
         const client = getClient(token);
         const res = await client.collection(RESOURCE).find({
@@ -58,19 +23,23 @@ export const pinService = {
         return res.data;
     },
 
-    // Check if a pin name already exists (pending or approved)
+    /**
+     * Checks if a pin name already exists (case-insensitive).
+     * Role: Authenticated
+     */
     findByName: async (name, token) => {
         const client = getClient(token);
         const res = await client.collection(RESOURCE).find({
-            filters: {
-                name: { $eqi: name } // $eqi is case-insensitive match in Strapi v4/v5
-            },
+            filters: { name: { $eqi: name } },
             pagination: { limit: 1 }
         });
         return res.data && res.data.length > 0 ? res.data[0] : null;
     },
 
-    // Public/User: Get pins owned by a specific user
+    /**
+     * Fetches pins owned by a specific user.
+     * Role: Authenticated
+     */
     getUserPins: async (userId, token) => {
         const client = getClient(token);
         const res = await client.collection(RESOURCE).find({
@@ -81,26 +50,34 @@ export const pinService = {
         return res.data;
     },
 
-    // Crew: Suggest a new pin
+    /**
+     * Submits a new pin suggestion.
+     * Role: Authenticated (Crew)
+     */
     suggestPin: async (data, token) => {
         const payload = {
-            status: 'pending', // Default
+            status: 'pending',
             ...data,
-            publishedAt: new Date(), // Ensure it's not a draft
+            publishedAt: new Date(),
         };
-        return await apiRequest(RESOURCE, 'POST', payload, token);
+        return await request(RESOURCE, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ data: payload }),
+        });
     },
 
-    // Generic Image Upload for Pins
+    /**
+     * Uploads an image for a pin suggestion.
+     * Role: Authenticated
+     */
     uploadImage: async (file, token) => {
         const formData = new FormData();
         formData.append("files", file);
 
-        const response = await fetch(`${getApiBaseUrl()}/api/upload`, {
+        const response = await fetch(`${request("").url.replace('/api/', '/api/upload')}`, { // Helper for upload endpoint
             method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
             body: formData,
         });
 
@@ -113,27 +90,36 @@ export const pinService = {
         return data[0];
     },
 
-    // User: Add a pin to a user profile (Many-to-Many connect)
+    /**
+     * Connects a pin to a user profile.
+     * Role: Authenticated / Admin
+     */
     equipPin: async (pinId, userId, token) => {
-        const payload = {
-            users: {
-                connect: [userId]
-            }
-        };
-        return await apiRequest(`${RESOURCE}/${pinId}`, 'PUT', payload, token);
+        const payload = { users: { connect: [userId] } };
+        return await request(`${RESOURCE}/${pinId}`, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ data: payload }),
+        });
     },
 
-    // User: Remove a pin from a user profile (Many-to-Many disconnect)
+    /**
+     * Disconnects a pin from a user profile.
+     * Role: Authenticated / Admin
+     */
     unequipPin: async (pinId, userId, token) => {
-        const payload = {
-            users: {
-                disconnect: [userId]
-            }
-        };
-        return await apiRequest(`${RESOURCE}/${pinId}`, 'PUT', payload, token);
+        const payload = { users: { disconnect: [userId] } };
+        return await request(`${RESOURCE}/${pinId}`, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ data: payload }),
+        });
     },
 
-    // Admin: Get pending pins
+    /**
+     * Fetches all pending pin suggestions.
+     * Role: Admin
+     */
     getPendingPins: async (token) => {
         const client = getClient(token);
         const res = await client.collection(RESOURCE).find({
@@ -144,13 +130,26 @@ export const pinService = {
         return res.data;
     },
 
-    // Admin: Approve flow
-    approvePin: async (pinId, token) => {
-        return await apiRequest(`${RESOURCE}/${pinId}`, 'PUT', { status: 'approved' }, token);
+    /**
+     * Approves a pin suggestion.
+     * Role: Admin
+     */
+    approve: async (pinId, token) => {
+        return await request(`${RESOURCE}/${pinId}`, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify({ data: { status: 'approved' } }),
+        });
     },
 
-    // Admin: Reject flow (Deletes the suggestion)
-    rejectPin: async (pinId, token) => {
-        return await apiRequest(`${RESOURCE}/${pinId}`, 'DELETE', null, token);
+    /**
+     * Deletes (rejects) a pin suggestion.
+     * Role: Admin
+     */
+    delete: async (pinId, token) => {
+        return await request(`${RESOURCE}/${pinId}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${token}` },
+        });
     },
 };

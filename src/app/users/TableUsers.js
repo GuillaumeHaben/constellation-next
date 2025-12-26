@@ -92,7 +92,7 @@ export function TableUsers() {
     handleRemove,
   } = tableState;
 
-  const onRemove = handleRemove(userService.remove);
+  const onRemove = handleRemove(userService.delete);
 
   const renderCell = useCallback((user, columnKey) => {
     return <RenderCell user={user} columnKey={columnKey} onRemove={onRemove} canDelete={isAdmin} />;

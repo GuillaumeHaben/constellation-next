@@ -51,7 +51,7 @@ export default function AdminApprovalsPage() {
         const pinIdentifier = pin.documentId || pin.id;
         try {
             const token = localStorage.getItem("token");
-            await pinService.approvePin(pinIdentifier, token);
+            await pinService.approve(pinIdentifier, token);
             setPendingPins(prev => prev.filter(p => (p.documentId || p.id) !== pinIdentifier));
         } catch (error) {
             console.error("Failed to approve", error);
@@ -65,7 +65,7 @@ export default function AdminApprovalsPage() {
         const pinIdentifier = pin.documentId || pin.id;
         try {
             const token = localStorage.getItem("token");
-            await pinService.rejectPin(pinIdentifier, token);
+            await pinService.delete(pinIdentifier, token);
             setPendingPins(prev => prev.filter(p => (p.documentId || p.id) !== pinIdentifier));
         } catch (error) {
             console.error("Failed to reject", error);

@@ -40,11 +40,27 @@ jest.mock('../ModalUser', () => {
     };
 });
 
-// Mock layout components
-jest.mock('@/components/Navbar', () => () => <div />);
-jest.mock('@/components/Header', () => () => <div />);
-jest.mock('@/components/Footer', () => () => <div />);
-jest.mock('@/components/BreadCrumbs', () => () => <div />);
+// Mock Modals
+jest.mock('@/components/Navbar', () => {
+    const MockQuote = () => <div />;
+    MockQuote.displayName = 'MockNavbar';
+    return MockQuote;
+});
+jest.mock('@/components/Header', () => {
+    const MockQuote = () => <div />;
+    MockQuote.displayName = 'MockHeader';
+    return MockQuote;
+});
+jest.mock('@/components/Footer', () => {
+    const MockQuote = () => <div />;
+    MockQuote.displayName = 'MockFooter';
+    return MockQuote;
+});
+jest.mock('@/components/BreadCrumbs', () => {
+    const MockQuote = () => <div />;
+    MockQuote.displayName = 'MockBreadCrumbs';
+    return MockQuote;
+});
 
 describe('User Profile Page', () => {
     const mockParams = { slug: 'john-doe' };

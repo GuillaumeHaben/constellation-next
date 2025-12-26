@@ -8,7 +8,7 @@ export default function Quote({ text, author, authorTitle, picture }) {
             <figure className="max-w-screen-lg mx-auto flex items-center justify-end gap-8">
                 <blockquote className="max-w-xl w-1/2">
                     <p className="text-base italic font-medium tracking-tight text-slate-300 group-hover:text-slate-200 leading-relaxed text-right transition-colors duration-500">
-                        "{text}"
+                        &quot;{text}&quot;
                     </p>
                 </blockquote>
 
