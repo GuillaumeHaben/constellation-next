@@ -58,6 +58,18 @@ export const pinService = {
         return res.data;
     },
 
+    // Check if a pin name already exists (pending or approved)
+    findByName: async (name, token) => {
+        const client = getClient(token);
+        const res = await client.collection(RESOURCE).find({
+            filters: {
+                name: { $eqi: name } // $eqi is case-insensitive match in Strapi v4/v5
+            },
+            pagination: { limit: 1 }
+        });
+        return res.data && res.data.length > 0 ? res.data[0] : null;
+    },
+
     // Public/User: Get pins owned by a specific user
     getUserPins: async (userId, token) => {
         const client = getClient(token);

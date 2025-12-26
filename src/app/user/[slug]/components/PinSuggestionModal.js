@@ -21,6 +21,7 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const fileInputRef = useRef(null);
 
     const handleFileSelect = (e) => {
@@ -32,23 +33,28 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
         }
     };
 
+    const handleNameChange = (val) => {
+        setName(val);
+        setError(null);
+    };
+
     const handleSubmit = async () => {
         if (!name || !selectedFile) return;
 
         setLoading(true);
+        setError(null);
         try {
             const token = localStorage.getItem("token");
 
-            // 1. Upload image
-            // We use userService.upload as a generic uploader, assuming it works for any ref or generic upload
-            // But userService.upload is specific to user profile picture (ref='plugin::users-permissions.user'). 
-            // We need a generic upload. 
-            // pinService doesn't have upload. Let's make a generic upload here or reuse userService if we assume it can be adapted.
-            // Looking at userService.upload: it hardcodes ref/refId/field. 
-            // I should probably refrain from using userService.upload for Pins.
-            // I'll implement a simple upload fetch here or add a generic upload to pinService/userService.
-            // For now, inline generic upload to avoid breaking changes in userService.
+            // 1. Check for duplicates
+            const existingPin = await pinService.findByName(name, token);
+            if (existingPin) {
+                setError("A pin with this name already exists in the library.");
+                setLoading(false);
+                return;
+            }
 
+            // 2. Upload image
             const formData = new FormData();
             formData.append("files", selectedFile);
 
@@ -64,7 +70,7 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
             const uploadData = await uploadRes.json();
             const imageId = uploadData[0].id;
 
-            // 2. Create Pin Suggestion
+            // 3. Create Pin Suggestion
             const isAdminOrManager = user?.role?.type === 'admin' || user?.role?.type === 'manager';
 
             await pinService.suggestPin({
@@ -81,7 +87,7 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
 
         } catch (error) {
             console.error("Suggestion failed", error);
-            alert("Failed to submit suggestion.");
+            setError("Failed to submit suggestion. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -100,8 +106,10 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
                             label="Mission Name"
                             placeholder="e.g. Apollo 11"
                             value={name}
-                            onValueChange={setName}
+                            onValueChange={handleNameChange}
                             isRequired
+                            isInvalid={!!error}
+                            errorMessage={error}
                         />
 
                         {/* Image Upload */}
