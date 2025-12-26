@@ -162,7 +162,7 @@ export default function Sidebar({
 
                         <CardBody className="flex flex-col p-8 relative z-10 h-full">
                             {/* Profile Info Section - Centered vertically in the available space */}
-                            <div className="flex-1 flex flex-col items-center justify-center gap-6">
+                            <div className="flex-1 flex flex-col items-center justify-center gap-4">
                                 <div className="relative group/avatar">
                                     <Avatar
                                         src={getProfilePictureUrl(targetUser)}
@@ -177,34 +177,37 @@ export default function Sidebar({
                                         </div>
                                     )}
                                 </div>
+                                <div className="flex flex-col items-center">
 
-                                <div className="text-center space-y-1">
+                                    {/* Last Seen Status */}
+                                    <div className="py-1 px-3 rounded-full bg-white/5 border border-white/10 flex items-center gap-2">
+                                        {targetUser.lastSeenAt && (new Date() - new Date(targetUser.lastSeenAt) < 300000) ? (
+                                            <>
+                                                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                                <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">Online Now</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="w-2 h-2 rounded-full bg-slate-600" />
+                                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                                    Last seen {targetUser.lastSeenAt ? formatTimeAgo(targetUser.lastSeenAt) : "a while ago"}
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="text-center">
                                     <h2 className="text-2xl font-bold text-white tracking-tight">
                                         {targetUser.firstName} {targetUser.lastName}
                                     </h2>
                                     <div className="flex flex-col items-center">
-                                        <div className="flex items-center gap-1 flex-wrap justify-center">
-                                            {ageDisplay && <p className="text-slate-200 font-semibold text-xs tracking-widest">{ageDisplay}, </p>}
-                                            <p className="text-blue-400 font-semibold text-xs tracking-widest uppercase">{targetUser.position || "ESA Member"}</p>
+                                        <div className="flex items-center flex-wrap justify-center">
+                                            {ageDisplay && <p className="text-slate-400 font-semibold text-xs tracking-widest">{ageDisplay}</p>}
+                                            {/* <p className="text-blue-400 font-semibold text-xs tracking-widest uppercase">{targetUser.position || "ESA Member"}</p> */}
                                         </div>
-                                        <p className="text-slate-500 font-medium text-xs tracking-wide">{targetUser.esaSite || "ESA"}</p>
+                                        {/* <p className="text-slate-500 font-medium text-xs tracking-wide">{targetUser.esaSite || "ESA"}</p> */}
 
-                                        {/* Last Seen Status */}
-                                        <div className="mt-2 py-1 px-3 rounded-full bg-white/5 border border-white/10 flex items-center gap-2">
-                                            {targetUser.lastSeenAt && (new Date() - new Date(targetUser.lastSeenAt) < 300000) ? (
-                                                <>
-                                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                                    <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">Online Now</span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <div className="w-2 h-2 rounded-full bg-slate-600" />
-                                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                                                        Last seen {targetUser.lastSeenAt ? formatTimeAgo(targetUser.lastSeenAt) : "a while ago"}
-                                                    </span>
-                                                </>
-                                            )}
-                                        </div>
                                     </div>
                                 </div>
 
@@ -273,7 +276,7 @@ export default function Sidebar({
                     <Card className="flex-1 h-full bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/50 rounded-2xl shadow-xl overflow-hidden">
                         <CardBody className="flex flex-col p-8 h-full">
                             {/* QR Content Section - Centered vertically */}
-                            <div className="flex-1 flex flex-col items-center justify-center gap-6">
+                            <div className="flex-1 flex flex-col items-center justify-center gap-2">
                                 <div ref={qrRef} className="rounded-xl overflow-hidden min-h-[240px] flex items-center justify-center">
                                     {!qrToken && (
                                         <div className="flex flex-col items-center gap-3">

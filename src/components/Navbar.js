@@ -239,7 +239,35 @@ export default function NavBar() {
             </div>
 
             <DisclosurePanel className="md:hidden">
-                <div className="space-y-4 px-2 pb-3 pt-3 sm:px-3">
+                <div className="border-t border-white/10 pt-4 pb-3 space-y-4">
+                    <button type="button" className="flex items-center pb-3 pt-3 px-5 w-full text-left rounded-md cursor-pointer group bg-transparent hover:bg-white/5">
+                        <div className="shrink-0">
+                            <Avatar
+                                src={getProfilePictureUrl(user)}
+                                className="w-10 h-10"
+                                isBordered
+                                radius="full"
+                                color="default"
+                            />
+                        </div>
+                        <Link href={`/user/${user.slug}`}>
+                            <div className="ml-3">
+                                <div className="text-base/5 font-medium text-white-400 group-hover:text-white transition-colors duration-200">
+                                    {user.firstName} {user.lastName}
+                                </div>
+                                <div className="text-sm font-medium text-gray-400 group-hover:text-white transition-colors duration-200">
+                                    {user.email}
+                                </div>
+                            </div>
+                        </Link>
+                    </button>
+                    <button type="button" className="flex items-center pb-2 pt-2 px-7 w-full text-left hover:bg-white/5 rounded-md cursor-pointer">
+                        <button onClick={logout} className="text-base/5 font-medium text-white flex items-center gap-2">
+                            {ArrowLeftEndOnRectangleIcon && <ArrowLeftEndOnRectangleIcon className="h-6 w-6 text-white" />} Sign out <span aria-hidden="true"></span>
+                        </button>
+                    </button>
+                </div>
+                <div className="space-y-4 px-2 pb-3 pt-3 sm:px-3 border-t border-white/5">
                     {mobileSections.map((section, index) => (
                         <div
                             key={section.key}
@@ -272,34 +300,6 @@ export default function NavBar() {
                             </div>
                         </div>
                     ))}
-                </div>
-                <div className="border-t border-white/10 pt-4 pb-3 space-y-4">
-                    <button type="button" className="flex items-center pb-3 pt-3 px-5 w-full text-left rounded-md cursor-pointer group bg-transparent hover:bg-white/5">
-                        <div className="shrink-0">
-                            <Avatar
-                                src={getProfilePictureUrl(user)}
-                                className="w-10 h-10"
-                                isBordered
-                                radius="full"
-                                color="default"
-                            />
-                        </div>
-                        <Link href={`/user/${user.slug}`}>
-                            <div className="ml-3">
-                                <div className="text-base/5 font-medium text-gray-400 group-hover:text-white transition-colors duration-200">
-                                    {user.firstName} {user.lastName}
-                                </div>
-                                <div className="text-sm font-medium text-gray-400 group-hover:text-white transition-colors duration-200">
-                                    {user.email}
-                                </div>
-                            </div>
-                        </Link>
-                    </button>
-                    <button type="button" className="flex items-center pb-6 pt-6 px-7 w-full text-left hover:bg-white/5 rounded-md cursor-pointer">
-                        <button onClick={logout} className="text-base/5 font-medium text-white">
-                            Sign out <span aria-hidden="true">&rarr;</span>
-                        </button>
-                    </button>
                 </div>
             </DisclosurePanel>
         </Disclosure>

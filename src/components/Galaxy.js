@@ -13,7 +13,7 @@ const Galaxy = () => {
         const fetchUserCount = async () => {
             try {
                 const count = await userService.count();
-                setStarCount(100); // count || 50
+                setStarCount(count || 50); // count || 50
             } catch (error) {
                 console.error("Failed to fetch user count for Galaxy", error);
                 setStarCount(500); // Default fallback

@@ -90,7 +90,7 @@ describe('TabPins Component', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Add Pin')).toBeInTheDocument();
-            expect(screen.getByText('Suggest New Pin')).toBeInTheDocument();
+            expect(screen.getByText('Suggest Pin')).toBeInTheDocument();
         });
     });
 

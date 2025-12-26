@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Avatar, Button, Tooltip, Chip, Card, CardBody } from "@heroui/react";
-import { PlusIcon, LightBulbIcon, InformationCircleIcon, SparklesIcon } from "@heroicons/react/24/solid";
+import { PlusIcon, LightBulbIcon, InformationCircleIcon, SparklesIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
 import { pinService } from "@/service/pinService";
 import { useAuth } from "@/context/AuthContext";
 import PinLibraryModal from "./PinLibraryModal";
@@ -18,6 +18,9 @@ export default function TabPins({ targetUser }) {
     const [showLibrary, setShowLibrary] = useState(false);
     const [showSuggestion, setShowSuggestion] = useState(false);
     const [showRarityInfo, setShowRarityInfo] = useState(false);
+
+    // Edit mode state for mobile deletion
+    const [isEditing, setIsEditing] = useState(false);
 
     const isOwnProfile = user && targetUser && user.slug === targetUser.slug;
     const isCrew = user && (user.role?.name === "Crew" || user.role?.name === "Manager" || user.role?.name === "Admin");
@@ -152,27 +155,45 @@ export default function TabPins({ targetUser }) {
             </div>
 
             {/* Action Buttons - Only for own profile */}
-            {(isOwnProfile && isCrew) && (
-                <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                    <Button
-                        color="success"
-                        variant="flat"
-                        onPress={() => setShowLibrary(true)}
-                        className="flex-1 font-semibold h-12"
-                        startContent={<PlusIcon className="w-5 h-5" />}
-                    >
-                        Add Pin
-                    </Button>
-                    <Button
-                        color="warning"
-                        variant="flat"
-                        onPress={() => setShowSuggestion(true)}
-                        className="flex-1 font-semibold h-12"
-                        startContent={<LightBulbIcon className="w-5 h-5" />}
-                    >
-                        Suggest New Pin
-                    </Button>
-                </div>
+            {/* Action Buttons - Only for own profile */}
+            {isOwnProfile && (
+                <>
+                    <div className="flex flex-row gap-6 mb-6">
+                        {isCrew && (
+                            <>
+                                <Button
+                                    color="success"
+                                    variant="flat"
+                                    onPress={() => setShowLibrary(true)}
+                                    className="flex-1 font-semibold h-12"
+                                    startContent={<PlusIcon className="w-5 h-5" />}
+                                >
+                                    Add Pin
+                                </Button>
+                                <Button
+                                    color="warning"
+                                    variant="flat"
+                                    onPress={() => setShowSuggestion(true)}
+                                    className="flex-1 font-semibold h-12"
+                                    startContent={<LightBulbIcon className="w-5 h-5" />}
+                                >
+                                    Suggest Pin
+                                </Button>
+                            </>
+                        )}
+                    </div>
+                    <div className="flex flex-row gap-3 mb-6 sm:hidden">
+                        <Button
+                            color={isEditing ? "danger" : "primary"}
+                            variant="flat"
+                            onPress={() => setIsEditing(!isEditing)}
+                            className="font-semibold h-12 flex-1"
+                            startContent={<PencilSquareIcon className="w-5 h-5" />}
+                        >
+                            {isEditing ? "Done" : "Edit"}
+                        </Button>
+                    </div>
+                </>
             )}
 
             {/* Pins Grid - Left aligned for better scalability */}
@@ -185,7 +206,7 @@ export default function TabPins({ targetUser }) {
                     </div>
                 ) : null
             ) : (
-                <div className="flex flex-wrap gap-4 sm:gap-6 justify-start items-start">
+                <div className="flex flex-wrap gap-4 sm:gap-6 justify-center items-center sm:justify-start sm:items-start">
                     {[...pins]
                         .sort((a, b) => (parseFloat(b.rarity) || 0) - (parseFloat(a.rarity) || 0))
                         .map((pin) => {
@@ -215,7 +236,7 @@ export default function TabPins({ targetUser }) {
                                                     e.stopPropagation();
                                                     handleUnequip(pin.documentId || pin.id);
                                                 }}
-                                                className="absolute -top-1 -right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover/pin:opacity-100 transition-all duration-200 z-20 shadow-xl scale-90 group-hover/pin:scale-100"
+                                                className={`absolute -top-1 -right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 transition-all duration-200 z-20 shadow-xl scale-90 group-hover/pin:scale-100 ${isEditing ? 'opacity-100' : 'opacity-0 group-hover/pin:opacity-100'}`}
                                                 title="Remove Pin"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">

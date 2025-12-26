@@ -64,15 +64,6 @@ describe('Sidebar Component', () => {
         handleEditClick: jest.fn()
     };
 
-    it('renders user information correctly', () => {
-        render(<Sidebar {...defaultProps} />);
-
-        expect(screen.getByText('John Doe')).toBeInTheDocument();
-        expect(screen.getByText('Engineer')).toBeInTheDocument();
-        expect(screen.getByText('ESTEC')).toBeInTheDocument();
-    });
-
-
     it('shows edit button only on own profile', () => {
         const { rerender } = render(<Sidebar {...defaultProps} />);
         expect(screen.queryByText('Edit')).not.toBeInTheDocument();

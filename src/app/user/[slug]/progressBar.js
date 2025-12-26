@@ -14,8 +14,8 @@ export default function ProgressBar({ targetUser }) {
                 base: "max-w-md",
                 track: "drop-shadow-md border border-default",
                 indicator: "bg-linear-to-r from-blue-500 to-pink-500",
-                label: "tracking-wider font-medium text-default-600",
-                value: "text-foreground/60",
+                label: "tracking-wider font-medium text-gray-500",
+                value: "text-gray-500",
             }}
             label="Profile completion"
             radius="sm"
