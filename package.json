@@ -19,7 +19,7 @@
     "framer-motion": "^12.23.24",
     "h3-js": "^4.4.0",
     "maplibre-gl": "^5.15.0",
-    "next": "15.5.4",
+    "next": "^15.5.9",
     "qr-code-styling": "^1.9.2",
     "react": "19.1.0",
     "react-aria-components": "^1.13.0",

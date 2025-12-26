@@ -28,10 +28,7 @@ jest.mock('@/utils/slug', () => ({
 // Mock next/image
 jest.mock('next/image', () => ({
     __esModule: true,
-    default: (props) => {
-         
-        return <Image {...props} alt={props.alt} />;
-    },
+    default: (props) => <img {...props} alt={props.alt} />,
 }));
 
 describe('Signup Component', () => {

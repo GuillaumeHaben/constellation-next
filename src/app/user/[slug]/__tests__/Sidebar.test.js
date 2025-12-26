@@ -32,7 +32,7 @@ jest.mock('@heroicons/react/24/solid', () => ({
 
 // Mock heroui components
 jest.mock('@heroui/react', () => ({
-    Avatar: ({ src, name }) => <Image data-testid="avatar" src={src} alt={name} />,
+    Avatar: ({ src, name }) => <Image data-testid="avatar" src={src} alt={name} width={100} height={100} />,
     Button: ({ children, onPress, isLoading }) => (
         <button onClick={onPress} disabled={isLoading}>{children}</button>
     ),

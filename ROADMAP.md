@@ -36,8 +36,9 @@ Build a clean, modular social platform for the ESA community:
 - [x] Heatmap Integration for User Locations
 - [x] Awards Tab UI with achieved/locked states
 - [x] Prevent duplicate pin names in suggestions
+- [x] Tracking and statistics for achievement progress (Awards)
+- [x] Making sure all awards are achievable (tests)
 - [ ] Interactive dashboards for Pin statistics and global collection metrics
-- [ ] Tracking and statistics for achievement progress (Awards)
 - [ ] Anti-cheat: Validate country of origin at signup to prevent award manipulation
 
 ### Phase 4: Social Features & Clubs
@@ -60,8 +61,8 @@ Build a clean, modular social platform for the ESA community:
 - [x] "Home" button optimization for iOS WebApps
 - [x] Simplified pin suggestions (removed mission descriptions)
 - [x] Conditional "New Feature" modal (skip for patch fixes/initial login)
+- [x] Consistency: Standardize vertical padding across all profile tabs
 - [ ] **Visibility**: Fix delete button not appearing on mobile
-- [ ] **Consistency**: Standardize vertical padding across all profile tabs
 - [ ] **Onboarding**: Add "Join the Team" and "How it Works" info pages
 - [ ] **Homepage**: Implement dynamic and attractive content/animations
 
@@ -76,7 +77,7 @@ Build a clean, modular social platform for the ESA community:
 
 ### Technical Debt & Maintenance
 - [x] Centralized API helper for Docker/Local environments
-- [ ] Review utility and redundancy of all `userService` methods
+- [x] Review utility and redundancy of all `userService` methods
 - [ ] Comprehensive API testing (Integration/E2E)
 - [ ] Implementation of Google Analytics (Privacy-friendly)
 - [ ] Database backup and disaster recovery plan

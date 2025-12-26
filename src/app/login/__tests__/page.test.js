@@ -17,10 +17,7 @@ jest.mock('next/navigation', () => ({
 // Mock next/image
 jest.mock('next/image', () => ({
     __esModule: true,
-    default: (props) => {
-         
-        return <Image {...props} alt={props.alt} />;
-    },
+    default: (props) => <img {...props} alt={props.alt} />,
 }));
 
 describe('Login Component', () => {

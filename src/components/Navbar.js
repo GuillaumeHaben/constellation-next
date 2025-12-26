@@ -18,7 +18,8 @@ import {
     ChatBubbleBottomCenterTextIcon,
     ShoppingBagIcon,
     LinkIcon,
-    GlobeAltIcon
+    GlobeAltIcon,
+    TrophyIcon
 } from '@heroicons/react/24/outline';
 import Link from "next/link";
 import Image from "next/image";
@@ -76,7 +77,8 @@ export default function NavBar() {
             name: 'Admin',
             icon: ShieldCheckIcon,
             children: [
-                { name: 'Pin approval', href: '/admin/approvals', icon: CheckBadgeIcon }
+                { name: 'Pin approval', href: '/admin/approvals', icon: CheckBadgeIcon },
+                { name: 'Award management', href: '/admin/awards', icon: TrophyIcon }
             ]
         });
     }
