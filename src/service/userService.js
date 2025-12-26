@@ -92,6 +92,22 @@ export const userService = {
     return data;
   },
 
+  updateLastSeen: async (id, token) => {
+    if (!id || !token) return;
+    try {
+      await fetch(`${getApiBaseUrl()}/api/users/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ lastSeenAt: new Date().toISOString() }),
+      });
+    } catch (error) {
+      console.error('Failed to update last seen:', error);
+    }
+  },
+
   upload: async (file, token, userId) => {
     const formData = new FormData();
     formData.append("files", file);

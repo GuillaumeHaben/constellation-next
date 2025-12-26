@@ -1,5 +1,4 @@
-import React from "react";
-import { User, Chip, Tooltip, Button, Link } from "@heroui/react";
+import { Avatar, Chip, Tooltip, Button, Link, Badge } from "@heroui/react";
 import { EyeIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { TeamsIcon } from "@/components/Icons";
 import { getProfilePictureUrl } from "@/utils/media";
@@ -8,17 +7,36 @@ import { roleColorMap } from "../utils";
 export function RenderCell({ user, columnKey, onRemove, canDelete }) {
     const cellValue = user[columnKey];
 
+    const isOnline = user.lastSeenAt && (new Date() - new Date(user.lastSeenAt) < 300000); // 5 minutes
+
     switch (columnKey) {
         case "name":
             return (
                 <Link href={`/user/${user.slug}`} className="no-underline text-default-700">
-                    <User
-                        avatarProps={{ radius: "lg", src: getProfilePictureUrl(user) }}
-                        description={user.email}
-                        name={`${user.firstName || ""} ${user.lastName || ""}`}
-                    >
-                        {user.email}
-                    </User>
+                    <div className="flex items-center gap-3">
+                        <Badge
+                            content=""
+                            color="success"
+                            shape="circle"
+                            placement="bottom-right"
+                            isInvisible={!isOnline}
+                            className="bg-green-500 border-3 border-zinc-900 w-3 h-3"
+                        >
+                            <Avatar
+                                radius="lg"
+                                src={getProfilePictureUrl(user)}
+                                size="md"
+                            />
+                        </Badge>
+                        <div className="flex flex-col overflow-hidden">
+                            <span className="text-small font-bold text-slate-200 truncate">
+                                {`${user.firstName || ""} ${user.lastName || ""}`}
+                            </span>
+                            <span className="text-tiny text-slate-500 truncate">
+                                {user.email}
+                            </span>
+                        </div>
+                    </div>
                 </Link>
             );
         case "role":

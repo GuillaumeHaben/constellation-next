@@ -6,12 +6,28 @@ import {
     CardBody,
     Avatar,
     Spinner,
-    Button
+    Button,
+    Badge
 } from "@heroui/react";
 import { CameraIcon, PencilIcon, QrCodeIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { getProfilePictureUrl } from "@/utils/media";
 import ProgressBar from "../progressBar";
 import { userService } from "@/service/userService";
+
+const formatTimeAgo = (dateStr) => {
+    if (!dateStr) return "a while ago";
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return "just now";
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    return `${diffDays}d ago`;
+};
 
 export default function Sidebar({
     targetUser,
@@ -166,9 +182,30 @@ export default function Sidebar({
                                     <h2 className="text-2xl font-bold text-white tracking-tight">
                                         {targetUser.firstName} {targetUser.lastName}
                                     </h2>
-                                    {ageDisplay && <p className="text-slate-200 font-semibold text-xs tracking-widest inline">{ageDisplay}, </p>}
-                                    <p className="text-blue-400 font-semibold text-xs tracking-widest uppercase inline">{targetUser.position || "ESA Member"}</p>
-                                    <p className="text-slate-500 font-medium text-xs tracking-wide">{targetUser.esaSite || "ESA"}</p>
+                                    <div className="flex flex-col items-center">
+                                        <div className="flex items-center gap-1 flex-wrap justify-center">
+                                            {ageDisplay && <p className="text-slate-200 font-semibold text-xs tracking-widest">{ageDisplay}, </p>}
+                                            <p className="text-blue-400 font-semibold text-xs tracking-widest uppercase">{targetUser.position || "ESA Member"}</p>
+                                        </div>
+                                        <p className="text-slate-500 font-medium text-xs tracking-wide">{targetUser.esaSite || "ESA"}</p>
+
+                                        {/* Last Seen Status */}
+                                        <div className="mt-2 py-1 px-3 rounded-full bg-white/5 border border-white/10 flex items-center gap-2">
+                                            {targetUser.lastSeenAt && (new Date() - new Date(targetUser.lastSeenAt) < 300000) ? (
+                                                <>
+                                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                                    <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">Online Now</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className="w-2 h-2 rounded-full bg-slate-600" />
+                                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                                        Last seen {targetUser.lastSeenAt ? formatTimeAgo(targetUser.lastSeenAt) : "a while ago"}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {isOwnProfile && (

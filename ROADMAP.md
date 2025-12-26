@@ -28,16 +28,16 @@ Build a clean, modular social platform for the ESA community:
 - [x] Comprehensive User Profiles
 - [x] Profile Picture Uploads
 - [x] Dynamic Sidebar & Tabbed Navigation (Overview, Social, Pins, QR, Awards)
-- [ ] Online status indicators and "Last Seen" timestamps
+- [x] Online status indicators and "Last Seen" timestamps
 
 ### Phase 3: Pins & Achievements (Gamification)
 - [x] Pin Library & Collection System
 - [x] Pin Rarity Calculation Logic
 - [x] Heatmap Integration for User Locations
 - [x] Awards Tab UI with achieved/locked states
+- [x] Prevent duplicate pin names in suggestions
 - [ ] Interactive dashboards for Pin statistics and global collection metrics
 - [ ] Tracking and statistics for achievement progress (Awards)
-- [ ] Prevent duplicate pin names in suggestions
 - [ ] Anti-cheat: Validate country of origin at signup to prevent award manipulation
 
 ### Phase 4: Social Features & Clubs

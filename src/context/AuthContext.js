@@ -27,9 +27,26 @@ export function AuthProvider({ children }) {
         if (!token) return;
 
         userService.getMe(token)
-            .then((data) => setUser(data))
+            .then((data) => {
+                setUser(data);
+                if (data?.id) {
+                    userService.updateLastSeen(data.id, token);
+                }
+            })
             .catch(() => setUser(null));
     }, []);
+
+    // Heartbeat: update lastSeenAt every 2 minutes
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!user?.id || !token) return;
+
+        const interval = setInterval(() => {
+            userService.updateLastSeen(user.id, token);
+        }, 120000); // 2 minutes
+
+        return () => clearInterval(interval);
+    }, [user?.id]);
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
