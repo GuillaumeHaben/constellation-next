@@ -16,7 +16,9 @@ const HeatMap = () => {
             container: mapContainer.current,
             style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
             center: [4.497010, 52.160114],
-            zoom: 11
+            zoom: 11,
+            minZoom: 3,      // Prevent zooming out to see the whole world
+            maxZoom: 13      // Prevent zooming in too close
         });
 
 
@@ -41,42 +43,27 @@ const HeatMap = () => {
                     paint: {
                         'circle-radius': [
                             'interpolate',
-                            ['linear'],
+                            ['exponential', 2],
                             ['zoom'],
-                            5, 15,
-                            12, 50
+                            8, 20,       // At zoom 8 and below, stay at 5px (cluster view)
+                            12, 50,     // Match H3 Res 7 size (~1.1km radius) at zoom 12
+                            15, 150     // Match H3 Res 7 size at zoom 15 (then stay fixed in pixels)
                         ],
                         'circle-color': [
                             'interpolate',
                             ['linear'],
                             ['get', 'count'],
-                            1, '#ccefff',
-                            2, '#66d9ff',
-                            5, '#00bfff',
-                            10, '#0099ff',
-                            20, '#0066cc'
+                            1, '#3b82f6',   // Blue (1 user)
+                            3, '#22c55e',   // Green (3 users)
+                            8, '#eab308',   // Yellow (8 users)
+                            15, '#f97316',  // Orange (15 users)
+                            25, '#ef4444'   // Red (25+ users)
                         ],
-                        'circle-opacity': 0.4,
-                        'circle-stroke-color': 'rgba(255,255,255,0)',
-                        'circle-stroke-width': 0
+                        'circle-opacity': 0.6,
+                        'circle-blur': 0.5,
+                        'circle-stroke-color': 'rgba(255,255,255,0.2)',
+                        'circle-stroke-width': 1
                     }
-                });
-
-                // Add popup on click
-                map.current.on('click', 'heatmap-layer', (e) => {
-                    const count = e.features[0].properties.count;
-                    new maplibregl.Popup()
-                        .setLngLat(e.lngLat)
-                        .setHTML(`<strong>Users in this area:</strong> ${count}`)
-                        .addTo(map.current);
-                });
-
-                // Change cursor on hover
-                map.current.on('mouseenter', 'heatmap-layer', () => {
-                    map.current.getCanvas().style.cursor = 'pointer';
-                });
-                map.current.on('mouseleave', 'heatmap-layer', () => {
-                    map.current.getCanvas().style.cursor = '';
                 });
 
             } catch (error) {
