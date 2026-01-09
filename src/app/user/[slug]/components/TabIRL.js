@@ -7,7 +7,7 @@ import { Card, CardBody, Avatar } from "@heroui/react";
 import { UsersIcon } from "@heroicons/react/24/outline";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { Tooltip } from "@heroui/react";
-import { getProfilePictureUrl } from "@/utils/media";
+import Link from "next/link"; import { getProfilePictureUrl } from "@/utils/media";
 import ConnectionsInfoModal from "./ConnectionsInfoModal";
 
 export default function TabIRL({ targetUser }) {
