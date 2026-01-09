@@ -1,27 +1,25 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import icon from '../../../public/img/icon.png';
-import { userService } from "@/service/userService";
-import { createUserSlug } from "@/utils/slug";
 
 export default function Signup() {
-  const [form, setForm] = useState({ username: "", email: "", password: "", firstName: "", lastName: "" });
+  const [form, setForm] = useState({ username: "", email: "", password: "", repeatPassword: "" });
   const [error, setError] = useState("");
   const [pendingConfirmation, setPendingConfirmation] = useState(false);
-  const router = useRouter();
-  const { login } = useAuth();
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
+    setPendingConfirmation(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setPendingConfirmation(false);
 
     const email = form.email.toLowerCase();
     if (!email.endsWith('@esa.int') && !email.endsWith('@ext.esa.int')) {
@@ -29,8 +27,12 @@ export default function Signup() {
       return;
     }
 
+    if (form.password !== form.repeatPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     try {
-      const slug = createUserSlug(form.firstName, form.lastName);
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/local/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -38,20 +40,24 @@ export default function Signup() {
           username: form.email, // using email as username
           email: form.email,
           password: form.password,
-          firstName: form.firstName,
-          lastName: form.lastName,
-          slug,
+          // Names are now extracted from email by backend
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error?.message || "Registration failed");
+        const errorMessage = data.error?.message || "Registration failed";
+        // Treat "Error sending confirmation email" as success
+        if (errorMessage === "Error sending confirmation email") {
+          setPendingConfirmation(true);
+          return;
+        }
+        setError(errorMessage);
         return;
       }
 
-      // Instead of logging in, we show the confirmation message
+      // Show the manual confirmation message
       setPendingConfirmation(true);
 
     } catch (err) {
@@ -59,35 +65,6 @@ export default function Signup() {
       setError("Something went wrong");
     }
   };
-
-  if (pendingConfirmation) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6 py-12 lg:px-8">
-        <div className="w-full sm:max-w-md text-center">
-          <Image
-            alt="Constellation"
-            src={icon}
-            className="mx-auto size-16 w-auto"
-            width={64}
-            height={64}
-          />
-          <h2 className="mt-10 text-2xl/9 font-bold tracking-tight text-white">Check your email</h2>
-          <p className="mt-4 text-gray-300">
-            We&apos;ve sent a confirmation link to <span className="font-semibold text-white">{form.email}</span>.
-            Please click the link to activate your account.
-          </p>
-          <div className="mt-10">
-            <Link
-              href="/login"
-              className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-            >
-              Back to login
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -111,42 +88,6 @@ export default function Signup() {
         </div>
         <div className="mt-10 w-full sm:max-w-sm">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="firstName" className="block text-sm/6 font-medium text-gray-100">
-                First name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="firstName"
-                  name="firstName"
-                  value={form.firstName}
-                  onChange={handleChange}
-                  placeholder="John"
-                  type="text"
-                  required
-                  autoComplete="text"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="lastName" className="block text-sm/6 font-medium text-gray-100">
-                Last name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="lastName"
-                  name="lastName"
-                  value={form.lastName}
-                  onChange={handleChange}
-                  placeholder="Doe"
-                  type="text"
-                  required
-                  autoComplete="text"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">
                 Email address
@@ -195,6 +136,8 @@ export default function Signup() {
                 <input
                   id="repeatPassword"
                   name="repeatPassword"
+                  value={form.repeatPassword}
+                  onChange={handleChange}
                   type="password"
                   required
                   autoComplete="current-password"
@@ -211,7 +154,13 @@ export default function Signup() {
                 Sign up
               </button>
             </div>
-            {error && <p className="text-red-400 text-sm">{error}</p>}
+            {error && <div className="mt-4 p-4 rounded-lg bg-danger-500/10 border border-danger-500/20">
+              <p className="text-sm text-danger-400 text-center">{error}</p>
+            </div>}
+            {pendingConfirmation &&
+              <div className="mt-4 p-4 rounded-lg bg-success-500/10 border border-success-500/20">
+                <p className="text-sm text-success-400 text-center"><b>Account successfully created</b><br />An Admin will approve you account creation shortly. Sit tight and relax.</p>
+              </div>}
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-400">

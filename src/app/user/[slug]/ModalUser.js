@@ -54,7 +54,7 @@ export function ModalUser({ isOpen, setIsModalOpen, editForm, setEditForm, targe
                 <ModalHeader className="flex flex-col gap-1">Edit Profile</ModalHeader>
                 <ModalBody>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Input
+                        {/* <Input
                             label="First Name"
                             value={editForm.firstName}
                             onChange={(e) => setEditForm({ ...editForm, firstName: e.target.value })}
@@ -63,7 +63,7 @@ export function ModalUser({ isOpen, setIsModalOpen, editForm, setEditForm, targe
                             label="Last Name"
                             value={editForm.lastName}
                             onChange={(e) => setEditForm({ ...editForm, lastName: e.target.value })}
-                        />
+                        /> */}
                         <Input
                             label="Birthday"
                             type="date"

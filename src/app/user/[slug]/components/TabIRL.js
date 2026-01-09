@@ -4,16 +4,18 @@ import { useEffect, useState } from "react";
 import { userService } from "@/service/userService";
 import { useAuth } from "@/context/AuthContext";
 import { Card, CardBody, Avatar } from "@heroui/react";
-import { UsersIcon, ChartBarIcon, CalendarIcon } from "@heroicons/react/24/outline";
-import Quote from "@/components/Quote";
-import Link from "next/link";
+import { UsersIcon } from "@heroicons/react/24/outline";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import { Tooltip } from "@heroui/react";
 import { getProfilePictureUrl } from "@/utils/media";
+import ConnectionsInfoModal from "./ConnectionsInfoModal";
 
 export default function TabIRL({ targetUser }) {
     const { user } = useAuth();
     const [encounterCount, setEncounterCount] = useState(0);
     const [encounteredUsers, setEncounteredUsers] = useState([]);
     const [isLoadingEncounters, setIsLoadingEncounters] = useState(true);
+    const [showConnectionsInfo, setShowConnectionsInfo] = useState(false);
 
     const isOwnProfile = user && targetUser && user.slug === targetUser.slug;
 
@@ -75,12 +77,18 @@ export default function TabIRL({ targetUser }) {
                                     <p className="text-5xl font-black text-white mt-1">{encounterCount}</p>
                                 </div>
                             </div>
+
                             <div className="text-center md:text-right">
-                                <p className="text-yellow-100/60 text-sm mb-2 font-medium">Platform Rank</p>
-                                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500/20 border border-yellow-400/30 text-yellow-300 font-bold">
-                                    <ChartBarIcon className="w-5 h-5" />
-                                    Explorer
-                                </div>
+                                <p className="text-yellow-100/60 text-sm mb-2 font-medium">IRL Connections Info</p>
+                                <Tooltip content="Learn about IRL connections" placement="left">
+                                    <button
+                                        onClick={() => setShowConnectionsInfo(true)}
+                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500/20 border border-yellow-400/30 text-yellow-300 font-bold hover:bg-yellow-500/30 transition-colors"
+                                    >
+                                        <InformationCircleIcon className="w-5 h-5" />
+                                        How it works
+                                    </button>
+                                </Tooltip>
                             </div>
                         </div>
                     </CardBody>
@@ -131,6 +139,12 @@ export default function TabIRL({ targetUser }) {
                             })}
                         </div>
                     )}
+
+
+                    <ConnectionsInfoModal
+                        isOpen={showConnectionsInfo}
+                        onClose={() => setShowConnectionsInfo(false)}
+                    />
                 </div>
             </div>
         </div>

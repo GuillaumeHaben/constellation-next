@@ -177,37 +177,30 @@ export default function Sidebar({
                                         </div>
                                     )}
                                 </div>
-                                <div className="flex flex-col items-center">
 
-                                    {/* Last Seen Status */}
-                                    <div className="py-1 px-3 rounded-full bg-white/5 border border-white/10 flex items-center gap-2">
-                                        {targetUser.lastSeenAt && (new Date() - new Date(targetUser.lastSeenAt) < 300000) ? (
-                                            <>
-                                                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                                <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">Online Now</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className="w-2 h-2 rounded-full bg-slate-600" />
-                                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                                                    Last seen {targetUser.lastSeenAt ? formatTimeAgo(targetUser.lastSeenAt) : "a while ago"}
-                                                </span>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
 
                                 <div className="text-center">
                                     <h2 className="text-2xl font-bold text-white tracking-tight">
                                         {targetUser.firstName} {targetUser.lastName}
                                     </h2>
-                                    <div className="flex flex-col items-center">
-                                        <div className="flex items-center flex-wrap justify-center">
-                                            {ageDisplay && <p className="text-slate-400 font-semibold text-xs tracking-widest">{ageDisplay}</p>}
-                                            {/* <p className="text-blue-400 font-semibold text-xs tracking-widest uppercase">{targetUser.position || "ESA Member"}</p> */}
-                                        </div>
-                                        {/* <p className="text-slate-500 font-medium text-xs tracking-wide">{targetUser.esaSite || "ESA"}</p> */}
+                                    <div className="flex flex-col items-center pt-1">
 
+                                        {/* Last Seen Status */}
+                                        <div className="py-1 px-3 rounded-full bg-white/5 border border-white/10 flex items-center gap-2">
+                                            {targetUser.lastSeenAt && (new Date() - new Date(targetUser.lastSeenAt) < 300000) ? (
+                                                <>
+                                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                                    <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">Online Now</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className="w-2 h-2 rounded-full bg-slate-600" />
+                                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                                        Last seen {targetUser.lastSeenAt ? formatTimeAgo(targetUser.lastSeenAt) : "a while ago"}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 

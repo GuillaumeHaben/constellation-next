@@ -14,8 +14,10 @@ export default function Login() {
   const router = useRouter();
   const { login } = useAuth();
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +31,7 @@ export default function Login() {
       router.push("/home");
     } catch (err) {
       if (err.message?.toLowerCase().includes("not confirmed")) {
-        setError("Your account email is not confirmed. Please check your inbox for the activation link.");
+        setError("Your account is not confirmed yet. Please be patient, an Admin will approve your account shortly.");
       } else {
         setError(err.message || "Something went wrong");
       }
@@ -63,7 +65,7 @@ export default function Login() {
                   name="identifier"
                   value={form.identifier}
                   onChange={handleChange}
-                  placeholder="john.doe@me.com"
+                  placeholder="john.doe@esa.int"
                   type="email"
                   required
                   autoComplete="email"
@@ -105,7 +107,9 @@ export default function Login() {
                 Sign in
               </button>
             </div>
-            {error && <p>{error}</p>}
+            {error && <div className="mt-4 p-4 rounded-lg bg-danger-500/10 border border-danger-500/20">
+              <p className="text-sm text-danger-400 text-center">{error}</p>
+            </div>}
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-400">

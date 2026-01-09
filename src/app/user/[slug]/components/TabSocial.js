@@ -65,8 +65,10 @@ export default function TabSocial({ targetUser }) {
 
     if (activeSocialLinks.length === 0) {
         return (
-            <div className="text-center py-8 text-slate-400">
-                No social links available
+            <div className="flex flex-col gap-2 pt-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="text-center text-gray-500 py-8 border-2 border-dashed border-slate-700/50 rounded-2xl">
+                    No social links available. Edit your profile to add some.
+                </div>
             </div>
         );
     }
