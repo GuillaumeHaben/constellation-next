@@ -61,7 +61,7 @@ export function RenderCell({ user, columnKey, onRemove, canDelete }) {
                         </Button>
                     </Tooltip>
                     <Tooltip content="Connect on Teams" placement="bottom">
-                        <Button isIconOnly size="sm" variant="light">
+                        <Button isIconOnly as="a" href={`https://teams.microsoft.com/l/chat/0/0?users=${user.email}`} target="_blank" size="sm" variant="light">
                             <TeamsIcon className="h-5 w-5 text-indigo-600" />
                         </Button>
                     </Tooltip>
