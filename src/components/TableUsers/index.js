@@ -52,14 +52,14 @@ const customUserFilter = (items, filterValue) => {
   return filtered;
 };
 
-export function TableUsers({ fetchUsers = userService.getAll, users }) {
+export function TableUsers({ fetchUsers = userService.getAll, users, initialVisibleColumns = INITIAL_VISIBLE_COLUMNS }) {
   const { user: currentUser } = useAuth();
   const isAdmin = currentUser?.role?.name === 'Admin';
 
   const tableState = useDataTable({
     fetchData: users ? () => Promise.resolve(users) : fetchUsers,
     columns,
-    initialVisibleColumns: INITIAL_VISIBLE_COLUMNS,
+    initialVisibleColumns,
     enableFiltering: true,
     enableSorting: true,
     enablePagination: true,
@@ -117,6 +117,7 @@ export function TableUsers({ fetchUsers = userService.getAll, users }) {
           setVisibleColumns={setVisibleColumns}
           dataLength={data.length}
           onRowsPerPageChange={onRowsPerPageChange}
+          rowsPerPage={tableState.rowsPerPage}
           columns={columns}
           enableSearch={true}
           enableColumnFilter={true}

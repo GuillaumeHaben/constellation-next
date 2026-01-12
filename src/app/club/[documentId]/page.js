@@ -122,7 +122,10 @@ export default function ClubDetailsPage({ params }) {
                                 <h1 className="text-xl font-bold text-white">Members</h1>
                             </div>
 
-                            <TableUsers users={owner ? [owner, ...(club.members || [])] : (club.members || [])} />
+                            <TableUsers
+                                users={owner ? [owner, ...(club.members || [])] : (club.members || [])}
+                                initialVisibleColumns={["name", "esaSite", "position", "country", "directorate"]}
+                            />
                         </div>
                     </div>
 

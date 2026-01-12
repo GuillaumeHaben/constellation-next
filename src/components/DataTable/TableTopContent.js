@@ -31,6 +31,7 @@ export function TableTopContent({
     enableRowsPerPage = true,
     searchPlaceholder = "Search...",
     entityName = "items",
+    rowsPerPage = 10 // Default fallback if not provided
 }) {
     return (
         <div className="flex flex-col gap-4">
@@ -103,6 +104,7 @@ export function TableTopContent({
                         <select
                             className="bg-transparent outline-solid outline-transparent text-default-700 text-small"
                             onChange={onRowsPerPageChange}
+                            value={rowsPerPage}
                         >
                             <option value="5">5</option>
                             <option value="10">10</option>

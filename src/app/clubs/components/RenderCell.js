@@ -9,10 +9,9 @@ export function RenderCell({ club, columnKey, onEdit, onRemove, onJoin, onLeave,
         case "name":
             return (
                 <div className="flex flex-col">
-                    <Link href={`/club/${club.documentId}`} className="text-bold text-small capitalize text-foreground no-underline">
+                    <Link href={`/club/${club.documentId}`} className="text-small capitalize text-foreground no-underline font-bold text-slate-200 truncate">
                         {club.name}
                     </Link>
-                    <p className="text-tiny text-default-400">{club.description}</p>
                 </div>
             );
         case "owner":

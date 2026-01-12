@@ -256,6 +256,7 @@ export function TableClubs() {
             setVisibleColumns={setVisibleColumns}
             dataLength={data.length}
             onRowsPerPageChange={onRowsPerPageChange}
+            rowsPerPage={tableState.rowsPerPage}
             columns={columns}
             enableSearch={true}
             enableColumnFilter={true}
