@@ -14,7 +14,13 @@ export const clubService = {
    */
   getAll: async (token) => {
     const client = getClient(token);
-    const res = await client.collection(RESOURCE).find();
+    const res = await client.collection(RESOURCE).find({
+      populate: {
+        owner: {
+          populate: ['profilePicture']
+        }
+      }
+    });
     return res.data;
   },
 
@@ -24,7 +30,13 @@ export const clubService = {
    */
   getById: async (documentId, token) => {
     const client = getClient(token);
-    return await client.collection(RESOURCE).findOne({ id: documentId });
+    return await client.collection(RESOURCE).findOne(documentId, {
+      populate: {
+        owner: {
+          populate: ['profilePicture']
+        }
+      }
+    });
   },
 
   /**
@@ -32,6 +44,7 @@ export const clubService = {
    * Role: Authenticated / Admin
    */
   create: async (clubData, token) => {
+    // clubData expected to contain { name, description, creation }
     const client = getClient(token);
     return await client.collection(RESOURCE).create(clubData);
   },
@@ -40,9 +53,9 @@ export const clubService = {
    * Updates an existing club.
    * Role: Authenticated (Owner) / Admin
    */
-  update: async (documentId, name, description, token) => {
+  update: async (documentId, name, description, creation, token) => {
     const client = getClient(token);
-    return await client.collection(RESOURCE).update(documentId, { name, description });
+    return await client.collection(RESOURCE).update(documentId, { name, description, creation });
   },
 
   /**

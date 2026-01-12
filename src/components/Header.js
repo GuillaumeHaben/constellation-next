@@ -37,10 +37,10 @@ export default function Header({ title, breadcrumbs, icon }) {
                     ) ||
                     title === "Map" && (
                         <Quote text="I wisely started with a map, and made the story fit" author="J.R.R. Tolkien" authorTitle="Writer, poet & philologist" picture="/img/jrr-tolkien.jpg" />
-                    ) ||
-                    title === "Users" && (
-                        <Quote text="Whatever the future holds, the bond and the friendship between our people are unbreakable" author="Ursula von der Leyen" authorTitle="European Leading Figure" picture="/img/ursula-von-der-leyen.jpg" />
                     )
+                    // title === "Users" && (
+                    //     <Quote text="Whatever the future holds, the bond and the friendship between our people are unbreakable" author="Ursula von der Leyen" authorTitle="European Leading Figure" picture="/img/ursula-von-der-leyen.jpg" />
+                    // )
                 }
             </div>
 

@@ -52,12 +52,12 @@ const customUserFilter = (items, filterValue) => {
   return filtered;
 };
 
-export function TableUsers() {
+export function TableUsers({ fetchUsers = userService.getAll }) {
   const { user: currentUser } = useAuth();
   const isAdmin = currentUser?.role?.name === 'Admin';
 
   const tableState = useDataTable({
-    fetchData: userService.getAll,
+    fetchData: fetchUsers,
     columns,
     initialVisibleColumns: INITIAL_VISIBLE_COLUMNS,
     enableFiltering: true,

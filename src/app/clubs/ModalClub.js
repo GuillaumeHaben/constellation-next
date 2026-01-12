@@ -11,20 +11,33 @@ import {
     Input,
 } from "@heroui/react";
 
+import { DatePicker } from "@heroui/react";
+import { parseDate, getLocalTimeZone, today } from "@internationalized/date";
+
 export function ModalClub({ isOpen, onOpenChange, onCreate, onUpdate, initialData }) {
     const isEditMode = Boolean(initialData);
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
+    const [creation, setCreation] = useState(today(getLocalTimeZone()));
 
     // Prefill data when editing
     useEffect(() => {
         if (initialData) {
             setName(initialData.name || "");
             setDescription(initialData.description || "");
+            if (initialData.creation) {
+                try {
+                    setCreation(parseDate(initialData.creation));
+                } catch (e) {
+                    console.warn("Invalid date format", initialData.creation);
+                    setCreation(today(getLocalTimeZone()));
+                }
+            }
         } else {
             setName("");
             setDescription("");
+            setCreation(today(getLocalTimeZone()));
         }
     }, [initialData]);
 
@@ -36,14 +49,18 @@ export function ModalClub({ isOpen, onOpenChange, onCreate, onUpdate, initialDat
         }
 
         try {
+            // Format date as YYYY-MM-DD string for Strapi
+            const creationDate = creation.toString();
+
             if (isEditMode && onUpdate) {
-                await onUpdate(initialData.documentId, name, description);
+                await onUpdate(initialData.documentId, name, description, creationDate);
             } else if (onCreate) {
-                await onCreate(name, description);
+                await onCreate(name, description, creationDate);
             }
             internalOnClose?.();
             setName("");
             setDescription("");
+            setCreation(today(getLocalTimeZone()));
         } catch (err) {
             console.error("Failed to submit form:", err);
         }
@@ -76,6 +93,15 @@ export function ModalClub({ isOpen, onOpenChange, onCreate, onUpdate, initialDat
                                     variant="bordered"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
+                                />
+                                <DatePicker
+                                    label="Creation Date"
+                                    granularity="month"
+                                    visibleMonths={1}
+                                    isRequired
+                                    variant="bordered"
+                                    value={creation}
+                                    onChange={setCreation}
                                 />
                             </ModalBody>
                             <ModalFooter>

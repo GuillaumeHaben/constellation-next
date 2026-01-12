@@ -84,7 +84,7 @@ export default function User({ params }) {
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
-      <Header title={"Profile"} breadcrumbs={<BreadCrumbs currentPage={"user/" + slug} targetUser={targetUser}></BreadCrumbs>} icon={UserIcon} />
+      <Header title={"User Profile"} breadcrumbs={<BreadCrumbs currentPage={"user/" + slug} targetUser={targetUser}></BreadCrumbs>} icon={UserIcon} />
       <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           {targetUser ? (

@@ -56,6 +56,16 @@ export default function BreadCrumbs({ currentPage, targetUser }) {
                     Pin Approval
                 </BreadcrumbItem>
             )}
+            {currentPage?.startsWith("club/") && (
+                <BreadcrumbItem isCurrent={false}>
+                    Clubs
+                </BreadcrumbItem>
+            )}
+            {currentPage?.startsWith("club/") && (
+                <BreadcrumbItem key={currentPage} isCurrent={true}>
+                    {currentPage.split("/")[1]}
+                </BreadcrumbItem>
+            )}
         </Breadcrumbs>
     )
 }
