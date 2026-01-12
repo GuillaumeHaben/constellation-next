@@ -1,4 +1,4 @@
-import { getClient } from "./apiBase";
+import { getClient, request } from "./apiBase";
 
 const RESOURCE = "clubs";
 
@@ -18,10 +18,31 @@ export const clubService = {
       populate: {
         owner: {
           populate: ['profilePicture']
+        },
+        members: {
+          populate: ['profilePicture']
         }
       }
     });
     return res.data;
+  },
+
+  join: async (documentId, token) => {
+    return await request(`${RESOURCE}/${documentId}/join`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  },
+
+  leave: async (documentId, token) => {
+    return await request(`${RESOURCE}/${documentId}/leave`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
   },
 
   /**
@@ -33,6 +54,9 @@ export const clubService = {
     return await client.collection(RESOURCE).findOne(documentId, {
       populate: {
         owner: {
+          populate: ['profilePicture']
+        },
+        members: {
           populate: ['profilePicture']
         }
       }

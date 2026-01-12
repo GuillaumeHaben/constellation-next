@@ -122,7 +122,7 @@ export default function ClubDetailsPage({ params }) {
                                 <h1 className="text-xl font-bold text-white">Members</h1>
                             </div>
 
-                            <TableUsers />
+                            <TableUsers users={owner ? [owner, ...(club.members || [])] : (club.members || [])} />
                         </div>
                     </div>
 

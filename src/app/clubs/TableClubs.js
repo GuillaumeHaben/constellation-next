@@ -11,12 +11,13 @@ import { useAuth } from "@/context/AuthContext";
 const columns = [
   { key: "id", label: "ID", sortable: true },
   { key: "name", label: "NAME", sortable: true },
+  { key: "members", label: "MEMBERS", sortable: true },
   { key: "owner", label: "OWNER", sortable: true },
   { key: "creation", label: "CREATION", sortable: true },
   { key: "actions", label: "ACTIONS", sortable: false },
 ];
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "owner", "creation", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "members", "owner", "creation", "actions"];
 
 // Custom sort function
 const customClubSort = (items, sortDescriptor) => {
@@ -27,6 +28,10 @@ const customClubSort = (items, sortDescriptor) => {
     if (sortDescriptor.column === "owner") {
       first = a.owner ? `${a.owner.firstName || ""} ${a.owner.lastName || ""}` : "";
       second = b.owner ? `${b.owner.firstName || ""} ${b.owner.lastName || ""}` : "";
+    } else if (sortDescriptor.column === "members") {
+      // Calculate count: members array + owner (1)
+      first = (a.members?.length || 0) + (a.owner ? 1 : 0);
+      second = (b.members?.length || 0) + (b.owner ? 1 : 0);
     }
 
     const isFirstEmpty = first === null || first === undefined || first === "";
@@ -161,6 +166,40 @@ export function TableClubs() {
     setModalOpen(true);
   };
 
+  const handleJoin = async (documentId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await clubService.join(documentId, token);
+      // Optimistic update
+      setData((prev) => prev.map(c => {
+        if (c.documentId === documentId) {
+          // Check if already member to avoid duplicates just in case
+          if (c.members?.some(m => m.documentId === currentUser.documentId)) return c;
+          return { ...c, members: [...(c.members || []), currentUser] };
+        }
+        return c;
+      }));
+    } catch (err) {
+      console.error("Failed to join club:", err);
+    }
+  };
+
+  const handleLeave = async (documentId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await clubService.leave(documentId, token);
+      // Optimistic update
+      setData((prev) => prev.map(c => {
+        if (c.documentId === documentId) {
+          return { ...c, members: (c.members || []).filter(m => m.documentId !== currentUser.documentId) };
+        }
+        return c;
+      }));
+    } catch (err) {
+      console.error("Failed to leave club:", err);
+    }
+  };
+
   const renderCell = useCallback((club, columnKey) => {
     // Logic for permissions:
     // Admin sees everything.
@@ -180,8 +219,11 @@ export function TableClubs() {
         columnKey={columnKey}
         onEdit={onEdit}
         onRemove={onRemove}
+        onJoin={handleJoin}
+        onLeave={handleLeave}
         canEdit={canEdit}
         canDelete={canDelete}
+        currentUser={currentUser}
       />
     );
   }, [onRemove, currentUser, isAdmin]);

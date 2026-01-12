@@ -1,8 +1,8 @@
 import { Avatar, Tooltip, Button, Link, Badge } from "@heroui/react";
-import { PencilSquareIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, TrashIcon, EyeIcon, UserPlusIcon, UserMinusIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import { getProfilePictureUrl } from "@/utils/media";
 
-export function RenderCell({ club, columnKey, onEdit, onRemove, canEdit, canDelete }) {
+export function RenderCell({ club, columnKey, onEdit, onRemove, onJoin, onLeave, canEdit, canDelete, currentUser }) {
     const cellValue = club[columnKey];
 
     switch (columnKey) {
@@ -57,7 +57,18 @@ export function RenderCell({ club, columnKey, onEdit, onRemove, canEdit, canDele
                     </span>
                 </div>
             );
+        case "members":
+            const memberCount = (club.members?.length || 0) + (club.owner ? 1 : 0);
+            return (
+                <div className="flex items-center gap-1 text-sm text-slate-400">
+                    <UserGroupIcon className="h-4 w-4" />
+                    <span className="font-medium">{memberCount}</span>
+                </div>
+            );
         case "actions":
+            const isOwner = club.owner?.documentId === currentUser?.documentId;
+            const isMember = club.members?.some(m => m.documentId === currentUser?.documentId);
+
             return (
                 <div className="flex items-center justify-center gap-2">
                     <Tooltip content="View club" placement="bottom">
@@ -65,6 +76,23 @@ export function RenderCell({ club, columnKey, onEdit, onRemove, canEdit, canDele
                             <EyeIcon className="h-5 w-5 text-slate-400" />
                         </Button>
                     </Tooltip>
+
+                    {!isOwner && !isMember && (
+                        <Tooltip content="Join club" placement="bottom">
+                            <Button isIconOnly onPress={() => onJoin(club.documentId)} size="sm" variant="light">
+                                <UserPlusIcon className="h-5 w-5 text-green-500" />
+                            </Button>
+                        </Tooltip>
+                    )}
+
+                    {!isOwner && isMember && (
+                        <Tooltip content="Leave club" placement="bottom">
+                            <Button isIconOnly onPress={() => onLeave(club.documentId)} size="sm" variant="light">
+                                <UserMinusIcon className="h-5 w-5 text-orange-500" />
+                            </Button>
+                        </Tooltip>
+                    )}
+
                     {canEdit && (
                         <Tooltip content="Edit club" placement="bottom">
                             <Button

@@ -57,7 +57,7 @@ export default function BreadCrumbs({ currentPage, targetUser }) {
                 </BreadcrumbItem>
             )}
             {currentPage?.startsWith("club/") && (
-                <BreadcrumbItem isCurrent={false}>
+                <BreadcrumbItem key="clubs" isCurrent={false}>
                     Clubs
                 </BreadcrumbItem>
             )}
