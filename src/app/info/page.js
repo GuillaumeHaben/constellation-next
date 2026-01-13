@@ -4,8 +4,9 @@ import NavBar from "@/components/Navbar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BreadCrumbs from "@/components/BreadCrumbs";
-import { InformationCircleIcon, RocketLaunchIcon, HeartIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { InformationCircleIcon, RocketLaunchIcon, HeartIcon, CodeBracketIcon } from "@heroicons/react/24/outline";
 import { Card, CardBody } from "@heroui/react";
+import Link from "next/link";
 
 export default function InfoPage() {
     return (
@@ -18,15 +19,11 @@ export default function InfoPage() {
             />
 
             <main className="flex-1">
-                <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8 space-y-16">
+                <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
 
                     {/* Vision Section */}
                     <div className="text-center space-y-4">
                         <h2 className="text-4xl font-black text-white tracking-tight">Our Mission</h2>
-                        <p className="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
-                            Constellation is more than a platform. It&apos;s a digital space designed to connect
-                            the next generation of space pioneers at the European Space Agency.
-                        </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -73,14 +70,27 @@ export default function InfoPage() {
                     {/* Team / ESA Section */}
                     <div className="bg-gradient-to-br from-blue-600/10 to-indigo-600/10 rounded-3xl p-8 md:p-12 border border-blue-500/20 text-center space-y-6">
                         <div className="flex justify-center">
-                            <UserGroupIcon className="w-12 h-12 text-blue-400" />
+                            <CodeBracketIcon className="w-12 h-12 text-blue-400" />
                         </div>
-                        <h2 className="text-3xl font-black text-white px-4">Built by YPs, for YPs</h2>
-                        <p className="text-slate-300 max-w-3xl mx-auto text-lg leading-relaxed">
-                            Constellation was born from a simple observation: our agency is full of brilliant individuals,
-                            yet crossing orbits isn&apos;t always easy. We built this tool to make our galaxy a bit smaller
-                            and our community a lot stronger.
-                        </p>
+                        <h2 className="text-3xl font-black text-white px-4">The Founder's Vision</h2>
+                        <div className="text-justify italic">
+                            <p className="text-slate-300 max-w-2xl mx-auto text-sm leading-relaxed pb-2">
+                                Constellation is, first and foremost, about us — each individual who makes up the ESA community. I often think of it as a small city: we share many things, such as common passions, hobbies, technical expertise, and countries of origin, yet, for the most part, it feels like we do not know each other very well. I am convinced that we would all benefit from being more aware of one another — our initiatives and our interests. Who knows? Someone else might be working on the same technologies, come from the same hometown, or speak the same language. I want to give people the keys to get to know each other better, to receive greater recognition for our engagement, and simply to feel proud of belonging to such a remarkable workplace.</p>
+                            <p className="text-slate-300 max-w-2xl mx-auto text-sm leading-relaxed pb-2">
+                                I want Constellation to be user-friendly, which is why I place the greatest emphasis on design and performance — in my view, the key pillars for securing early adopters. I also hope that Constellation will continue beyond the end of my contract. For this reason, I dedicate a significant amount of time to documentation, testing, and long-term maintainability.
+                            </p>
+                            <p className="text-slate-300 max-w-2xl mx-auto text-sm leading-relaxed pb-2">
+                                Through this project, I also wanted to demonstrate that it is possible to make things happen at ESA. Despite procedures that can sometimes feel slow and heavy, Constellation proves that we can still find ways to create something meaningful — even when it is done entirely in our free time as a side project. Of course, as a researcher in product assurance, I fully understand the importance of assessments and compliance processes. It is ultimately about finding the right balance: knowing how to kick-start an initiative before moving into full certification.
+                            </p>
+                            <p className="text-slate-300 max-w-2xl mx-auto text-sm leading-relaxed pb-2">
+                                I truly believe that everyone can contribute to this project, and I very much look forward to it — so please reach out! It is not only about coding: it is also about branding, promotion, testing, brainstorming, or simply sharing feedback, both good and bad. Each of us knows something better than the next. What are you the best at?
+                            </p>
+                            <p className="text-white max-w-2xl mx-auto text-sm leading-relaxed text-right pt-6">
+                                <Link href="/user/guillaume-haben/" >
+                                    Guillaume Haben
+                                </Link>
+                            </p>
+                        </div>
                     </div>
 
                 </div>
