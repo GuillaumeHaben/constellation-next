@@ -6,15 +6,12 @@ import BreadCrumbs from "@/components/BreadCrumbs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { HomeIcon } from "@heroicons/react/24/outline";
-import ModalNewFeature from "@/components/ModalNewFeature";
-import { Button } from "@heroui/react";
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { userService } from "@/service/userService";
 import { changelogService } from "@/service/changelogService";
 import ModalReleaseNotes from "./ModalReleaseNotes";
 import DashboardHome from "./components/DashboardHome";
-import Quote from "@/components/Quote";
+import Link from "next/link";
 
 export default function Home() {
   const { user } = useAuth();
@@ -89,7 +86,7 @@ export default function Home() {
 
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-blue-600/10 to-transparent p-6 rounded-2xl border border-blue-500/10">
             <div>
-              <h2 className="text-2xl font-black text-white tracking-tight">Welcome to Constellation, <span className="text-[#3b82f6]"> {user.firstName}</span>!</h2>
+              <h2 className="text-2xl font-black text-white tracking-tight">Welcome to Constellation, <Link href={`/user/${user.slug}`} className="text-[#3b82f6]/80 hover:text-[#3b82f6]"> {user.firstName}</Link>!</h2>
               <p className="text-base text-gray-400 tracking-tight lg:w-2/3">Constellation connects Young Professionals at ESA, helping them discover peers, share the pride behind their initiatives, and build a lasting community beyond their mission.</p>
             </div>
           </div>
