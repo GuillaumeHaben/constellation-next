@@ -236,7 +236,7 @@ export default function TabPins({ targetUser }) {
                                                     e.stopPropagation();
                                                     handleUnequip(pin.documentId || pin.id);
                                                 }}
-                                                className={`absolute -top-1 -right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 transition-all duration-200 z-20 shadow-xl scale-90 group-hover/pin:scale-100 ${isEditing ? 'opacity-100' : 'opacity-0 group-hover/pin:opacity-100'}`}
+                                                className={`absolute -top-1 -right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 transition-all duration-200 z-20 shadow-xl scale-90 ${isEditing ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none group-hover/pin:opacity-100 group-hover/pin:pointer-events-auto'}`}
                                                 title="Remove Pin"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">

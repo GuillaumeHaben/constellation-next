@@ -23,7 +23,7 @@ export default function AdminApprovalsPage() {
         if (user) {
             // Access control
             const role = user.role?.type;
-            if (role !== 'manager' && role !== 'admin') {
+            if (role !== 'admin') {
                 router.push('/');
                 return;
             }

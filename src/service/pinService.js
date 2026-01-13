@@ -56,8 +56,8 @@ export const pinService = {
      */
     suggestPin: async (data, token) => {
         const payload = {
-            status: 'pending',
             ...data,
+            status: 'pending',
             publishedAt: new Date(),
         };
         return await request(RESOURCE, {

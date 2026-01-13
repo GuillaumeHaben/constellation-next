@@ -72,7 +72,7 @@ export default function NavBar() {
 
     // Clone navigation path and add Admin if generic
     const fullNavigation = [...navigation];
-    if (user.role?.type === 'manager' || user.role?.type === 'admin') {
+    if (user.role?.type === 'admin') {
         fullNavigation.push({
             name: 'Admin',
             icon: ShieldCheckIcon,

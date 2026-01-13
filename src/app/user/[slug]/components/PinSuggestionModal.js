@@ -71,13 +71,13 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
             const imageId = uploadData[0].id;
 
             // 3. Create Pin Suggestion
-            const isAdminOrManager = user?.role?.type === 'admin' || user?.role?.type === 'manager';
+            const isAdmin = user?.role?.type === 'admin';
 
             await pinService.suggestPin({
                 name,
                 image: imageId,
                 suggestedBy: user.id,
-                status: isAdminOrManager ? 'approved' : 'pending'
+                status: isAdmin ? 'approved' : 'pending'
             }, token);
 
             onClose();
