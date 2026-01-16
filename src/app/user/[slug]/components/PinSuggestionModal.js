@@ -77,7 +77,7 @@ export default function PinSuggestionModal({ isOpen, onClose }) {
                 name,
                 image: imageId,
                 suggestedBy: user.id,
-                status: isAdmin ? 'approved' : 'pending'
+                status: 'pending'
             }, token);
 
             onClose();

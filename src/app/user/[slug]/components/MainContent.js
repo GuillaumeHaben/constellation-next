@@ -13,7 +13,7 @@ import TabAwards from "./TabAwards";
 import TabSocial from "./TabSocial";
 import TabQR from "./TabIRL";
 
-export default function MainContent({ targetUser }) {
+export default function MainContent({ targetUser, onUpdateUser }) {
     return (
         <Card className="bg-gradient-to-br p-6 from-slate-900 to-slate-800 border border-slate-700/50 rounded-2xl shadow-xl transition-all duration-300 hover:border-slate-600 h-full relative overflow-hidden group">
             {/* Decorative background effects */}
@@ -35,7 +35,7 @@ export default function MainContent({ targetUser }) {
                             </div>
                         }
                     >
-                        <TabOverview targetUser={targetUser} />
+                        <TabOverview targetUser={targetUser} onUpdateUser={onUpdateUser} />
                     </Tab>
                     <Tab
                         key="social"

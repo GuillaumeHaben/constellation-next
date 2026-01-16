@@ -103,7 +103,7 @@ export default function User({ params }) {
 
               {/* Right Column - Detailed Information */}
               <div className="lg:col-span-3">
-                <MainContent targetUser={targetUser} />
+                <MainContent targetUser={targetUser} onUpdateUser={setTargetUser} />
               </div>
             </div>
           ) : (

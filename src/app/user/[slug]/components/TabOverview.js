@@ -13,11 +13,12 @@ import {
     GlobeEuropeAfricaIcon
 } from "@heroicons/react/24/outline";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@heroui/react";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { userService } from "@/service/userService";
 import LanguageLibraryModal from "./LanguageLibraryModal";
+import TwemojiFlag from "@/components/TwemojiFlag";
 
 const COUNTRY_EMOJIS = {
     "Austria": "🇦🇹",
@@ -109,10 +110,18 @@ function PrivacyBadge({ isPrivate }) {
 }
 
 
-export default function TabOverview({ targetUser }) {
+export default function TabOverview({ targetUser, onUpdateUser }) {
     const { user: currentUser } = useAuth();
     const [spokenLanguages, setSpokenLanguages] = useState(targetUser.spoken_languages || []);
     const [showLibrary, setShowLibrary] = useState(false);
+
+    // Sync local state when prop updates (fixing race condition)
+    useEffect(() => {
+        if (targetUser?.spoken_languages) {
+            setSpokenLanguages(targetUser.spoken_languages);
+        }
+    }, [targetUser?.spoken_languages]);
+
     const [isSaving, setIsSaving] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -127,6 +136,10 @@ export default function TabOverview({ targetUser }) {
             const token = localStorage.getItem("token");
             await userService.update(currentUser.id, { spoken_languages: newLanguages }, token);
             setSpokenLanguages(newLanguages);
+            // Update parent state immediately
+            if (onUpdateUser) {
+                onUpdateUser({ ...targetUser, spoken_languages: newLanguages });
+            }
         } catch (error) {
             console.error("Failed to add language", error);
         } finally {
@@ -141,6 +154,10 @@ export default function TabOverview({ targetUser }) {
             const token = localStorage.getItem("token");
             await userService.update(currentUser.id, { spoken_languages: newLanguages }, token);
             setSpokenLanguages(newLanguages);
+            // Update parent state immediately
+            if (onUpdateUser) {
+                onUpdateUser({ ...targetUser, spoken_languages: newLanguages });
+            }
         } catch (error) {
             console.error("Failed to delete language", error);
         } finally {
@@ -152,7 +169,14 @@ export default function TabOverview({ targetUser }) {
         {
             key: "country",
             label: "Country",
-            value: targetUser.country ? `${COUNTRY_EMOJIS[targetUser.country] ?? ""} ${targetUser.country}`.trim() : null,
+            value: targetUser.country ? (
+                <div className="flex items-center gap-2">
+                    {COUNTRY_EMOJIS[targetUser.country] && (
+                        <TwemojiFlag emoji={COUNTRY_EMOJIS[targetUser.country]} />
+                    )}
+                    <span>{targetUser.country}</span>
+                </div>
+            ) : null,
             icon: GlobeAltIcon,
             isPrivate: false
         },
@@ -277,8 +301,8 @@ export default function TabOverview({ targetUser }) {
                                 <div key={langName} className="flex flex-col items-center group/item transition-transform duration-200">
                                     <div className="relative group/lang w-16 h-16 sm:w-20 sm:h-20">
                                         <Tooltip content={langName} placement="top" closeDelay={0}>
-                                            <div className="w-full h-full flex items-center justify-center text-3xl sm:text-4xl border border-white/10 rounded-full bg-white/5 cursor-default group-hover/lang:bg-white/10 transition-colors">
-                                                {emoji}
+                                            <div className="w-full h-full flex items-center justify-center border border-white/10 rounded-full bg-white/5 cursor-default group-hover/lang:bg-white/10 transition-colors">
+                                                <TwemojiFlag emoji={emoji} size={36} />
                                             </div>
                                         </Tooltip>
 

@@ -12,6 +12,8 @@ import {
 } from "@heroui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
+import TwemojiFlag from "@/components/TwemojiFlag";
+
 export default function LanguageLibraryModal({ isOpen, onClose, onLanguageAdded, spokenLanguages = {}, currentLanguages = [] }) {
     const [search, setSearch] = useState("");
 
@@ -46,8 +48,8 @@ export default function LanguageLibraryModal({ isOpen, onClose, onLanguageAdded,
                                 const isOwned = currentLanguages.includes(name);
                                 return (
                                     <div key={name} className="border border-gray-800 rounded-lg p-4 flex flex-col items-center gap-3 hover:bg-gray-800/50 transition relative group">
-                                        <div className="w-16 h-16 flex items-center justify-center text-4xl border border-white/10 rounded-full bg-white/5">
-                                            {emoji}
+                                        <div className="w-16 h-16 flex items-center justify-center border border-white/10 rounded-full bg-white/5">
+                                            <TwemojiFlag emoji={emoji} size={36} />
                                         </div>
                                         <div className="text-center">
                                             <p className="font-semibold text-sm truncate w-full">{name}</p>
